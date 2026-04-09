@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>Products — MarketPlace Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
@@ -17,260 +18,292 @@
       --font-mono: 'DM Mono', monospace;
     }
 
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; }
+
     .nav-link.active { background: rgba(124,58,237,.14); }
     .nav-link.active::before { background: var(--po-accent); }
 
     /* ── Page Header ── */
     .po-header {
       display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+      gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
     }
     .po-header-left .po-title {
-      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      font-family: var(--font-display); font-size: 22px; font-weight: 800;
       color: var(--text); letter-spacing: -.6px; line-height: 1.15;
     }
-    .po-header-left .po-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
-    .po-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .po-header-left .po-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .po-header-right { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
 
     /* ── Stats ── */
-    .po-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+    .po-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
     .po-stat {
-      background: var(--white); border-radius: 14px; border: 1px solid var(--gray-100);
-      padding: 18px 20px; position: relative; overflow: hidden;
+      background: var(--white); border-radius: 12px; border: 1px solid var(--gray-100);
+      padding: 14px 16px; position: relative; overflow: hidden;
       transition: transform .16s, box-shadow .16s;
     }
-    .po-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .po-stat:active { transform: scale(.98); }
     .po-stat::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0;
-      height: 3px; border-radius: 14px 14px 0 0;
+      height: 3px; border-radius: 12px 12px 0 0;
     }
     .po-stat.purple::before { background: var(--po-accent); }
     .po-stat.green::before  { background: #10B981; }
     .po-stat.red::before    { background: #EF4444; }
     .po-stat.blue::before   { background: #3B82F6; }
     .po-stat-icon {
-      width: 38px; height: 38px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
     }
-    .po-stat-icon .material-symbols-rounded { font-size: 20px; }
+    .po-stat-icon .material-symbols-rounded { font-size: 17px; }
     .po-stat.purple .po-stat-icon { background: var(--po-accent-light); color: var(--po-accent); }
     .po-stat.green  .po-stat-icon { background: #D1FAE5; color: #059669; }
     .po-stat.red    .po-stat-icon { background: #FEE2E2; color: #DC2626; }
     .po-stat.blue   .po-stat-icon { background: #DBEAFE; color: #2563EB; }
     .po-stat-num {
-      font-family: var(--font-display); font-size: 28px; font-weight: 800;
-      letter-spacing: -.8px; color: var(--text); line-height: 1;
+      font-family: var(--font-display); font-size: 22px; font-weight: 800;
+      letter-spacing: -.6px; color: var(--text); line-height: 1;
     }
-    .po-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+    .po-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-top: 3px; }
 
     /* ── Status Pill Tabs ── */
-    .status-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+    .status-pills {
+      display: flex; gap: 6px; flex-wrap: nowrap; margin-bottom: 18px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; padding-bottom: 4px;
+    }
+    .status-pills::-webkit-scrollbar { display: none; }
     .status-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 99px; border: 1.5px solid var(--gray-200);
-      background: var(--white); font-size: 12px; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-radius: 99px; border: 1.5px solid var(--gray-200);
+      background: var(--white); font-size: 11px; font-weight: 700;
       color: var(--text-muted); cursor: pointer; transition: all .16s ease;
-      font-family: var(--font-display); white-space: nowrap;
+      font-family: var(--font-display); white-space: nowrap; flex-shrink: 0;
     }
     .status-pill:hover { border-color: var(--po-accent); color: var(--po-accent); background: var(--po-accent-light); }
     .status-pill.active { background: var(--po-accent); border-color: var(--po-accent); color: #fff; }
     .status-pill .pill-count {
       background: rgba(255,255,255,.25); border-radius: 99px;
-      padding: 1px 7px; font-size: 10px; font-weight: 800;
+      padding: 1px 6px; font-size: 10px; font-weight: 800;
     }
     .status-pill:not(.active) .pill-count { background: var(--gray-100); color: var(--text-muted); }
+    .status-pill .material-symbols-rounded { font-size: 12px; }
 
     /* ── Card ── */
     .po-card {
-      background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
+      background: var(--white); border-radius: 14px; border: 1px solid var(--gray-100);
       box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
     }
     .po-card-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-100); gap: 12px; flex-wrap: wrap;
+      padding: 16px 16px 12px; border-bottom: 1px solid var(--gray-100); gap: 10px; flex-wrap: wrap;
     }
     .po-card-title {
-      font-family: var(--font-display); font-size: 15px; font-weight: 700;
-      color: var(--text); display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 7px;
     }
-    .po-card-title .material-symbols-rounded { font-size: 18px; color: var(--po-accent); }
+    .po-card-title .material-symbols-rounded { font-size: 17px; color: var(--po-accent); }
 
     /* ── Search ── */
     .po-search-wrap {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 7px;
       background: var(--gray-50); border: 1.5px solid var(--gray-200);
-      border-radius: 10px; padding: 7px 12px; min-width: 200px;
+      border-radius: 9px; padding: 7px 11px; flex: 1; min-width: 0;
     }
-    .po-search-wrap .material-symbols-rounded { font-size: 17px; color: var(--text-muted); }
+    .po-search-wrap .material-symbols-rounded { font-size: 16px; color: var(--text-muted); flex-shrink: 0; }
     .po-search-wrap input {
       border: none; background: transparent; font-size: 13px; color: var(--text);
-      outline: none; font-family: var(--font-display); width: 100%;
+      outline: none; font-family: var(--font-display); width: 100%; min-width: 0;
     }
     .po-search-wrap:focus-within { border-color: var(--po-accent); background: var(--po-accent-light); }
 
     .po-cat-select {
-      padding: 7px 12px; border-radius: 10px; border: 1.5px solid var(--gray-200);
+      padding: 7px 10px; border-radius: 9px; border: 1.5px solid var(--gray-200);
       font-family: var(--font-display); font-size: 12px; font-weight: 600;
       color: var(--text); background: var(--white); outline: none; cursor: pointer;
-      transition: border-color .14s;
+      flex-shrink: 0; max-width: 130px;
     }
-    .po-cat-select:focus { border-color: var(--po-accent); }
 
-    /* ── Table ── */
+    /* ── Mobile Product Cards ── */
+    .po-product-cards { display: none; padding: 12px; }
+    .po-product-card {
+      background: var(--white); border: 1px solid var(--gray-100); border-radius: 12px;
+      padding: 12px; margin-bottom: 10px; transition: box-shadow .14s;
+    }
+    .po-product-card:last-child { margin-bottom: 0; }
+    .po-product-card-top { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+    .po-product-card-img {
+      width: 56px; height: 56px; border-radius: 10px; object-fit: cover;
+      background: var(--gray-100); border: 1px solid var(--gray-200); flex-shrink: 0;
+    }
+    .po-product-card-img-placeholder {
+      width: 56px; height: 56px; border-radius: 10px; background: var(--gray-100);
+      border: 1px solid var(--gray-200); display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .po-product-card-img-placeholder .material-symbols-rounded { font-size: 22px; color: var(--gray-300); }
+    .po-product-card-info { flex: 1; min-width: 0; }
+    .po-product-card-name {
+      font-family: var(--font-display); font-size: 13px; font-weight: 700;
+      color: var(--text); margin-bottom: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .po-product-card-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+    .po-product-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+    .po-product-card-price-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--gray-50); border-radius: 8px; padding: 8px 10px;
+      margin-bottom: 10px; gap: 8px;
+    }
+    .po-product-card-price {
+      font-family: var(--font-display); font-size: 15px; font-weight: 800; color: var(--text);
+    }
+    .po-product-card-disc { font-family: var(--font-mono); font-size: 11px; color: #059669; }
+    .po-product-card-stock {
+      font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+      color: var(--text); display: flex; align-items: center; gap: 4px;
+    }
+    .po-product-card-actions {
+      display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 6px;
+    }
+
+    /* ── Table (desktop) ── */
     .po-table-wrap { overflow-x: auto; }
     .po-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .po-table thead th {
-      text-align: left; padding: 10px 20px; font-size: 10.5px; font-weight: 700;
+      text-align: left; padding: 9px 16px; font-size: 10px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
       background: var(--gray-50); border-bottom: 1px solid var(--gray-200); white-space: nowrap;
     }
     .po-table tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .12s; }
     .po-table tbody tr:last-child { border-bottom: none; }
     .po-table tbody tr:hover { background: #FAFAF8; }
-    .po-table tbody td { padding: 14px 20px; vertical-align: middle; }
+    .po-table tbody td { padding: 12px 16px; vertical-align: middle; }
 
     .po-id {
-      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
       color: var(--po-accent); background: var(--po-accent-light);
-      border-radius: 6px; padding: 3px 8px; display: inline-block;
+      border-radius: 6px; padding: 2px 7px; display: inline-block;
     }
-
-    /* Product thumbnail */
     .prod-img {
-      width: 44px; height: 44px; border-radius: 10px; object-fit: cover;
+      width: 40px; height: 40px; border-radius: 9px; object-fit: cover;
       background: var(--gray-100); border: 1px solid var(--gray-200);
     }
     .prod-img-placeholder {
-      width: 44px; height: 44px; border-radius: 10px;
+      width: 40px; height: 40px; border-radius: 9px;
       background: var(--gray-100); border: 1px solid var(--gray-200);
       display: flex; align-items: center; justify-content: center;
     }
-    .prod-img-placeholder .material-symbols-rounded { font-size: 20px; color: var(--gray-300); }
-
+    .prod-img-placeholder .material-symbols-rounded { font-size: 18px; color: var(--gray-300); }
     .po-product-name { font-weight: 700; font-size: 13px; color: var(--text); font-family: var(--font-display); }
-    .po-product-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
-
-    .po-price { font-weight: 800; font-size: 14px; color: var(--text); font-family: var(--font-display); }
-    .po-price-disc { font-size: 11px; color: #059669; font-family: var(--font-mono); margin-top: 2px; }
+    .po-product-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; font-family: var(--font-mono); }
+    .po-price { font-weight: 800; font-size: 13px; color: var(--text); font-family: var(--font-display); }
+    .po-price-disc { font-size: 10px; color: #059669; font-family: var(--font-mono); margin-top: 1px; }
 
     /* Status Badges */
     .po-status {
-      display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
-      border-radius: 99px; font-size: 11px; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px;
+      border-radius: 99px; font-size: 10.5px; font-weight: 700;
       font-family: var(--font-display); white-space: nowrap;
     }
-    .po-status .material-symbols-rounded { font-size: 13px; }
-    .po-status.ACTIVE     { background: #D1FAE5; color: #065F46; }
-    .po-status.INACTIVE   { background: #FEE2E2; color: #B91C1C; }
-    .po-status.DRAFT      { background: #F5F3FF; color: var(--po-accent-dark); }
-    .po-status.IN_STOCK   { background: #D1FAE5; color: #065F46; }
-    .po-status.LOW_STOCK  { background: #FEF3C7; color: #92400E; }
+    .po-status .material-symbols-rounded { font-size: 12px; }
+    .po-status.ACTIVE      { background: #D1FAE5; color: #065F46; }
+    .po-status.INACTIVE    { background: #FEE2E2; color: #B91C1C; }
+    .po-status.DRAFT       { background: #F5F3FF; color: var(--po-accent-dark); }
+    .po-status.IN_STOCK    { background: #D1FAE5; color: #065F46; }
+    .po-status.LOW_STOCK   { background: #FEF3C7; color: #92400E; }
     .po-status.OUT_OF_STOCK { background: #FEE2E2; color: #B91C1C; }
     .po-status.COMING_SOON { background: #DBEAFE; color: #1D4ED8; }
-    .po-status.PRE_ORDER  { background: #FEF3C7; color: #92400E; }
+    .po-status.PRE_ORDER   { background: #FEF3C7; color: #92400E; }
 
     /* Action Buttons */
     .po-action-btn {
-      display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px;
-      border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;
-      border: none; transition: all .14s; font-family: var(--font-display); white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      padding: 6px 11px; border-radius: 7px; font-size: 11px; font-weight: 700;
+      cursor: pointer; border: none; transition: all .14s;
+      font-family: var(--font-display); white-space: nowrap;
     }
-    .po-action-btn .material-symbols-rounded { font-size: 15px; }
+    .po-action-btn .material-symbols-rounded { font-size: 14px; }
     .po-action-btn.view   { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
-    .po-action-btn.view:hover { background: var(--gray-200); }
+    .po-action-btn.view:hover   { background: var(--gray-200); }
     .po-action-btn.edit   { background: #DBEAFE; color: #1D4ED8; border: 1px solid #BFDBFE; }
-    .po-action-btn.edit:hover { background: #BFDBFE; }
+    .po-action-btn.edit:hover   { background: #BFDBFE; }
     .po-action-btn.stock  { background: var(--po-accent-light); color: var(--po-accent-dark); border: 1px solid var(--po-accent-mid); }
-    .po-action-btn.stock:hover { background: var(--po-accent-mid); }
+    .po-action-btn.stock:hover  { background: var(--po-accent-mid); }
     .po-action-btn.danger { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
     .po-action-btn.danger:hover { background: #FECACA; }
 
-    /* Refresh btn */
+    /* Buttons */
     .po-refresh-btn {
-      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
-      border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
-      color: var(--gray-600); font-size: 12px; font-weight: 700; cursor: pointer;
-      font-family: var(--font-display); transition: all .14s;
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px;
+      border-radius: 8px; background: var(--white); border: 1.5px solid var(--gray-200);
+      color: var(--gray-600); font-size: 11px; font-weight: 700; cursor: pointer;
+      font-family: var(--font-display); transition: all .14s; white-space: nowrap;
     }
     .po-refresh-btn:hover { border-color: var(--po-accent); color: var(--po-accent); background: var(--po-accent-light); }
-    .po-refresh-btn .material-symbols-rounded { font-size: 16px; }
+    .po-refresh-btn .material-symbols-rounded { font-size: 15px; }
     .po-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
 
-    /* AI generate button */
     .btn-ai {
-      display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
-      border-radius: 9px; background: var(--white); color: var(--po-accent);
-      font-size: 12px; font-weight: 700; cursor: pointer;
-      border: 1.5px solid var(--po-accent-mid); font-family: var(--font-display); transition: all .14s;
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px;
+      border-radius: 8px; background: var(--white); color: var(--po-accent);
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      border: 1.5px solid var(--po-accent-mid); font-family: var(--font-display);
+      transition: all .14s; white-space: nowrap;
     }
     .btn-ai:hover { background: var(--po-accent-light); }
-    .btn-ai .material-symbols-rounded { font-size: 16px; }
+    .btn-ai .material-symbols-rounded { font-size: 15px; }
 
-    /* Add Product button */
     .btn-add-product {
-      display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
-      border-radius: 9px; background: var(--po-accent); color: #fff;
-      font-size: 12px; font-weight: 700; cursor: pointer; border: none;
-      font-family: var(--font-display); transition: all .14s;
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
+      border-radius: 8px; background: var(--po-accent); color: #fff;
+      font-size: 11px; font-weight: 700; cursor: pointer; border: none;
+      font-family: var(--font-display); transition: all .14s; white-space: nowrap;
     }
-    .btn-add-product:hover { background: var(--po-accent-dark); box-shadow: 0 4px 14px var(--po-accent-glow); }
-    .btn-add-product .material-symbols-rounded { font-size: 16px; }
+    .btn-add-product:hover { background: var(--po-accent-dark); }
+    .btn-add-product .material-symbols-rounded { font-size: 15px; }
 
-    /* Total chip */
     .po-total-chip {
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-flex; align-items: center; gap: 5px;
       background: var(--po-accent-light); color: var(--po-accent-dark);
-      border-radius: 99px; padding: 4px 12px; font-size: 12px; font-weight: 700;
-      font-family: var(--font-display);
+      border-radius: 99px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+      font-family: var(--font-display); white-space: nowrap;
     }
 
-    /* Modal buttons */
+    /* Modal Buttons */
     .btn-po-primary {
-      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
-      border-radius: 10px; background: var(--po-accent); color: #fff;
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
+      border-radius: 9px; background: var(--po-accent); color: #fff;
       font-size: 13px; font-weight: 700; font-family: var(--font-display);
       border: none; cursor: pointer; transition: all .15s;
     }
-    .btn-po-primary:hover { background: var(--po-accent-dark); box-shadow: 0 4px 16px var(--po-accent-glow); }
+    .btn-po-primary:hover { background: var(--po-accent-dark); }
     .btn-po-primary:disabled { opacity: .6; cursor: not-allowed; }
-    .btn-po-primary .material-symbols-rounded { font-size: 17px; }
+    .btn-po-primary .material-symbols-rounded { font-size: 16px; }
 
     .btn-po-ghost {
-      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
-      border-radius: 10px; background: var(--gray-100); color: var(--gray-700);
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
+      border-radius: 9px; background: var(--gray-100); color: var(--gray-700);
       font-size: 13px; font-weight: 700; font-family: var(--font-display);
       border: 1px solid var(--gray-200); cursor: pointer; transition: all .15s;
     }
     .btn-po-ghost:hover { background: var(--gray-200); }
-    .btn-po-ghost .material-symbols-rounded { font-size: 17px; }
+    .btn-po-ghost .material-symbols-rounded { font-size: 16px; }
 
     .btn-po-danger {
-      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
-      border-radius: 10px; background: #FEE2E2; color: #B91C1C;
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
+      border-radius: 9px; background: #FEE2E2; color: #B91C1C;
       font-size: 13px; font-weight: 700; font-family: var(--font-display);
       border: 1px solid #FECACA; cursor: pointer; transition: all .15s;
     }
     .btn-po-danger:hover { background: #FECACA; }
-    .btn-po-danger .material-symbols-rounded { font-size: 17px; }
-
-    .po-detail-row {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      padding: 10px 0; border-bottom: 1px solid var(--gray-100); gap: 12px;
-    }
-    .po-detail-row:last-child { border-bottom: none; }
-    .po-detail-key {
-      font-size: 11.5px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: .6px; white-space: nowrap;
-    }
-    .po-detail-val {
-      font-size: 13px; font-weight: 700; color: var(--text);
-      text-align: right; font-family: var(--font-display);
-    }
+    .btn-po-danger .material-symbols-rounded { font-size: 16px; }
 
     /* AI response block */
     .ai-response-block {
       background: var(--po-accent-light); border-radius: 10px;
-      padding: 14px 16px; margin-top: 12px; border: 1px solid var(--po-accent-mid);
+      padding: 12px 14px; margin-top: 12px; border: 1px solid var(--po-accent-mid);
     }
     .ai-response-header {
       display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
@@ -281,164 +314,232 @@
 
     /* Skeleton */
     .po-skel {
-      height: 14px; border-radius: 6px;
+      height: 13px; border-radius: 6px;
       background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
       background-size: 200% 100%; animation: shimmer 1.4s infinite;
     }
-    .po-skel.sm { width: 60px; height: 10px; }
-    .po-skel.md { width: 120px; }
-    .po-skel.sq { width: 44px; height: 44px; border-radius: 10px; }
+    .po-skel.sm  { width: 60px; height: 10px; }
+    .po-skel.md  { width: 120px; }
+    .po-skel.sq  { width: 40px; height: 40px; border-radius: 9px; }
+    .po-skel.sq2 { width: 56px; height: 56px; border-radius: 10px; }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Empty state */
     .po-empty {
       display: flex; flex-direction: column; align-items: center;
-      gap: 12px; padding: 64px 24px; text-align: center;
+      gap: 10px; padding: 48px 24px; text-align: center;
     }
     .po-empty-icon {
-      width: 64px; height: 64px; border-radius: 18px; background: var(--po-accent-light);
+      width: 56px; height: 56px; border-radius: 16px; background: var(--po-accent-light);
       display: flex; align-items: center; justify-content: center;
     }
-    .po-empty-icon .material-symbols-rounded { font-size: 30px; color: var(--po-accent); }
-    .po-empty-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--gray-500); }
-    .po-empty-sub { font-size: 12px; color: var(--text-muted); max-width: 260px; }
+    .po-empty-icon .material-symbols-rounded { font-size: 26px; color: var(--po-accent); }
+    .po-empty-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--gray-500); }
+    .po-empty-sub { font-size: 12px; color: var(--text-muted); max-width: 240px; }
 
-    /* ── Add / Edit Product Modal Form Styles ── */
-    .po-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    /* ── Form Styles ── */
+    .po-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .po-form-grid.single { grid-template-columns: 1fr; }
     .po-form-field { display: flex; flex-direction: column; gap: 5px; }
     .po-form-field.span2 { grid-column: span 2; }
     .po-form-label {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      font-size: 10.5px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .6px; color: var(--text-muted);
     }
     .po-form-label span { color: #EF4444; margin-left: 2px; }
     .po-form-input {
-      padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--gray-200);
+      padding: 9px 11px; border-radius: 9px; border: 1.5px solid var(--gray-200);
       font-family: var(--font-display); font-size: 13px; font-weight: 600;
       color: var(--text); background: var(--white); outline: none;
-      transition: border-color .14s; width: 100%; box-sizing: border-box;
+      transition: border-color .14s; width: 100%;
     }
     .po-form-input:focus { border-color: var(--po-accent); background: var(--po-accent-light); }
     .po-form-textarea {
-      padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--gray-200);
+      padding: 9px 11px; border-radius: 9px; border: 1.5px solid var(--gray-200);
       font-family: var(--font-display); font-size: 13px; font-weight: 500;
       color: var(--text); background: var(--white); outline: none;
-      transition: border-color .14s; width: 100%; box-sizing: border-box;
-      resize: vertical; min-height: 80px; line-height: 1.5;
+      transition: border-color .14s; width: 100%;
+      resize: vertical; min-height: 72px; line-height: 1.5;
     }
     .po-form-textarea:focus { border-color: var(--po-accent); background: var(--po-accent-light); }
     .po-form-select {
-      padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--gray-200);
+      padding: 9px 11px; border-radius: 9px; border: 1.5px solid var(--gray-200);
       font-family: var(--font-display); font-size: 13px; font-weight: 600;
       color: var(--text); background: var(--white); outline: none; cursor: pointer;
-      transition: border-color .14s; width: 100%; box-sizing: border-box;
+      transition: border-color .14s; width: 100%;
     }
     .po-form-select:focus { border-color: var(--po-accent); }
 
-    /* Discount toggle */
+    /* Toggle */
     .po-toggle-row {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--gray-200);
+      padding: 10px 12px; border-radius: 9px; border: 1.5px solid var(--gray-200);
       background: var(--gray-50); cursor: pointer; transition: all .14s;
     }
     .po-toggle-row:hover { border-color: var(--po-accent); background: var(--po-accent-light); }
     .po-toggle-label { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text); }
     .po-toggle-switch {
-      width: 38px; height: 22px; border-radius: 99px; background: var(--gray-200);
+      width: 36px; height: 20px; border-radius: 99px; background: var(--gray-200);
       position: relative; transition: background .2s; flex-shrink: 0;
     }
     .po-toggle-switch.on { background: var(--po-accent); }
     .po-toggle-switch::after {
-      content: ''; position: absolute; width: 16px; height: 16px;
+      content: ''; position: absolute; width: 14px; height: 14px;
       border-radius: 50%; background: #fff; top: 3px; left: 3px;
       transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
     }
     .po-toggle-switch.on::after { left: 19px; }
 
-    /* Image upload area */
+    /* Image upload */
     .po-img-upload {
-      border: 2px dashed var(--gray-200); border-radius: 12px;
-      padding: 20px; text-align: center; cursor: pointer;
+      border: 2px dashed var(--gray-200); border-radius: 10px;
+      padding: 16px; text-align: center; cursor: pointer;
       transition: all .14s; background: var(--gray-50);
     }
     .po-img-upload:hover { border-color: var(--po-accent); background: var(--po-accent-light); }
     .po-img-upload input { display: none; }
-    .po-img-upload-icon .material-symbols-rounded { font-size: 28px; color: var(--text-muted); }
-    .po-img-upload-label { font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--text-muted); margin-top: 6px; }
-    .po-img-upload-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .po-img-upload-icon .material-symbols-rounded { font-size: 24px; color: var(--text-muted); }
+    .po-img-upload-label { font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--text-muted); margin-top: 4px; }
+    .po-img-upload-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 
-    /* Image previews */
-    .po-img-previews { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .po-img-previews { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
     .po-img-preview-item {
-      position: relative; width: 60px; height: 60px; border-radius: 8px;
+      position: relative; width: 56px; height: 56px; border-radius: 8px;
       overflow: hidden; border: 1.5px solid var(--gray-200);
     }
     .po-img-preview-item img { width: 100%; height: 100%; object-fit: cover; }
     .po-img-preview-item .remove-img {
-      position: absolute; top: 2px; right: 2px; width: 18px; height: 18px;
+      position: absolute; top: 2px; right: 2px; width: 17px; height: 17px;
       border-radius: 50%; background: rgba(0,0,0,.65); color: #fff;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 10px; font-weight: 900;
-      border: none; line-height: 1;
+      cursor: pointer; font-size: 9px; font-weight: 900; border: none; line-height: 1;
     }
 
-    /* Modal scrollable body */
+    /* Modal */
     .modal-body-scroll {
-      max-height: 65vh; overflow-y: auto; padding: 20px 24px;
+      max-height: 60vh; overflow-y: auto; padding: 16px 18px;
     }
-    .modal-body-scroll::-webkit-scrollbar { width: 4px; }
+    .modal-body-scroll::-webkit-scrollbar { width: 3px; }
     .modal-body-scroll::-webkit-scrollbar-track { background: transparent; }
     .modal-body-scroll::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 99px; }
 
-    /* Section divider inside modal */
     .po-form-section {
-      margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--gray-100);
+      margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--gray-100);
     }
     .po-form-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
     .po-form-section-title {
-      font-family: var(--font-display); font-size: 12px; font-weight: 800;
+      font-family: var(--font-display); font-size: 11px; font-weight: 800;
       text-transform: uppercase; letter-spacing: .8px; color: var(--po-accent);
-      margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+      margin-bottom: 10px; display: flex; align-items: center; gap: 5px;
     }
-    .po-form-section-title .material-symbols-rounded { font-size: 14px; }
+    .po-form-section-title .material-symbols-rounded { font-size: 13px; }
 
-    /* Existing images in edit modal */
     .po-existing-img-item {
-      position: relative; width: 60px; height: 60px; border-radius: 8px;
+      position: relative; width: 56px; height: 56px; border-radius: 8px;
       overflow: hidden; border: 1.5px solid var(--gray-200);
     }
     .po-existing-img-item img { width: 100%; height: 100%; object-fit: cover; }
-    .po-existing-img-item .mark-delete {
-      position: absolute; inset: 0; background: rgba(239,68,68,.75);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 11px; font-weight: 900; color: #fff;
-    }
     .po-existing-img-item .del-overlay {
-      position: absolute; top: 2px; right: 2px; width: 18px; height: 18px;
+      position: absolute; top: 2px; right: 2px; width: 17px; height: 17px;
       border-radius: 50%; background: rgba(0,0,0,.65); color: #fff;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 10px; font-weight: 900;
-      border: none; line-height: 1;
+      cursor: pointer; font-size: 9px; font-weight: 900; border: none; line-height: 1;
     }
 
-    /* availableInDays & discountPct hidden by default */
-    #availableInDaysWrap,
-    #editAvailableInDaysWrap { display: none; }
-    #discountPctWrap,
-    #editDiscountPctWrap { display: none; }
+    /* Hidden fields */
+    #availableInDaysWrap, #editAvailableInDaysWrap { display: none; }
+    #discountPctWrap, #editDiscountPctWrap { display: none; }
 
-    @media (max-width: 900px) { .po-stats { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 640px) {
-      .po-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .po-stat-num { font-size: 22px; }
-      .po-header-left .po-title { font-size: 20px; }
-      .col-brand, .col-stock-status { display: none; }
+    /* Detail row */
+    .po-detail-row {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid var(--gray-100); gap: 10px;
+    }
+    .po-detail-row:last-child { border-bottom: none; }
+    .po-detail-key {
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+    }
+    .po-detail-val {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      text-align: right; font-family: var(--font-display);
+    }
+
+    /* Quick Action Modal */
+    .quick-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .quick-action-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 14px 10px; border-radius: 10px; cursor: pointer;
+      border: 1.5px solid var(--gray-200); background: var(--white);
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .quick-action-btn:hover { border-color: var(--po-accent); background: var(--po-accent-light); }
+    .quick-action-btn .material-symbols-rounded { font-size: 20px; color: var(--po-accent); }
+    .quick-action-btn span:last-child { font-size: 11px; font-weight: 700; color: var(--text); }
+
+    /* ─────────────────────────────── */
+    /*  RESPONSIVE                     */
+    /* ─────────────────────────────── */
+
+    /* Large desktop */
+    @media (min-width: 901px) {
+      .po-table-wrap { display: block; }
+      .po-product-cards { display: none !important; }
+    }
+
+    /* Tablet */
+    @media (max-width: 900px) {
+      .po-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+
+    /* Mobile & Tablet — switch to card layout */
+    @media (max-width: 768px) {
+      .po-table-wrap { display: none !important; }
+      .po-product-cards { display: block !important; }
+
+      .po-header { margin-bottom: 14px; }
+      .po-header-left .po-title { font-size: 19px; }
+      .po-header-right { gap: 5px; }
+
+      .po-stats { grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 14px; }
+      .po-stat { padding: 12px 13px; }
+      .po-stat-num { font-size: 20px; }
+      .po-stat-label { font-size: 10px; }
+
+      .po-card-header { padding: 12px 14px 10px; }
+      .po-card-header > div:last-child { width: 100%; }
+      .po-search-wrap { min-width: 0; }
+
       .po-form-grid { grid-template-columns: 1fr; }
       .po-form-field.span2 { grid-column: span 1; }
+
+      .modal-body-scroll { max-height: 70vh; padding: 14px 16px; }
+
+      /* Modals: full-screen on mobile */
+      .modal {
+        width: 100% !important; max-width: 100% !important;
+        min-height: 50vh; border-radius: 20px 20px 0 0 !important;
+        position: fixed !important; bottom: 0 !important;
+        left: 0 !important; right: 0 !important; top: auto !important;
+        margin: 0 !important; transform: none !important;
+      }
+      .modal-overlay {
+        align-items: flex-end !important;
+      }
     }
-    @media (max-width: 480px) { .col-img { display: none; } }
+
+    @media (max-width: 480px) {
+      .po-stats { gap: 8px; }
+      .po-stat { padding: 10px 11px; }
+      .po-stat-icon { width: 28px; height: 28px; margin-bottom: 8px; }
+      .po-stat-num { font-size: 18px; }
+      .btn-ai { display: none; }
+    }
+
+    @media (max-width: 360px) {
+      .po-header-right .po-refresh-btn { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -449,10 +550,10 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="addProductModal">
   <div class="modal" style="max-width:600px">
-    <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:18px;color:var(--po-accent)">add_box</span>
+        <div style="width:34px;height:34px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">add_box</span>
         </div>
         <div>
           <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Add New Product</div>
@@ -463,12 +564,9 @@
     </div>
 
     <div class="modal-body-scroll" id="addProductBody">
-      <!-- Section: Basic Info -->
+      <!-- Basic Info -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">info</span>
-          Basic Information
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">info</span>Basic Information</div>
         <div class="po-form-grid">
           <div class="po-form-field span2">
             <label class="po-form-label">Product Name <span>*</span></label>
@@ -480,9 +578,7 @@
           </div>
           <div class="po-form-field">
             <label class="po-form-label">Category <span>*</span></label>
-            <select id="ap-category" class="po-form-select">
-              <option value="">Select category…</option>
-            </select>
+            <select id="ap-category" class="po-form-select"><option value="">Select category…</option></select>
           </div>
           <div class="po-form-field span2">
             <label class="po-form-label">Description</label>
@@ -491,12 +587,9 @@
         </div>
       </div>
 
-      <!-- Section: Pricing -->
+      <!-- Pricing -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">payments</span>
-          Pricing
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">payments</span>Pricing</div>
         <div class="po-form-grid">
           <div class="po-form-field">
             <label class="po-form-label">Price (₵) <span>*</span></label>
@@ -507,28 +600,25 @@
             <input type="number" id="ap-stock" class="po-form-input" min="0" placeholder="e.g. 50"/>
           </div>
           <div class="po-form-field span2">
-            <label class="po-form-label" style="margin-bottom:6px">Discount</label>
+            <label class="po-form-label" style="margin-bottom:5px">Discount</label>
             <div class="po-toggle-row" onclick="toggleDiscount('discountToggle','discountPctWrap')">
               <div>
                 <div class="po-toggle-label">Enable Discount</div>
-                <div style="font-size:11px;color:var(--text-muted);margin-top:1px">Apply a percentage discount to this product</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px">Apply a percentage discount</div>
               </div>
               <div class="po-toggle-switch" id="discountToggle"></div>
             </div>
           </div>
           <div class="po-form-field span2" id="discountPctWrap">
             <label class="po-form-label">Discount Percentage <span>*</span></label>
-            <input type="number" id="ap-discount-pct" class="po-form-input" min="1" max="99" step="0.1" placeholder="e.g. 15 (for 15% off)"/>
+            <input type="number" id="ap-discount-pct" class="po-form-input" min="1" max="99" step="0.1" placeholder="e.g. 15"/>
           </div>
         </div>
       </div>
 
-      <!-- Section: Stock Status -->
+      <!-- Stock Status -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">inventory</span>
-          Stock Status
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">inventory</span>Stock Status</div>
         <div class="po-form-grid">
           <div class="po-form-field span2">
             <label class="po-form-label">Stock Status <span>*</span></label>
@@ -543,49 +633,41 @@
           <div class="po-form-field span2" id="availableInDaysWrap">
             <label class="po-form-label">Available In (Days) <span>*</span></label>
             <input type="number" id="ap-available-days" class="po-form-input" min="1" placeholder="e.g. 14"/>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Required for Coming Soon and Pre-Order items</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:3px">Required for Coming Soon and Pre-Order items</div>
           </div>
         </div>
       </div>
 
-      <!-- Section: Images -->
+      <!-- Images -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">photo_library</span>
-          Product Images
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">photo_library</span>Product Images</div>
         <div class="po-img-upload" onclick="document.getElementById('ap-images-input').click()">
           <input type="file" id="ap-images-input" accept="image/*" multiple onchange="handleImageSelect(event,'apImagePreviews','ap')"/>
-          <div class="po-img-upload-icon">
-            <span class="material-symbols-rounded">cloud_upload</span>
-          </div>
-          <div class="po-img-upload-label">Click to upload images</div>
+          <div class="po-img-upload-icon"><span class="material-symbols-rounded">cloud_upload</span></div>
+          <div class="po-img-upload-label">Tap to upload images</div>
           <div class="po-img-upload-sub">PNG, JPG, WEBP — up to 10 files</div>
         </div>
         <div class="po-img-previews" id="apImagePreviews"></div>
       </div>
 
-      <!-- Section: Video (optional) -->
+      <!-- Video -->
       <div class="po-form-section">
         <div class="po-form-section-title">
-          <span class="material-symbols-rounded">videocam</span>
-          Product Video <span style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:none;letter-spacing:0">(Optional)</span>
+          <span class="material-symbols-rounded">videocam</span>Product Video
+          <span style="font-size:10px;font-weight:500;color:var(--text-muted);text-transform:none;letter-spacing:0;margin-left:4px">(Optional)</span>
         </div>
         <div class="po-form-field">
           <label class="po-form-label">Video File</label>
-          <input type="file" id="ap-video-input" class="po-form-input" accept="video/*"
-            style="padding:7px 12px;cursor:pointer"/>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">MP4, MOV, WEBM — max recommended 100MB</div>
+          <input type="file" id="ap-video-input" class="po-form-input" accept="video/*" style="padding:7px 11px;cursor:pointer"/>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px">MP4, MOV, WEBM — max 100MB</div>
         </div>
       </div>
     </div>
 
-    <div class="modal-footer" style="padding:14px 24px;gap:8px">
-      <button class="btn-po-ghost" onclick="closeAddProductModal()">
-        <span class="material-symbols-rounded">close</span> Cancel
-      </button>
+    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+      <button class="btn-po-ghost" onclick="closeAddProductModal()"><span class="material-symbols-rounded">close</span>Cancel</button>
       <button class="btn-po-primary" id="saveProductBtn" onclick="doAddProduct()">
-        <span class="material-symbols-rounded">add_box</span> Add Product
+        <span class="material-symbols-rounded">add_box</span>Add Product
       </button>
     </div>
   </div>
@@ -596,10 +678,10 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="editProductModal">
   <div class="modal" style="max-width:600px">
-    <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:9px;background:#DBEAFE;display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:18px;color:#1D4ED8">edit</span>
+        <div style="width:34px;height:34px;border-radius:9px;background:#DBEAFE;display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:17px;color:#1D4ED8">edit</span>
         </div>
         <div>
           <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Edit Product</div>
@@ -610,12 +692,9 @@
     </div>
 
     <div class="modal-body-scroll">
-      <!-- Section: Basic Info -->
+      <!-- Basic Info -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">info</span>
-          Basic Information
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">info</span>Basic Information</div>
         <div class="po-form-grid">
           <div class="po-form-field span2">
             <label class="po-form-label">Product Name</label>
@@ -627,9 +706,7 @@
           </div>
           <div class="po-form-field">
             <label class="po-form-label">Category</label>
-            <select id="ep-category" class="po-form-select">
-              <option value="">Keep current category</option>
-            </select>
+            <select id="ep-category" class="po-form-select"><option value="">Keep current</option></select>
           </div>
           <div class="po-form-field span2">
             <label class="po-form-label">Description</label>
@@ -638,27 +715,24 @@
         </div>
       </div>
 
-      <!-- Section: Pricing -->
+      <!-- Pricing -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">payments</span>
-          Pricing
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">payments</span>Pricing</div>
         <div class="po-form-grid">
           <div class="po-form-field">
             <label class="po-form-label">Price (₵)</label>
-            <input type="number" id="ep-price" class="po-form-input" min="0" step="0.01" placeholder="Leave blank to keep current"/>
+            <input type="number" id="ep-price" class="po-form-input" min="0" step="0.01" placeholder="Leave blank to keep"/>
           </div>
           <div class="po-form-field">
             <label class="po-form-label">Stock Quantity</label>
-            <input type="number" id="ep-stock" class="po-form-input" min="0" placeholder="Leave blank to keep current"/>
+            <input type="number" id="ep-stock" class="po-form-input" min="0" placeholder="Leave blank to keep"/>
           </div>
           <div class="po-form-field span2">
-            <label class="po-form-label" style="margin-bottom:6px">Discount</label>
+            <label class="po-form-label" style="margin-bottom:5px">Discount</label>
             <div class="po-toggle-row" onclick="toggleDiscount('editDiscountToggle','editDiscountPctWrap')">
               <div>
                 <div class="po-toggle-label">Enable Discount</div>
-                <div style="font-size:11px;color:var(--text-muted);margin-top:1px">Apply a percentage discount to this product</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px">Apply a percentage discount</div>
               </div>
               <div class="po-toggle-switch" id="editDiscountToggle"></div>
             </div>
@@ -670,12 +744,9 @@
         </div>
       </div>
 
-      <!-- Section: Stock Status -->
+      <!-- Stock Status -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">inventory</span>
-          Stock Status
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">inventory</span>Stock Status</div>
         <div class="po-form-grid">
           <div class="po-form-field span2">
             <label class="po-form-label">Stock Status</label>
@@ -694,12 +765,9 @@
         </div>
       </div>
 
-      <!-- Section: Product Status -->
+      <!-- Product Status -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">toggle_on</span>
-          Product Status
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">toggle_on</span>Product Status</div>
         <div class="po-form-field">
           <label class="po-form-label">Visibility Status</label>
           <select id="ep-product-status" class="po-form-select">
@@ -710,56 +778,46 @@
         </div>
       </div>
 
-      <!-- Section: Images -->
+      <!-- Images -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">photo_library</span>
-          Product Images
-        </div>
-        <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">
-          Current Images <span style="font-size:10px;font-weight:500;text-transform:none;letter-spacing:0">(click ✕ to mark for deletion)</span>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">photo_library</span>Product Images</div>
+        <div style="font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">
+          Current Images <span style="font-size:9.5px;font-weight:500;text-transform:none;letter-spacing:0">(tap ✕ to mark for deletion)</span>
         </div>
         <div class="po-img-previews" id="epExistingImages"></div>
-        <div style="margin-top:12px;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Add New Images</div>
+        <div style="margin-top:10px;font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Add New Images</div>
         <div class="po-img-upload" onclick="document.getElementById('ep-images-input').click()">
           <input type="file" id="ep-images-input" accept="image/*" multiple onchange="handleImageSelect(event,'epNewImagePreviews','ep')"/>
           <div class="po-img-upload-icon"><span class="material-symbols-rounded">cloud_upload</span></div>
-          <div class="po-img-upload-label">Click to add more images</div>
+          <div class="po-img-upload-label">Tap to add more images</div>
           <div class="po-img-upload-sub">PNG, JPG, WEBP</div>
         </div>
         <div class="po-img-previews" id="epNewImagePreviews"></div>
       </div>
 
-      <!-- Section: Video -->
+      <!-- Video -->
       <div class="po-form-section">
-        <div class="po-form-section-title">
-          <span class="material-symbols-rounded">videocam</span>
-          Product Video
-        </div>
+        <div class="po-form-section-title"><span class="material-symbols-rounded">videocam</span>Product Video</div>
         <div id="epCurrentVideo" style="margin-bottom:10px"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
-          <div class="po-toggle-row" style="flex:1" onclick="toggleDeleteVideo()">
-            <div>
-              <div class="po-toggle-label">Delete existing video</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:1px">Remove the current video from this product</div>
-            </div>
-            <div class="po-toggle-switch" id="deleteVideoToggle"></div>
+        <div class="po-toggle-row" style="margin-bottom:10px" onclick="toggleDeleteVideo()">
+          <div>
+            <div class="po-toggle-label">Delete existing video</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:1px">Remove the current video</div>
           </div>
+          <div class="po-toggle-switch" id="deleteVideoToggle"></div>
         </div>
         <div class="po-form-field">
           <label class="po-form-label">Replace / Upload New Video</label>
-          <input type="file" id="ep-video-input" class="po-form-input" accept="video/*" style="padding:7px 12px;cursor:pointer"/>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Uploading a new video will replace the existing one</div>
+          <input type="file" id="ep-video-input" class="po-form-input" accept="video/*" style="padding:7px 11px;cursor:pointer"/>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px">Uploading replaces existing video</div>
         </div>
       </div>
     </div>
 
-    <div class="modal-footer" style="padding:14px 24px;gap:8px">
-      <button class="btn-po-ghost" onclick="closeEditProductModal()">
-        <span class="material-symbols-rounded">close</span> Cancel
-      </button>
+    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+      <button class="btn-po-ghost" onclick="closeEditProductModal()"><span class="material-symbols-rounded">close</span>Cancel</button>
       <button class="btn-po-primary" id="updateProductBtn" onclick="doUpdateProduct()">
-        <span class="material-symbols-rounded">save</span> Save Changes
+        <span class="material-symbols-rounded">save</span>Save Changes
       </button>
     </div>
   </div>
@@ -770,20 +828,18 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="productModal">
   <div class="modal" style="max-width:540px">
-    <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:18px;color:var(--po-accent)">inventory_2</span>
+        <div style="width:34px;height:34px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">inventory_2</span>
         </div>
         <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Product Details</div>
       </div>
       <button class="icon-btn" onclick="closeModal('productModal')"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="modal-body" id="pModalBody" style="padding:20px 24px;max-height:70vh;overflow-y:auto"></div>
-    <div class="modal-footer" style="padding:14px 24px;gap:8px">
-      <button class="btn-po-ghost" onclick="closeModal('productModal')">
-        <span class="material-symbols-rounded">close</span> Close
-      </button>
+    <div class="modal-body" id="pModalBody" style="padding:16px 18px;max-height:72vh;overflow-y:auto"></div>
+    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+      <button class="btn-po-ghost" onclick="closeModal('productModal')"><span class="material-symbols-rounded">close</span>Close</button>
     </div>
   </div>
 </div>
@@ -793,26 +849,101 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="stockModal">
   <div class="modal" style="max-width:380px">
-    <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:18px;color:var(--po-accent)">edit</span>
+        <div style="width:34px;height:34px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">edit</span>
         </div>
         <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Update Stock</div>
       </div>
       <button class="icon-btn" onclick="closeModal('stockModal')"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="modal-body" style="padding:20px 24px">
-      <div style="margin-bottom:4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted)">New Stock Quantity</div>
-      <input type="number" id="stockInput" min="0" placeholder="e.g. 50"
-        style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--gray-200);font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text);background:var(--white);outline:none;box-sizing:border-box;margin-top:6px;transition:border-color .14s"
-        onfocus="this.style.borderColor='var(--po-accent)'" onblur="this.style.borderColor='var(--gray-200)'"/>
+    <div class="modal-body" style="padding:18px 20px">
+      <div class="po-form-field">
+        <label class="po-form-label">New Stock Quantity</label>
+        <input type="number" id="stockInput" min="0" placeholder="e.g. 50" class="po-form-input" style="margin-top:2px"/>
+      </div>
     </div>
-    <div class="modal-footer" style="padding:14px 24px;gap:8px">
+    <div class="modal-footer" style="padding:12px 18px;gap:7px">
       <button class="btn-po-ghost" onclick="closeModal('stockModal')">Cancel</button>
-      <button class="btn-po-primary" onclick="doUpdateStock()">
-        <span class="material-symbols-rounded">save</span> Save Stock
-      </button>
+      <button class="btn-po-primary" onclick="doUpdateStock()"><span class="material-symbols-rounded">save</span>Save Stock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  STOCK STATUS MODAL (NEW)                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="stockStatusModal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:9px;background:#D1FAE5;display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:17px;color:#059669">inventory_2</span>
+        </div>
+        <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Update Stock Status</div>
+      </div>
+      <button class="icon-btn" onclick="closeModal('stockStatusModal')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="modal-body" style="padding:18px 20px">
+      <div class="po-form-field" style="margin-bottom:12px">
+        <label class="po-form-label">Stock Status <span style="color:#EF4444;margin-left:2px">*</span></label>
+        <select id="ssStatusSelect" class="po-form-select" onchange="handleSSStatusChange()" style="margin-top:2px">
+          <option value="IN_STOCK">In Stock</option>
+          <option value="OUT_OF_STOCK">Out of Stock</option>
+          <option value="LOW_STOCK">Low Stock</option>
+          <option value="COMING_SOON">Coming Soon</option>
+          <option value="PRE_ORDER">Pre-Order</option>
+        </select>
+      </div>
+      <div class="po-form-field" id="ssDaysWrap" style="display:none">
+        <label class="po-form-label">Available In (Days) <span style="color:#EF4444;margin-left:2px">*</span></label>
+        <input type="number" id="ssDaysInput" min="1" placeholder="e.g. 14" class="po-form-input" style="margin-top:2px"/>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:3px">Required for Coming Soon and Pre-Order</div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+      <button class="btn-po-ghost" onclick="closeModal('stockStatusModal')">Cancel</button>
+      <button class="btn-po-primary" onclick="doUpdateStockStatus()"><span class="material-symbols-rounded">save</span>Update Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  PRODUCT STATUS MODAL (NEW)                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="productStatusModal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:9px;background:#F5F3FF;display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">toggle_on</span>
+        </div>
+        <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Update Product Status</div>
+      </div>
+      <button class="icon-btn" onclick="closeModal('productStatusModal')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="modal-body" style="padding:18px 20px">
+      <div class="po-form-field">
+        <label class="po-form-label">Visibility Status <span style="color:#EF4444;margin-left:2px">*</span></label>
+        <select id="psStatusSelect" class="po-form-select" style="margin-top:2px">
+          <option value="ACTIVE">Active — Visible to buyers</option>
+          <option value="INACTIVE">Inactive — Hidden from buyers</option>
+          <option value="DRAFT">Draft — Work in progress</option>
+        </select>
+      </div>
+      <div style="margin-top:12px;background:var(--po-accent-light);border-radius:9px;padding:10px 12px;border:1px solid var(--po-accent-mid)">
+        <div style="font-size:11px;font-weight:700;color:var(--po-accent-dark);margin-bottom:4px">Status Guide</div>
+        <div style="font-size:11px;color:var(--po-accent-dark);line-height:1.6">
+          <b>Active</b> — product is live and purchasable.<br/>
+          <b>Inactive</b> — hidden from all buyers.<br/>
+          <b>Draft</b> — saved but not yet published.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+      <button class="btn-po-ghost" onclick="closeModal('productStatusModal')">Cancel</button>
+      <button class="btn-po-primary" onclick="doUpdateProductStatus()"><span class="material-symbols-rounded">save</span>Update Status</button>
     </div>
   </div>
 </div>
@@ -823,35 +954,33 @@
 requireAuth();
 
 let currentProductId = null;
-let currentTab = 'all';
-
-// Image accumulators
-let apSelectedImages = [];  // add modal
-let epNewImages      = [];  // edit modal — new images to upload
-let epDeleteImageIds = [];  // edit modal — existing image IDs marked for deletion
+let currentTab       = 'all';
+let apSelectedImages = [];
+let epNewImages      = [];
+let epDeleteImageIds = [];
 
 const TAB_CONFIG = [
-  { mode: 'all',        label: 'All Products',  icon: 'select_all'   },
-  { mode: 'ACTIVE',     label: 'Active',         icon: 'check_circle' },
-  { mode: 'INACTIVE',   label: 'Inactive',       icon: 'unpublished'  },
-  { mode: 'DRAFT',      label: 'Draft',          icon: 'edit_note'    },
-  { mode: 'trending',   label: 'Trending',       icon: 'trending_up'  },
-  { mode: 'low',        label: 'Low Stock',      icon: 'warning'      },
-  { mode: 'discounted', label: 'Discounted',     icon: 'local_offer'  },
+  { mode: 'all',        label: 'All',       icon: 'select_all'   },
+  { mode: 'ACTIVE',     label: 'Active',    icon: 'check_circle' },
+  { mode: 'INACTIVE',   label: 'Inactive',  icon: 'unpublished'  },
+  { mode: 'DRAFT',      label: 'Draft',     icon: 'edit_note'    },
+  { mode: 'trending',   label: 'Trending',  icon: 'trending_up'  },
+  { mode: 'low',        label: 'Low Stock', icon: 'warning'      },
+  { mode: 'discounted', label: 'Discounted',icon: 'local_offer'  },
 ];
 
 const STATUS_ICONS = {
-  ACTIVE:       { icon: 'check_circle',         label: 'Active'        },
-  INACTIVE:     { icon: 'unpublished',           label: 'Inactive'      },
-  DRAFT:        { icon: 'edit_note',             label: 'Draft'         },
-  IN_STOCK:     { icon: 'inventory_2',           label: 'In Stock'      },
-  LOW_STOCK:    { icon: 'warning',               label: 'Low Stock'     },
-  OUT_OF_STOCK: { icon: 'remove_shopping_cart',  label: 'Out of Stock'  },
-  COMING_SOON:  { icon: 'schedule',              label: 'Coming Soon'   },
-  PRE_ORDER:    { icon: 'shopping_bag',          label: 'Pre-Order'     },
+  ACTIVE:        { icon: 'check_circle',        label: 'Active'       },
+  INACTIVE:      { icon: 'unpublished',          label: 'Inactive'     },
+  DRAFT:         { icon: 'edit_note',            label: 'Draft'        },
+  IN_STOCK:      { icon: 'inventory_2',          label: 'In Stock'     },
+  LOW_STOCK:     { icon: 'warning',              label: 'Low Stock'    },
+  OUT_OF_STOCK:  { icon: 'remove_shopping_cart', label: 'Out of Stock' },
+  COMING_SOON:   { icon: 'schedule',             label: 'Coming Soon'  },
+  PRE_ORDER:     { icon: 'shopping_bag',         label: 'Pre-Order'    },
 };
 
-// ── Page content ──────────────────────────────────────────────────
+// ── Page content ─────────────────────────────────────────────────
 const content = `
 <div class="po-header">
   <div class="po-header-left">
@@ -860,16 +989,13 @@ const content = `
   </div>
   <div class="po-header-right">
     <button class="po-refresh-btn" id="refreshBtn" onclick="loadProducts(currentTab)">
-      <span class="material-symbols-rounded">refresh</span>
-      Refresh
+      <span class="material-symbols-rounded">refresh</span>Refresh
     </button>
     <button class="btn-ai" onclick="window.location.href='ai.html'">
-      <span class="material-symbols-rounded">auto_awesome</span>
-      AI Generate
+      <span class="material-symbols-rounded">auto_awesome</span>AI
     </button>
     <button class="btn-add-product" onclick="openAddProductModal()">
-      <span class="material-symbols-rounded">add</span>
-      Add Product
+      <span class="material-symbols-rounded">add</span>Add Product
     </button>
   </div>
 </div>
@@ -902,11 +1028,10 @@ const content = `
 <div class="po-card">
   <div class="po-card-header">
     <div class="po-card-title">
-      <span class="material-symbols-rounded">inventory_2</span>
-      Product Records
+      <span class="material-symbols-rounded">inventory_2</span>Product Records
     </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <div class="po-search-wrap">
+    <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;width:100%">
+      <div class="po-search-wrap" style="flex:1;min-width:140px">
         <span class="material-symbols-rounded">search</span>
         <input type="text" id="prodSearch" placeholder="Search products…" oninput="filterProducts()"/>
       </div>
@@ -914,29 +1039,32 @@ const content = `
         <option value="">All Categories</option>
       </select>
       <div class="po-total-chip">
-        <span class="material-symbols-rounded" style="font-size:13px">tag</span>
-        <span id="prodCount">—</span> products
+        <span class="material-symbols-rounded" style="font-size:12px">tag</span>
+        <span id="prodCount">—</span>
       </div>
     </div>
   </div>
+
+  <!-- Desktop Table -->
   <div class="po-table-wrap">
     <table class="po-table">
       <thead>
         <tr>
-          <th class="col-img">Image</th>
+          <th>Image</th>
           <th>Product</th>
           <th>Price</th>
           <th>Stock</th>
           <th>Status</th>
-          <th class="col-stock-status">Stock Status</th>
+          <th>Stock Status</th>
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="prodBody">
-        ${skeletonRows()}
-      </tbody>
+      <tbody id="prodBody">${skeletonRows()}</tbody>
     </table>
   </div>
+
+  <!-- Mobile Cards -->
+  <div class="po-product-cards" id="prodCards">${skeletonCards()}</div>
 </div>
 `;
 
@@ -946,19 +1074,33 @@ loadProducts('all');
 loadStats();
 loadCategories();
 
-// ── Skeleton ──────────────────────────────────────────────────────
+// ── Skeleton ─────────────────────────────────────────────────────
 function skeletonRows() {
   return Array(5).fill(0).map(() => `
     <tr>
-      <td class="col-img"><div class="po-skel sq"></div></td>
-      <td><div class="po-skel md"></div><div class="po-skel sm" style="margin-top:6px"></div></td>
+      <td><div class="po-skel sq"></div></td>
+      <td><div class="po-skel md"></div><div class="po-skel sm" style="margin-top:5px"></div></td>
       <td><div class="po-skel sm"></div></td>
-      <td><div class="po-skel sm" style="width:40px"></div></td>
-      <td><div class="po-skel sm" style="width:80px"></div></td>
-      <td class="col-stock-status"><div class="po-skel sm" style="width:90px"></div></td>
-      <td><div class="po-skel sm" style="width:140px"></div></td>
-    </tr>
-  `).join('');
+      <td><div class="po-skel sm" style="width:36px"></div></td>
+      <td><div class="po-skel sm" style="width:72px"></div></td>
+      <td><div class="po-skel sm" style="width:88px"></div></td>
+      <td><div class="po-skel sm" style="width:130px"></div></td>
+    </tr>`).join('');
+}
+
+function skeletonCards() {
+  return Array(3).fill(0).map(() => `
+    <div class="po-product-card">
+      <div class="po-product-card-top">
+        <div class="po-skel sq2"></div>
+        <div style="flex:1;min-width:0">
+          <div class="po-skel md" style="margin-bottom:7px"></div>
+          <div class="po-skel sm"></div>
+        </div>
+      </div>
+      <div class="po-skel" style="height:38px;border-radius:8px;margin-bottom:8px"></div>
+      <div class="po-skel" style="height:34px;border-radius:7px"></div>
+    </div>`).join('');
 }
 
 // ── Tab pills ─────────────────────────────────────────────────────
@@ -966,33 +1108,26 @@ function buildTabPills() {
   const container = document.getElementById('tabPills');
   if (!container) return;
   container.innerHTML = TAB_CONFIG.map(cfg => `
-    <button class="status-pill ${cfg.mode === 'all' ? 'active' : ''}"
-            data-mode="${cfg.mode}"
-            onclick="switchTab('${cfg.mode}')">
-      <span class="material-symbols-rounded" style="font-size:13px">${cfg.icon}</span>
+    <button class="status-pill ${cfg.mode === 'all' ? 'active' : ''}" data-mode="${cfg.mode}" onclick="switchTab('${cfg.mode}')">
+      <span class="material-symbols-rounded">${cfg.icon}</span>
       ${cfg.label}
       <span class="pill-count" id="pill-count-${cfg.mode}">—</span>
-    </button>
-  `).join('');
+    </button>`).join('');
 }
 
 function switchTab(mode) {
   currentTab = mode;
-  document.querySelectorAll('.status-pill').forEach(p => {
-    p.classList.toggle('active', p.dataset.mode === mode);
-  });
+  document.querySelectorAll('.status-pill').forEach(p =>
+    p.classList.toggle('active', p.dataset.mode === mode));
   loadProducts(mode);
 }
 
 // ── Stats ─────────────────────────────────────────────────────────
 async function loadStats() {
   const [all, low, disc] = await Promise.all([
-    API.getMyProducts(),
-    API.getLowStockProducts(5),
-    API.getDiscountedProducts()
+    API.getMyProducts(), API.getLowStockProducts(5), API.getDiscountedProducts()
   ]);
   const toArr = r => Array.isArray(r.data?.data || r.data) ? (r.data?.data || r.data) : [];
-
   const allArr  = toArr(all);
   const lowArr  = toArr(low);
   const discArr = toArr(disc);
@@ -1003,9 +1138,9 @@ async function loadStats() {
   document.getElementById('discProd').textContent   = discArr.length;
 
   updatePillCount('all',        allArr.length);
-  updatePillCount('ACTIVE',     allArr.filter(p => (p.status || p.productStatus) === 'ACTIVE').length);
-  updatePillCount('INACTIVE',   allArr.filter(p => (p.status || p.productStatus) === 'INACTIVE').length);
-  updatePillCount('DRAFT',      allArr.filter(p => (p.status || p.productStatus) === 'DRAFT').length);
+  updatePillCount('ACTIVE',     allArr.filter(p => (p.status||p.productStatus)==='ACTIVE').length);
+  updatePillCount('INACTIVE',   allArr.filter(p => (p.status||p.productStatus)==='INACTIVE').length);
+  updatePillCount('DRAFT',      allArr.filter(p => (p.status||p.productStatus)==='DRAFT').length);
   updatePillCount('low',        lowArr.length);
   updatePillCount('discounted', discArr.length);
 }
@@ -1019,17 +1154,13 @@ function updatePillCount(mode, count) {
 async function loadCategories() {
   const res  = await API.getSellerCategories();
   const cats = res.data?.data || res.data || [];
-
-  const sel = document.getElementById('catFilter');
-  if (sel) {
-    cats.forEach(c => {
-      const o = document.createElement('option');
-      o.value = c.name || c.slug;
-      o.textContent = c.name || c.slug;
-      sel.appendChild(o);
-    });
-  }
-
+  const sel  = document.getElementById('catFilter');
+  if (sel) cats.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.name || c.slug;
+    o.textContent = c.name || c.slug;
+    sel.appendChild(o);
+  });
   populateCategorySelect('ap-category', cats);
   populateCategorySelect('ep-category', cats, true);
 }
@@ -1065,7 +1196,6 @@ async function loadProducts(mode = 'all') {
   const prods = res.data?.data || res.data || [];
   window._allProds = Array.isArray(prods) ? prods : [];
   renderProducts(window._allProds);
-
   updatePillCount(mode, window._allProds.length);
   const el = document.getElementById('prodCount');
   if (el) el.textContent = window._allProds.length;
@@ -1083,81 +1213,120 @@ function filterProducts() {
 
 // ── Render Products ───────────────────────────────────────────────
 function renderProducts(prods) {
+  renderTable(prods);
+  renderCards(prods);
+}
+
+function renderTable(prods) {
   const tbody = document.getElementById('prodBody');
   if (!tbody) return;
-
   if (!prods.length) {
-    tbody.innerHTML = `<tr><td colspan="7">
-      <div class="po-empty">
-        <div class="po-empty-icon"><span class="material-symbols-rounded">inventory_2</span></div>
-        <div class="po-empty-title">No products found</div>
-        <div class="po-empty-sub">Try a different filter or add some products</div>
-      </div>
-    </td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7">${emptyState()}</td></tr>`;
     return;
   }
-
   tbody.innerHTML = prods.map(p => {
-    const id        = p.productId || p.id;
-    const img       = p.images?.[0] || p.primaryImageUrl || p.imageUrl || p.thumbnailUrl || '';
-    const status    = p.status || p.productStatus || '';
-    const stockSt   = p.stockStatus || '';
-    const statusCfg = STATUS_ICONS[status]  || { icon: 'radio_button_unchecked', label: status || '—' };
-    const stockCfg  = STATUS_ICONS[stockSt] || { icon: 'radio_button_unchecked', label: stockSt || '—' };
-
+    const id      = p.productId || p.id;
+    const img     = p.images?.[0] || p.primaryImageUrl || p.imageUrl || '';
+    const status  = p.status || p.productStatus || '';
+    const stockSt = p.stockStatus || '';
+    const sCfg    = STATUS_ICONS[status]  || { icon: 'radio_button_unchecked', label: status  || '—' };
+    const stCfg   = STATUS_ICONS[stockSt] || { icon: 'radio_button_unchecked', label: stockSt || '—' };
     return `<tr>
-      <td class="col-img">
-        ${img
-          ? `<img src="${img}" class="prod-img" onerror="this.style.display='none'"/>`
-          : `<div class="prod-img-placeholder"><span class="material-symbols-rounded">image</span></div>`}
-      </td>
+      <td>${img ? `<img src="${img}" class="prod-img" onerror="this.style.display='none'"/>` : `<div class="prod-img-placeholder"><span class="material-symbols-rounded">image</span></div>`}</td>
       <td>
         <div class="po-product-name">${escHtml(p.name || p.productName || '—')}</div>
-        <div class="po-product-meta">${escHtml(p.brand || '')} ${escHtml(p.category || p.categoryName || '')}</div>
+        <div class="po-product-meta">${escHtml(p.brand || '')} ${escHtml(p.categoryName || '')}</div>
       </td>
       <td>
         <div class="po-price">${fmtCur(p.price)}</div>
         ${(p.discountedPrice || p.discountPrice) ? `<div class="po-price-disc">${fmtCur(p.discountedPrice || p.discountPrice)}</div>` : ''}
       </td>
-      <td>
-        <span style="font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text)">
-          ${p.stock ?? p.quantity ?? '—'}
-        </span>
-      </td>
+      <td><span style="font-family:var(--font-mono);font-size:12px;font-weight:600">${p.stock ?? '—'}</span></td>
       <td>
         <span class="po-status ${status}">
-          <span class="material-symbols-rounded">${statusCfg.icon}</span>
-          ${statusCfg.label}
+          <span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}
         </span>
       </td>
-      <td class="col-stock-status">
-        ${stockSt ? `
-        <span class="po-status ${stockSt}">
-          <span class="material-symbols-rounded">${stockCfg.icon}</span>
-          ${stockCfg.label}
-        </span>` : '<span style="color:var(--gray-300);font-size:12px">—</span>'}
+      <td>
+        ${stockSt ? `<span class="po-status ${stockSt}"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>` : '<span style="color:var(--gray-300);font-size:11px">—</span>'}
       </td>
       <td>
-        <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-          <button class="po-action-btn view" onclick="viewProduct('${id}')">
-            <span class="material-symbols-rounded">open_in_new</span>
-            View
-          </button>
-          <button class="po-action-btn edit" onclick="openEditProductModal('${id}')">
-            <span class="material-symbols-rounded">edit</span>
-            Edit
-          </button>
-          <button class="po-action-btn stock" onclick="openStockModal('${id}')">
-            <span class="material-symbols-rounded">inventory</span>
-            Stock
-          </button>
-          <button class="po-action-btn danger" onclick="deleteProduct('${id}')">
-            <span class="material-symbols-rounded">delete</span>
-          </button>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <button class="po-action-btn view"  onclick="viewProduct('${id}')"><span class="material-symbols-rounded">open_in_new</span>View</button>
+          <button class="po-action-btn edit"  onclick="openEditProductModal('${id}')"><span class="material-symbols-rounded">edit</span>Edit</button>
+          <button class="po-action-btn stock" onclick="openStockModal('${id}')"><span class="material-symbols-rounded">inventory</span>Stock</button>
+          <button class="po-action-btn stock" onclick="openStockStatusModal('${id}', '${stockSt}')" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0"><span class="material-symbols-rounded">swap_vert</span>S.Status</button>
+          <button class="po-action-btn stock" onclick="openProductStatusModal('${id}', '${status}')" style="background:#F5F3FF;color:var(--po-accent-dark);border-color:var(--po-accent-mid)"><span class="material-symbols-rounded">toggle_on</span>P.Status</button>
+          <button class="po-action-btn danger" onclick="deleteProduct('${id}')"><span class="material-symbols-rounded">delete</span></button>
         </div>
       </td>
     </tr>`;
   }).join('');
+}
+
+function renderCards(prods) {
+  const container = document.getElementById('prodCards');
+  if (!container) return;
+  if (!prods.length) {
+    container.innerHTML = emptyState();
+    return;
+  }
+  container.innerHTML = prods.map(p => {
+    const id      = p.productId || p.id;
+    const img     = p.images?.[0] || p.primaryImageUrl || p.imageUrl || '';
+    const status  = p.status || p.productStatus || '';
+    const stockSt = p.stockStatus || '';
+    const sCfg    = STATUS_ICONS[status]  || { icon: 'radio_button_unchecked', label: status  || '—' };
+    const stCfg   = STATUS_ICONS[stockSt] || { icon: 'radio_button_unchecked', label: stockSt || '—' };
+    return `
+    <div class="po-product-card">
+      <div class="po-product-card-top">
+        ${img
+          ? `<img src="${img}" class="po-product-card-img" onerror="this.style.display='none'"/>`
+          : `<div class="po-product-card-img-placeholder"><span class="material-symbols-rounded">image</span></div>`}
+        <div class="po-product-card-info">
+          <div class="po-product-card-name">${escHtml(p.name || p.productName || '—')}</div>
+          <div class="po-product-card-meta">${escHtml(p.brand || '')}${p.brand && p.categoryName ? ' · ' : ''}${escHtml(p.categoryName || '')}</div>
+          <div class="po-product-card-badges">
+            <span class="po-status ${status}"><span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}</span>
+            ${stockSt ? `<span class="po-status ${stockSt}"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="po-product-card-price-row">
+        <div>
+          <div class="po-product-card-price">${fmtCur(p.price)}</div>
+          ${(p.discountedPrice || p.discountPrice) ? `<div class="po-product-card-disc">${fmtCur(p.discountedPrice || p.discountPrice)} sale</div>` : ''}
+        </div>
+        <div class="po-product-card-stock">
+          <span class="material-symbols-rounded" style="font-size:14px;color:var(--text-muted)">inventory_2</span>
+          ${p.stock ?? '—'} units
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px">
+        <button class="po-action-btn view" style="justify-content:center" onclick="viewProduct('${id}')"><span class="material-symbols-rounded">open_in_new</span>View</button>
+        <button class="po-action-btn edit" style="justify-content:center" onclick="openEditProductModal('${id}')"><span class="material-symbols-rounded">edit</span>Edit</button>
+        <button class="po-action-btn stock" style="justify-content:center" onclick="openStockModal('${id}')"><span class="material-symbols-rounded">inventory</span>Update Stock</button>
+        <button class="po-action-btn danger" style="justify-content:center" onclick="deleteProduct('${id}')"><span class="material-symbols-rounded">delete</span>Delete</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button class="po-action-btn stock" style="justify-content:center;background:#D1FAE5;color:#065F46;border-color:#A7F3D0" onclick="openStockStatusModal('${id}', '${stockSt}')">
+          <span class="material-symbols-rounded">swap_vert</span>Stock Status
+        </button>
+        <button class="po-action-btn stock" style="justify-content:center;background:#F5F3FF;color:var(--po-accent-dark);border-color:var(--po-accent-mid)" onclick="openProductStatusModal('${id}', '${status}')">
+          <span class="material-symbols-rounded">toggle_on</span>Prod. Status
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function emptyState() {
+  return `<div class="po-empty">
+    <div class="po-empty-icon"><span class="material-symbols-rounded">inventory_2</span></div>
+    <div class="po-empty-title">No products found</div>
+    <div class="po-empty-sub">Try a different filter or add some products</div>
+  </div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1178,11 +1347,9 @@ function handleStockStatusChange(selectId, wrapId) {
   wrap.style.display = needDays ? 'flex' : 'none';
 }
 
-// Shared image select handler — prefix 'ap' or 'ep'
 function handleImageSelect(event, previewContainerId, prefix) {
   const files = Array.from(event.target.files);
   const arr   = prefix === 'ap' ? apSelectedImages : epNewImages;
-
   files.forEach(file => {
     if (arr.length >= 10) return;
     arr.push(file);
@@ -1194,10 +1361,7 @@ function handleImageSelect(event, previewContainerId, prefix) {
       const item = document.createElement('div');
       item.className = 'po-img-preview-item';
       item.id = `${prefix}-preview-${idx}`;
-      item.innerHTML = `
-        <img src="${e.target.result}" alt="preview"/>
-        <button class="remove-img" onclick="removeNewImage(${idx},'${previewContainerId}','${prefix}')">✕</button>
-      `;
+      item.innerHTML = `<img src="${e.target.result}" alt="preview"/><button class="remove-img" onclick="removeNewImage(${idx},'${previewContainerId}','${prefix}')">✕</button>`;
       previews.appendChild(item);
     };
     reader.readAsDataURL(file);
@@ -1216,11 +1380,7 @@ function removeNewImage(idx, previewContainerId, prefix) {
     reader.onload = e => {
       const item = document.createElement('div');
       item.className = 'po-img-preview-item';
-      item.id = `${prefix}-preview-${i}`;
-      item.innerHTML = `
-        <img src="${e.target.result}" alt="preview"/>
-        <button class="remove-img" onclick="removeNewImage(${i},'${previewContainerId}','${prefix}')">✕</button>
-      `;
+      item.innerHTML = `<img src="${e.target.result}" alt="preview"/><button class="remove-img" onclick="removeNewImage(${i},'${previewContainerId}','${prefix}')">✕</button>`;
       previews.appendChild(item);
     };
     reader.readAsDataURL(file);
@@ -1228,7 +1388,7 @@ function removeNewImage(idx, previewContainerId, prefix) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  ADD PRODUCT MODAL
+//  ADD PRODUCT
 // ══════════════════════════════════════════════════════════════════
 
 function openAddProductModal() {
@@ -1245,35 +1405,18 @@ function resetAddProductForm() {
   apSelectedImages = [];
   ['ap-name','ap-brand','ap-price','ap-stock','ap-discount-pct','ap-description','ap-available-days']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-
-  const cat = document.getElementById('ap-category');
-  if (cat) cat.value = '';
-  const ss = document.getElementById('ap-stock-status');
-  if (ss) ss.value = 'IN_STOCK';
-
-  const toggle = document.getElementById('discountToggle');
-  if (toggle) toggle.classList.remove('on');
-  const pctWrap = document.getElementById('discountPctWrap');
-  if (pctWrap) pctWrap.style.display = 'none';
-
-  const daysWrap = document.getElementById('availableInDaysWrap');
-  if (daysWrap) daysWrap.style.display = 'none';
-
-  const previews = document.getElementById('apImagePreviews');
-  if (previews) previews.innerHTML = '';
-
-  const vid = document.getElementById('ap-video-input');
-  if (vid) vid.value = '';
-
+  const cat = document.getElementById('ap-category'); if (cat) cat.value = '';
+  const ss  = document.getElementById('ap-stock-status'); if (ss) ss.value = 'IN_STOCK';
+  const toggle = document.getElementById('discountToggle'); if (toggle) toggle.classList.remove('on');
+  const pctWrap = document.getElementById('discountPctWrap'); if (pctWrap) pctWrap.style.display = 'none';
+  const daysWrap = document.getElementById('availableInDaysWrap'); if (daysWrap) daysWrap.style.display = 'none';
+  const previews = document.getElementById('apImagePreviews'); if (previews) previews.innerHTML = '';
+  const vid = document.getElementById('ap-video-input'); if (vid) vid.value = '';
   const btn = document.getElementById('saveProductBtn');
-  if (btn) {
-    btn.disabled = false;
-    btn.innerHTML = '<span class="material-symbols-rounded">add_box</span> Add Product';
-  }
+  if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-rounded">add_box</span>Add Product'; }
 }
 
 async function doAddProduct() {
-  // ── Validate ────────────────────────────────────────────────
   const name        = document.getElementById('ap-name')?.value?.trim();
   const categoryId  = document.getElementById('ap-category')?.value;
   const price       = document.getElementById('ap-price')?.value;
@@ -1287,27 +1430,18 @@ async function doAddProduct() {
 
   if (!name)       { showToast('Product name is required', 'error'); return; }
   if (!categoryId) { showToast('Please select a category', 'error'); return; }
-  if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0) {
-    showToast('Enter a valid price', 'error'); return;
-  }
-  if (stock === '' || isNaN(parseInt(stock)) || parseInt(stock) < 0) {
-    showToast('Enter a valid stock quantity', 'error'); return;
-  }
-  if (isDiscOn && (!discPct || isNaN(parseFloat(discPct)))) {
-    showToast('Enter a valid discount percentage', 'error'); return;
-  }
+  if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0) { showToast('Enter a valid price', 'error'); return; }
+  if (stock === '' || isNaN(parseInt(stock)) || parseInt(stock) < 0) { showToast('Enter a valid stock quantity', 'error'); return; }
+  if (isDiscOn && (!discPct || isNaN(parseFloat(discPct)))) { showToast('Enter a valid discount percentage', 'error'); return; }
   const needDays = stockStatus === 'COMING_SOON' || stockStatus === 'PRE_ORDER';
   if (needDays && (!availDays || isNaN(parseInt(availDays)) || parseInt(availDays) < 1)) {
     showToast('Available in days is required for this stock status', 'error'); return;
   }
 
-  // ── Build FormData (multipart) ──────────────────────────────
-  // Backend expects: @RequestPart("request") + @RequestPart("images") + @RequestPart("videoFile")
   const requestPayload = {
-    name,
-    categoryId,
-    price:       parseFloat(price),
-    stock:       parseInt(stock),
+    name, categoryId,
+    price: parseFloat(price),
+    stock: parseInt(stock),
     stockStatus,
     isDiscounted: isDiscOn,
     ...(brand       && { brand }),
@@ -1317,28 +1451,18 @@ async function doAddProduct() {
   };
 
   const formData = new FormData();
-  // ⬇ KEY FIX: the backend reads this as @RequestPart("request") with content-type application/json
   formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: 'application/json' }));
-
-  // Append each image under the "images" key
   apSelectedImages.forEach(file => formData.append('images', file));
-
-  // Append video if selected
   const videoInput = document.getElementById('ap-video-input');
-  if (videoInput?.files?.[0]) {
-    formData.append('videoFile', videoInput.files[0]);
-  }
+  if (videoInput?.files?.[0]) formData.append('videoFile', videoInput.files[0]);
 
-  // ── Disable button & show spinner ──────────────────────────
   const btn = document.getElementById('saveProductBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="material-symbols-rounded" style="animation:spin .8s linear infinite">progress_activity</span> Saving…';
+  btn.innerHTML = '<span class="material-symbols-rounded" style="animation:spin .8s linear infinite">progress_activity</span>Saving…';
 
-  // ── POST to /api/v1/seller/products ────────────────────────
   const res = await API.addProduct(formData);
-
   btn.disabled = false;
-  btn.innerHTML = '<span class="material-symbols-rounded">add_box</span> Add Product';
+  btn.innerHTML = '<span class="material-symbols-rounded">add_box</span>Add Product';
 
   if (res.ok) {
     showToast('Product added successfully! 🎉');
@@ -1346,44 +1470,30 @@ async function doAddProduct() {
     loadProducts(currentTab);
     loadStats();
   } else {
-    const msg = res.data?.message || res.data?.error || 'Failed to add product. Check the console for details.';
-    showToast(msg, 'error');
+    showToast(res.data?.message || res.data?.error || 'Failed to add product', 'error');
     console.error('addProduct error:', res);
   }
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  EDIT PRODUCT MODAL
+//  EDIT PRODUCT
 // ══════════════════════════════════════════════════════════════════
 
 async function openEditProductModal(id) {
   currentProductId = id;
-  epNewImages      = [];
-  epDeleteImageIds = [];
-
+  epNewImages = []; epDeleteImageIds = [];
   document.getElementById('editProductModal').classList.add('open');
   document.getElementById('editProductSubtitle').textContent = 'Loading…';
-
-  // Reset new image previews
   const newPrev = document.getElementById('epNewImagePreviews');
   if (newPrev) newPrev.innerHTML = '';
 
-  // Load full details
   const res = await API.getProductDetails(id);
-  if (!res.ok) {
-    showToast('Failed to load product details', 'error');
-    closeEditProductModal();
-    return;
-  }
+  if (!res.ok) { showToast('Failed to load product details', 'error'); closeEditProductModal(); return; }
 
   const p = res.data?.data || res.data;
   document.getElementById('editProductSubtitle').textContent = escHtml(p.name || p.productName || '');
 
-  // Populate fields
-  const setVal = (elId, val) => {
-    const el = document.getElementById(elId);
-    if (el && val != null) el.value = val;
-  };
+  const setVal = (elId, val) => { const el = document.getElementById(elId); if (el && val != null) el.value = val; };
 
   setVal('ep-name',        p.name || p.productName || '');
   setVal('ep-brand',       p.brand || '');
@@ -1391,79 +1501,53 @@ async function openEditProductModal(id) {
   setVal('ep-stock',       p.stock ?? p.quantity ?? '');
   setVal('ep-description', p.productDescription || p.description || '');
 
-  // Product status
   const pStatus = document.getElementById('ep-product-status');
   if (pStatus) pStatus.value = p.productStatus || p.status || 'ACTIVE';
 
-  // Stock status
   const ssEl = document.getElementById('ep-stock-status');
-  if (ssEl) {
-    ssEl.value = p.stockStatus || 'IN_STOCK';
-    handleStockStatusChange('ep-stock-status', 'editAvailableInDaysWrap');
-  }
+  if (ssEl) { ssEl.value = p.stockStatus || 'IN_STOCK'; handleStockStatusChange('ep-stock-status', 'editAvailableInDaysWrap'); }
   if (p.availableInDays) setVal('ep-available-days', p.availableInDays);
 
-  // Discount toggle
   const editDiscToggle = document.getElementById('editDiscountToggle');
   const editDiscWrap   = document.getElementById('editDiscountPctWrap');
-  const isDisc         = p.discounted || p.isDiscounted || false;
+  const isDisc = p.discounted || p.isDiscounted || false;
   if (isDisc) {
-    editDiscToggle.classList.add('on');
-    editDiscWrap.style.display = 'flex';
+    editDiscToggle.classList.add('on'); editDiscWrap.style.display = 'flex';
     setVal('ep-discount-pct', p.discountPercentage);
   } else {
-    editDiscToggle.classList.remove('on');
-    editDiscWrap.style.display = 'none';
+    editDiscToggle.classList.remove('on'); editDiscWrap.style.display = 'none';
   }
 
-  // Existing images
   const existingContainer = document.getElementById('epExistingImages');
   existingContainer.innerHTML = '';
   const imgs = p.images || (p.primaryImageUrl ? [{ id: null, imageUrl: p.primaryImageUrl }] : []);
   imgs.forEach(img => {
-    const url = typeof img === 'string' ? img : img.imageUrl;
+    const url   = typeof img === 'string' ? img : img.imageUrl;
     const imgId = img.id || null;
-    const item = document.createElement('div');
+    const item  = document.createElement('div');
     item.className = 'po-existing-img-item';
     item.id = `existing-img-${imgId}`;
-    item.innerHTML = `
-      <img src="${url}" alt="img" onerror="this.style.display='none'"/>
-      ${imgId ? `<button class="del-overlay" onclick="toggleDeleteExistingImage(${imgId}, this)" title="Mark for deletion">✕</button>` : ''}
-    `;
+    item.innerHTML = `<img src="${url}" alt="img" onerror="this.style.display='none'"/>${imgId ? `<button class="del-overlay" onclick="toggleDeleteExistingImage(${imgId}, this)" title="Mark for deletion">✕</button>` : ''}`;
     existingContainer.appendChild(item);
   });
 
-  // Current video
   const vidContainer = document.getElementById('epCurrentVideo');
   const vid = p.video || p.productVideo;
-  if (vid?.videoUrl) {
-    vidContainer.innerHTML = `
-      <video src="${vid.videoUrl}" controls style="width:100%;border-radius:10px;border:1px solid var(--gray-200);max-height:160px;margin-bottom:8px"></video>
-    `;
-  } else {
-    vidContainer.innerHTML = '<div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:8px">No video uploaded</div>';
-  }
+  vidContainer.innerHTML = vid?.videoUrl
+    ? `<video src="${vid.videoUrl}" controls style="width:100%;border-radius:9px;border:1px solid var(--gray-200);max-height:140px;margin-bottom:8px"></video>`
+    : '<div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:8px">No video uploaded</div>';
 
-  // Reset delete video toggle
   const delVidToggle = document.getElementById('deleteVideoToggle');
   if (delVidToggle) delVidToggle.classList.remove('on');
-
-  // Reset update button
   const btn = document.getElementById('updateProductBtn');
-  if (btn) {
-    btn.disabled = false;
-    btn.innerHTML = '<span class="material-symbols-rounded">save</span> Save Changes';
-  }
-
-  // Clear video input
+  if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-rounded">save</span>Save Changes'; }
   const vidInput = document.getElementById('ep-video-input');
   if (vidInput) vidInput.value = '';
 }
 
 function closeEditProductModal() {
   document.getElementById('editProductModal').classList.remove('open');
-  epNewImages      = [];
-  epDeleteImageIds = [];
+  epNewImages = []; epDeleteImageIds = [];
 }
 
 function toggleDeleteExistingImage(imgId, btn) {
@@ -1471,7 +1555,6 @@ function toggleDeleteExistingImage(imgId, btn) {
   if (idx === -1) {
     epDeleteImageIds.push(imgId);
     btn.style.background = 'rgba(239,68,68,.9)';
-    btn.style.color      = '#fff';
     btn.parentElement.style.opacity = '0.5';
     btn.title = 'Click to undo';
   } else {
@@ -1483,13 +1566,11 @@ function toggleDeleteExistingImage(imgId, btn) {
 }
 
 function toggleDeleteVideo() {
-  const toggle = document.getElementById('deleteVideoToggle');
-  toggle.classList.toggle('on');
+  document.getElementById('deleteVideoToggle').classList.toggle('on');
 }
 
 async function doUpdateProduct() {
   if (!currentProductId) return;
-
   const name        = document.getElementById('ep-name')?.value?.trim();
   const brand       = document.getElementById('ep-brand')?.value?.trim();
   const price       = document.getElementById('ep-price')?.value;
@@ -1503,16 +1584,12 @@ async function doUpdateProduct() {
   const discPct     = document.getElementById('ep-discount-pct')?.value;
   const deleteVideo = document.getElementById('deleteVideoToggle')?.classList.contains('on');
 
-  // Validate discount
-  if (isDiscOn && (!discPct || isNaN(parseFloat(discPct)))) {
-    showToast('Enter a valid discount percentage', 'error'); return;
-  }
+  if (isDiscOn && (!discPct || isNaN(parseFloat(discPct)))) { showToast('Enter a valid discount percentage', 'error'); return; }
   const needDays = stockStatus === 'COMING_SOON' || stockStatus === 'PRE_ORDER';
   if (needDays && (!availDays || isNaN(parseInt(availDays)) || parseInt(availDays) < 1)) {
     showToast('Available in days is required for this stock status', 'error'); return;
   }
 
-  // Build request payload — only include fields that have values
   const requestPayload = {
     ...(name         && { name }),
     ...(brand        && { brand }),
@@ -1524,7 +1601,7 @@ async function doUpdateProduct() {
     ...(productStat  && { productStatus: productStat }),
     isDiscounted: isDiscOn,
     ...(isDiscOn && discPct && { discountPercentage: parseFloat(discPct) }),
-    ...(!isDiscOn    && { discountPercentage: null }),
+    ...(!isDiscOn && { discountPercentage: null }),
     ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
     isDeleteVideo: deleteVideo,
     ...(epDeleteImageIds.length > 0 && { imageIdsToDelete: epDeleteImageIds }),
@@ -1532,24 +1609,17 @@ async function doUpdateProduct() {
 
   const formData = new FormData();
   formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: 'application/json' }));
-
-  // New images
   epNewImages.forEach(file => formData.append('newImages', file));
-
-  // Video replacement
   const videoInput = document.getElementById('ep-video-input');
-  if (videoInput?.files?.[0]) {
-    formData.append('videoFile', videoInput.files[0]);
-  }
+  if (videoInput?.files?.[0]) formData.append('videoFile', videoInput.files[0]);
 
   const btn = document.getElementById('updateProductBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="material-symbols-rounded" style="animation:spin .8s linear infinite">progress_activity</span> Saving…';
+  btn.innerHTML = '<span class="material-symbols-rounded" style="animation:spin .8s linear infinite">progress_activity</span>Saving…';
 
   const res = await API.updateProduct(currentProductId, formData);
-
   btn.disabled = false;
-  btn.innerHTML = '<span class="material-symbols-rounded">save</span> Save Changes';
+  btn.innerHTML = '<span class="material-symbols-rounded">save</span>Save Changes';
 
   if (res.ok) {
     showToast('Product updated successfully!');
@@ -1557,106 +1627,100 @@ async function doUpdateProduct() {
     loadProducts(currentTab);
     loadStats();
   } else {
-    const msg = res.data?.message || res.data?.error || 'Failed to update product';
-    showToast(msg, 'error');
+    showToast(res.data?.message || res.data?.error || 'Failed to update product', 'error');
     console.error('updateProduct error:', res);
   }
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  VIEW PRODUCT DETAIL
+//  PRODUCT DETAIL VIEW
 // ══════════════════════════════════════════════════════════════════
 
 async function viewProduct(id) {
   currentProductId = id;
   document.getElementById('productModal').classList.add('open');
   document.getElementById('pModalBody').innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;padding:40px">
-      <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
+    <div style="display:flex;align-items:center;justify-content:center;padding:36px">
+      <span class="material-symbols-rounded" style="font-size:26px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
 
   const res = await API.getProductDetails(id);
   if (!res.ok) {
-    document.getElementById('pModalBody').innerHTML = '<p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">Failed to load product.</p>';
+    document.getElementById('pModalBody').innerHTML = '<p style="color:#DC2626;font-weight:600;padding:16px">Failed to load product.</p>';
     return;
   }
 
-  const p          = res.data?.data || res.data;
-  const imgs       = p.images || (p.imageUrl ? [p.imageUrl] : []) || (p.primaryImageUrl ? [p.primaryImageUrl] : []);
-  const imgUrls    = imgs.map(i => typeof i === 'string' ? i : i.imageUrl).filter(Boolean);
-  const status     = p.status || p.productStatus || '';
-  const stockSt    = p.stockStatus || '';
-  const statusCfg  = STATUS_ICONS[status]   || { icon: 'radio_button_unchecked', label: '—'       };
-  const stockCfg   = STATUS_ICONS[stockSt]  || { icon: 'radio_button_unchecked', label: stockSt || '—' };
+  const p     = res.data?.data || res.data;
+  const imgs  = p.images || (p.imageUrl ? [p.imageUrl] : []) || (p.primaryImageUrl ? [p.primaryImageUrl] : []);
+  const imgUrls = imgs.map(i => typeof i === 'string' ? i : i.imageUrl).filter(Boolean);
+  const status  = p.status || p.productStatus || '';
+  const stockSt = p.stockStatus || '';
+  const sCfg    = STATUS_ICONS[status]  || { icon: 'radio_button_unchecked', label: '—' };
+  const stCfg   = STATUS_ICONS[stockSt] || { icon: 'radio_button_unchecked', label: stockSt || '—' };
 
   document.getElementById('pModalBody').innerHTML = `
-    ${imgUrls.length ? `
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-      ${imgUrls.map(url => `<img src="${url}" style="width:72px;height:72px;border-radius:10px;object-fit:cover;border:1px solid var(--gray-200)" onerror="this.style.display='none'"/>`).join('')}
+    ${imgUrls.length ? `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+      ${imgUrls.map(url => `<img src="${url}" style="width:64px;height:64px;border-radius:9px;object-fit:cover;border:1px solid var(--gray-200)" onerror="this.style.display='none'"/>`).join('')}
     </div>` : ''}
 
-    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
-      <div style="flex:1">
-        <div style="font-family:var(--font-display);font-weight:800;font-size:16px;color:var(--text)">${escHtml(p.name || p.productName || '—')}</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${escHtml(p.brand || '')} · ${escHtml(p.category?.name || p.categoryName || '')}</div>
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--gray-100)">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--text)">${escHtml(p.name || p.productName || '—')}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${escHtml(p.brand || '')}${p.brand && p.category?.name ? ' · ' : ''}${escHtml(p.category?.name || p.categoryName || '')}</div>
       </div>
-      <span class="po-status ${status}">
-        <span class="material-symbols-rounded">${statusCfg.icon}</span>
-        ${statusCfg.label}
-      </span>
+      <span class="po-status ${status}"><span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}</span>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-      <div style="background:var(--gray-50);border-radius:10px;padding:12px 14px;text-align:center">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:4px">Price</div>
-        <div style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text)">${fmtCur(p.price)}</div>
-        ${(p.discountedPrice || p.discountPrice) ? `<div style="font-family:var(--font-mono);font-size:11px;color:#059669;margin-top:2px">${fmtCur(p.discountedPrice || p.discountPrice)} sale</div>` : ''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
+      <div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;text-align:center">
+        <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:3px">Price</div>
+        <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">${fmtCur(p.price)}</div>
+        ${(p.discountedPrice||p.discountPrice) ? `<div style="font-size:10px;color:#059669;font-family:var(--font-mono);margin-top:2px">${fmtCur(p.discountedPrice||p.discountPrice)} sale</div>` : ''}
       </div>
-      <div style="background:var(--gray-50);border-radius:10px;padding:12px 14px;text-align:center">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:4px">Stock</div>
-        <div style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text)">${p.stock ?? p.quantity ?? '—'}</div>
-        ${stockSt ? `
-        <span class="po-status ${stockSt}" style="margin-top:4px;display:inline-flex">
-          <span class="material-symbols-rounded">${stockCfg.icon}</span>
-          ${stockCfg.label}
-        </span>` : ''}
+      <div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;text-align:center">
+        <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:3px">Stock</div>
+        <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">${p.stock ?? p.quantity ?? '—'}</div>
+        ${stockSt ? `<span class="po-status ${stockSt}" style="margin-top:3px;display:inline-flex"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>` : ''}
       </div>
     </div>
 
-    ${p.viewsCount != null ? `
-    <div style="background:var(--gray-50);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
-      <span class="material-symbols-rounded" style="font-size:16px;color:var(--po-accent)">visibility</span>
-      <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text)">${p.viewsCount} views</span>
+    ${p.viewsCount != null ? `<div style="background:var(--gray-50);border-radius:9px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:7px">
+      <span class="material-symbols-rounded" style="font-size:15px;color:var(--po-accent)">visibility</span>
+      <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--text)">${p.viewsCount} views</span>
     </div>` : ''}
 
-    ${p.availableInDays ? `
-    <div style="background:#DBEAFE;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
-      <span class="material-symbols-rounded" style="font-size:16px;color:#1D4ED8">schedule</span>
-      <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:#1D4ED8">Available in ${p.availableInDays} day${p.availableInDays > 1 ? 's' : ''}</span>
+    ${p.availableInDays ? `<div style="background:#DBEAFE;border-radius:9px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:7px">
+      <span class="material-symbols-rounded" style="font-size:15px;color:#1D4ED8">schedule</span>
+      <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:#1D4ED8">Available in ${p.availableInDays} day${p.availableInDays > 1 ? 's' : ''}</span>
     </div>` : ''}
 
-    ${p.productDescription || p.description ? `
-    <div style="background:var(--gray-50);border-radius:10px;padding:12px 14px;margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:6px">Description</div>
-      <div style="font-size:13px;color:var(--text);line-height:1.6">${escHtml(p.productDescription || p.description)}</div>
+    ${p.productDescription || p.description ? `<div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;margin-bottom:12px">
+      <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:5px">Description</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.6">${escHtml(p.productDescription || p.description)}</div>
     </div>` : ''}
 
-    ${(p.video?.videoUrl || p.productVideo?.videoUrl) ? `
-    <div style="margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px">Product Video</div>
-      <video src="${p.video?.videoUrl || p.productVideo?.videoUrl}" controls
-        style="width:100%;border-radius:10px;border:1px solid var(--gray-200);max-height:200px"></video>
+    ${(p.video?.videoUrl || p.productVideo?.videoUrl) ? `<div style="margin-bottom:14px">
+      <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:7px">Product Video</div>
+      <video src="${p.video?.videoUrl || p.productVideo?.videoUrl}" controls style="width:100%;border-radius:9px;border:1px solid var(--gray-200);max-height:180px"></video>
     </div>` : ''}
 
-    <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-      <button class="btn-po-primary" style="flex:1" onclick="closeModal('productModal');openEditProductModal('${p.productId || p.id}')">
-        <span class="material-symbols-rounded">edit</span> Edit Product
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+      <button class="btn-po-primary" style="justify-content:center" onclick="closeModal('productModal');openEditProductModal('${p.productId || p.id}')">
+        <span class="material-symbols-rounded">edit</span>Edit
       </button>
       <button onclick="doImproveVisibility('${p.productId || p.id}')"
-        style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:10px;background:var(--po-accent-light);color:var(--po-accent-dark);border:1px solid var(--po-accent-mid);font-family:var(--font-display);font-size:13px;font-weight:700;cursor:pointer;transition:background .14s"
-        onmouseover="this.style.background='var(--po-accent-mid)'" onmouseout="this.style.background='var(--po-accent-light)'">
-        <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
-        AI Improve Visibility
+        style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border-radius:9px;background:var(--po-accent-light);color:var(--po-accent-dark);border:1px solid var(--po-accent-mid);font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer;transition:background .14s">
+        <span class="material-symbols-rounded" style="font-size:15px">auto_awesome</span>AI Tips
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+      <button onclick="closeModal('productModal');openStockStatusModal('${p.productId || p.id}', '${stockSt}')"
+        style="display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px;border-radius:9px;background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0;font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer">
+        <span class="material-symbols-rounded" style="font-size:15px">swap_vert</span>Stock Status
+      </button>
+      <button onclick="closeModal('productModal');openProductStatusModal('${p.productId || p.id}', '${status}')"
+        style="display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px;border-radius:9px;background:#F5F3FF;color:var(--po-accent-dark);border:1px solid var(--po-accent-mid);font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer">
+        <span class="material-symbols-rounded" style="font-size:15px">toggle_on</span>Prod. Status
       </button>
     </div>
     <div id="aiVisResult"></div>
@@ -1665,7 +1729,7 @@ async function viewProduct(id) {
 
 async function doImproveVisibility(pid) {
   const el = document.getElementById('aiVisResult');
-  el.innerHTML = '<div class="ai-response-block" style="margin-top:12px"><div class="ai-response-header"><span class="material-symbols-rounded" style="animation:spin .8s linear infinite">progress_activity</span> Generating AI suggestions\u2026</div></div>';
+  el.innerHTML = '<div class="ai-response-block" style="margin-top:12px"><div class="ai-response-header"><span class="material-symbols-rounded" style="animation:spin .8s linear infinite">progress_activity</span>Generating AI suggestions…</div></div>';
 
   const res = await API.improveVisibility(pid);
   if (!res.ok) {
@@ -1673,103 +1737,53 @@ async function doImproveVisibility(pid) {
     return;
   }
 
-  // Backend shape: { data: { reply: "```json\n{...}\n```\n\n**extra**" } }
-  const raw = (res.data && res.data.data && res.data.data.reply)
-           || (res.data && res.data.reply)
-           || (res.data && res.data.message) || '';
-
-  let parsed = null;
-  let extraText = '';
-
-  // Pull JSON from inside the FIRST ```json ... ``` block only
+  const raw = (res.data?.data?.reply) || (res.data?.reply) || (res.data?.message) || '';
+  let parsed = null; let extraText = '';
   const fm = raw.match(/```json\s*([\s\S]*?)```/i);
   if (fm) {
     try { parsed = JSON.parse(fm[1].trim()); } catch(e) {}
     const after = raw.slice(raw.indexOf(fm[0]) + fm[0].length).trim();
-    extraText = after
-      .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#1F2937">$1</strong>')
-      .replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>')
-      .replace(/\n\n/g, '<br/><br/>')
-      .replace(/\n/g, ' ');
-  } else {
-    try { parsed = JSON.parse(raw.trim()); } catch(e) {}
-  }
+    extraText = after.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br/><br/>').replace(/\n/g,' ');
+  } else { try { parsed = JSON.parse(raw.trim()); } catch(e) {} }
 
   if (!parsed) {
-    const display = raw.replace(/```json\s*/gi,'').replace(/```/g,'')
-      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').trim();
-    el.innerHTML = '<div class="ai-response-block" style="margin-top:12px"><div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Visibility Tips</div><div class="ai-response-body" style="line-height:1.7">' + display + '</div></div>';
+    const display = raw.replace(/```json\s*/gi,'').replace(/```/g,'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').trim();
+    el.innerHTML = `<div class="ai-response-block" style="margin-top:12px"><div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span>Visibility Tips</div><div class="ai-response-body">${display}</div></div>`;
     return;
   }
 
-  const sec = function(icon, color, bg, title, body) {
-    return '<div style="background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--gray-100)">'
-      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">'
-      + '<span class="material-symbols-rounded" style="font-size:16px;color:' + color + '">' + icon + '</span>'
-      + '<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:' + color + '">' + title + '</span>'
-      + '</div>'
-      + '<div style="font-size:13px;color:#374151;line-height:1.6;background:' + bg + ';padding:10px 12px;border-radius:8px">' + body + '</div>'
-      + '</div>';
-  };
+  const sec = (icon, color, bg, title, body) =>
+    `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:7px">
+        <span class="material-symbols-rounded" style="font-size:15px;color:${color}">${icon}</span>
+        <span style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:${color}">${title}</span>
+      </div>
+      <div style="font-size:12px;color:#374151;line-height:1.6;background:${bg};padding:9px 11px;border-radius:8px">${body}</div>
+    </div>`;
 
-  const pill = function(t) {
-    return '<span style="display:inline-flex;padding:4px 11px;border-radius:99px;background:#DBEAFE;color:#1D4ED8;font-size:11px;font-weight:700;margin:3px 3px 0 0">' + escHtml(t) + '</span>';
-  };
+  const pill = t => `<span style="display:inline-flex;padding:3px 10px;border-radius:99px;background:#DBEAFE;color:#1D4ED8;font-size:10.5px;font-weight:700;margin:2px 2px 0 0">${escHtml(t)}</span>`;
+  const bul  = t => `<div style="display:flex;gap:7px;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--po-accent);flex-shrink:0;margin-top:5px;display:block"></span><span style="font-size:12px;color:#374151;line-height:1.5">${escHtml(t)}</span></div>`;
 
-  const bul = function(t) {
-    return '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:7px">'
-      + '<span style="width:7px;height:7px;border-radius:50%;background:var(--po-accent);flex-shrink:0;margin-top:5px;display:block"></span>'
-      + '<span style="font-size:13px;color:#374151;line-height:1.55">' + escHtml(t) + '</span>'
-      + '</div>';
-  };
+  let html = `<div style="margin-top:12px;border-radius:11px;overflow:hidden;border:1px solid var(--po-accent-mid)">
+    <div style="display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--po-accent);color:#fff">
+      <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+      <span style="font-family:var(--font-display);font-size:12px;font-weight:800">AI Visibility Report</span>
+    </div><div style="padding:12px;background:var(--po-accent-light)">`;
 
-  let html = '<div style="margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid var(--po-accent-mid)">'
-    + '<div style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--po-accent);color:#fff">'
-    + '<span class="material-symbols-rounded" style="font-size:17px">auto_awesome</span>'
-    + '<span style="font-family:var(--font-display);font-size:13px;font-weight:800">AI Visibility Report</span>'
-    + '</div><div style="padding:14px;background:var(--po-accent-light)">';
-
-  if (parsed.improvedTitle)
-    html += sec('title','#7C3AED','var(--po-accent-light)','Suggested Title',
-      '<span style="font-family:var(--font-display);font-size:14px;font-weight:700;color:#1F2937">&ldquo;' + escHtml(parsed.improvedTitle) + '&rdquo;</span>');
-
-  if (parsed.improvedDescription)
-    html += sec('description','#059669','#F0FDF4','Improved Description', escHtml(parsed.improvedDescription));
-
-  if (parsed.recommendedKeywords && parsed.recommendedKeywords.length)
-    html += '<div style="background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--gray-100)">'
-      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">'
-      + '<span class="material-symbols-rounded" style="font-size:16px;color:#2563EB">label</span>'
-      + '<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#2563EB">Recommended Keywords</span>'
-      + '</div><div>' + parsed.recommendedKeywords.map(pill).join('') + '</div></div>';
-
-  if (parsed.pricingAdvice)
-    html += sec('payments','#D97706','#FFFBEB','Pricing Advice', escHtml(parsed.pricingAdvice));
-
-  if (parsed.promotionTips && parsed.promotionTips.length)
-    html += '<div style="background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--gray-100)">'
-      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">'
-      + '<span class="material-symbols-rounded" style="font-size:16px;color:var(--po-accent)">campaign</span>'
-      + '<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--po-accent)">Promotion Tips</span>'
-      + '</div>' + parsed.promotionTips.map(bul).join('') + '</div>';
-
-  if (parsed.trendAlignment)
-    html += sec('trending_up','#0891B2','#ECFEFF','Trend Alignment', escHtml(parsed.trendAlignment));
-
-  if (extraText)
-    html += '<div style="background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--gray-100)">'
-      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">'
-      + '<span class="material-symbols-rounded" style="font-size:16px;color:#374151">info</span>'
-      + '<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#374151">Additional Notes</span>'
-      + '</div><div style="font-size:13px;color:#374151;line-height:1.7">' + extraText + '</div></div>';
+  if (parsed.improvedTitle) html += sec('title','#7C3AED','var(--po-accent-light)','Suggested Title',`<span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:#1F2937">&ldquo;${escHtml(parsed.improvedTitle)}&rdquo;</span>`);
+  if (parsed.improvedDescription) html += sec('description','#059669','#F0FDF4','Improved Description', escHtml(parsed.improvedDescription));
+  if (parsed.recommendedKeywords?.length) html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)"><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span class="material-symbols-rounded" style="font-size:15px;color:#2563EB">label</span><span style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#2563EB">Keywords</span></div><div>${parsed.recommendedKeywords.map(pill).join('')}</div></div>`;
+  if (parsed.pricingAdvice) html += sec('payments','#D97706','#FFFBEB','Pricing Advice', escHtml(parsed.pricingAdvice));
+  if (parsed.promotionTips?.length) html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)"><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span class="material-symbols-rounded" style="font-size:15px;color:var(--po-accent)">campaign</span><span style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--po-accent)">Promotion Tips</span></div>${parsed.promotionTips.map(bul).join('')}</div>`;
+  if (parsed.trendAlignment) html += sec('trending_up','#0891B2','#ECFEFF','Trend Alignment', escHtml(parsed.trendAlignment));
+  if (extraText) html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;border:1px solid var(--gray-100)"><div style="font-size:12px;color:#374151;line-height:1.7">${extraText}</div></div>`;
 
   html += '</div></div>';
   el.innerHTML = html;
 }
 
-
 // ══════════════════════════════════════════════════════════════════
-//  STOCK MODAL
+//  STOCK QUANTITY MODAL
 // ══════════════════════════════════════════════════════════════════
 
 function openStockModal(id) {
@@ -1793,6 +1807,72 @@ async function doUpdateStock() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+//  STOCK STATUS MODAL (NEW)
+// ══════════════════════════════════════════════════════════════════
+
+function openStockStatusModal(id, currentStatus) {
+  currentProductId = id;
+  const sel = document.getElementById('ssStatusSelect');
+  if (sel && currentStatus) sel.value = currentStatus;
+  handleSSStatusChange();
+  document.getElementById('stockStatusModal').classList.add('open');
+}
+
+function handleSSStatusChange() {
+  const status   = document.getElementById('ssStatusSelect').value;
+  const needDays = status === 'COMING_SOON' || status === 'PRE_ORDER';
+  document.getElementById('ssDaysWrap').style.display = needDays ? 'block' : 'none';
+  if (!needDays) document.getElementById('ssDaysInput').value = '';
+}
+
+async function doUpdateStockStatus() {
+  const status   = document.getElementById('ssStatusSelect').value;
+  const daysVal  = document.getElementById('ssDaysInput').value;
+  const needDays = status === 'COMING_SOON' || status === 'PRE_ORDER';
+
+  if (!status) { showToast('Please select a stock status', 'error'); return; }
+  if (needDays && (!daysVal || isNaN(parseInt(daysVal)) || parseInt(daysVal) < 1)) {
+    showToast('Available in days is required for this status', 'error'); return;
+  }
+
+  const days = needDays ? parseInt(daysVal) : undefined;
+  const res  = await API.updateStockStatus(currentProductId, status, days);
+  if (res.ok) {
+    showToast('Stock status updated!');
+    closeModal('stockStatusModal');
+    loadProducts(currentTab);
+    loadStats();
+  } else {
+    showToast(res.data?.message || 'Failed to update stock status', 'error');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  PRODUCT STATUS MODAL (NEW)
+// ══════════════════════════════════════════════════════════════════
+
+function openProductStatusModal(id, currentStatus) {
+  currentProductId = id;
+  const sel = document.getElementById('psStatusSelect');
+  if (sel && currentStatus) sel.value = currentStatus;
+  document.getElementById('productStatusModal').classList.add('open');
+}
+
+async function doUpdateProductStatus() {
+  const status = document.getElementById('psStatusSelect').value;
+  if (!status) { showToast('Please select a status', 'error'); return; }
+  const res = await API.updateProductStatus(currentProductId, status);
+  if (res.ok) {
+    showToast('Product status updated!');
+    closeModal('productStatusModal');
+    loadProducts(currentTab);
+    loadStats();
+  } else {
+    showToast(res.data?.message || 'Failed to update product status', 'error');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
 //  DELETE PRODUCT
 // ══════════════════════════════════════════════════════════════════
 
@@ -1809,11 +1889,9 @@ async function deleteProduct(id) {
 }
 
 // ── Generic close ─────────────────────────────────────────────────
-function closeModal(id) {
-  document.getElementById(id)?.classList.remove('open');
-}
+function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
 
-// ── Helpers ────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────
 function fmtCur(val) {
   if (val == null) return '—';
   return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits: 2 });

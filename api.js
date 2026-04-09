@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════
 //  MarketPlace Admin — Central API Handler
-//  Base URL: https://poikiloblastic-leeanne-gazeless.ngrok-free.dev
+//  Base URL: https://onettbackend.onrender.com
 // ═══════════════════════════════════════════════════════════════════
 
 const API = (() => {
@@ -76,17 +76,17 @@ const API = (() => {
   // ══════════════════════════════════════════════════════════════
   //  ORDERS
   // ══════════════════════════════════════════════════════════════
-  const getAllOrders       = (status) => get(`/api/v1/orders/admin/all${status ? `?status=${status}` : ''}`);
-  const getOrderById       = (id)     => get(`/api/v1/orders/admin/${id}`);
-  const updateOrderStatus  = (id, status) => patch(`/api/v1/orders/admin/${id}/status`, { status });
-  const cancelOrderByAdmin = (id)     => patch(`/api/v1/orders/admin/${id}/cancel`);
-  const getOrderSummary    = ()       => get('/api/v1/orders/admin/summary');
-  const getOrdersToday     = ()       => get('/api/v1/orders/admin/today');
-  const getOrdersThisWeek  = ()       => get('/api/v1/orders/admin/this-week');
-  const getOrdersThisMonth = ()       => get('/api/v1/orders/admin/this-month');
-  const getDailyCounts     = ()       => get('/api/v1/orders/admin/daily-counts');
-  const getSellerOrders    = (status) => get(`/api/v1/orders/seller/orders${status ? `?status=${status}` : ''}`);
-  const getSellerRevenue   = ()       => get('/api/v1/orders/seller/revenue');
+  const getAllOrders       = (status)      => get(`/api/v1/orders/admin/all${status ? `?status=${status}` : ''}`);
+  const getOrderById       = (id)          => get(`/api/v1/orders/admin/${id}`);
+  const updateOrderStatus  = (id, status)  => patch(`/api/v1/orders/admin/${id}/status`, { status });
+  const cancelOrderByAdmin = (id)          => patch(`/api/v1/orders/admin/${id}/cancel`);
+  const getOrderSummary    = ()            => get('/api/v1/orders/admin/summary');
+  const getOrdersToday     = ()            => get('/api/v1/orders/admin/today');
+  const getOrdersThisWeek  = ()            => get('/api/v1/orders/admin/this-week');
+  const getOrdersThisMonth = ()            => get('/api/v1/orders/admin/this-month');
+  const getDailyCounts     = ()            => get('/api/v1/orders/admin/daily-counts');
+  const getSellerOrders    = (status)      => get(`/api/v1/orders/seller/orders${status ? `?status=${status}` : ''}`);
+  const getSellerRevenue   = ()            => get('/api/v1/orders/seller/revenue');
 
   // ══════════════════════════════════════════════════════════════
   //  CATEGORIES (Seller) — multipart/form-data
@@ -106,10 +106,6 @@ const API = (() => {
 
   // ══════════════════════════════════════════════════════════════
   //  PRODUCTS (Seller)
-  //
-  //  ⚠️  THE ROOT CAUSE OF "add product not working":
-  //      addProduct and updateProduct were MISSING from the original
-  //      api.js but were called in products.html. Added below.
   // ══════════════════════════════════════════════════════════════
 
   /**
@@ -174,10 +170,29 @@ const API = (() => {
   const globalSearch          = (kw)          => get(`/api/v1/seller/products/global-search?keyword=${encodeURIComponent(kw)}`);
 
   // ── Patch endpoints ───────────────────────────────────────────
-  const updateStock       = (id, stock)   => patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
-  const updateProductStatus = (id, status) => patch(`/api/v1/seller/products/${id}/status?status=${status}`);
-  const updateStockStatus   = (id, s, days) =>
-    patch(`/api/v1/seller/products/${id}/stock-status?stockStatus=${s}${days ? `&availableInDays=${days}` : ''}`);
+  /**
+   * updateStock(productId, stock)
+   * Maps to: PATCH /api/v1/seller/products/{productId}/stock?stock={stock}
+   */
+  const updateStock = (id, stock) =>
+    patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
+
+  /**
+   * updateProductStatus(productId, status)
+   * status: 'ACTIVE' | 'INACTIVE' | 'DRAFT'
+   * Maps to: PATCH /api/v1/seller/products/{productId}/status?status={status}
+   */
+  const updateProductStatus = (id, status) =>
+    patch(`/api/v1/seller/products/${id}/status?status=${status}`);
+
+  /**
+   * updateStockStatus(productId, stockStatus, availableInDays?)
+   * stockStatus: 'IN_STOCK' | 'OUT_OF_STOCK' | 'LOW_STOCK' | 'COMING_SOON' | 'PRE_ORDER'
+   * availableInDays: required when stockStatus is COMING_SOON or PRE_ORDER
+   * Maps to: PATCH /api/v1/seller/products/{productId}/stock-status?stockStatus={s}&availableInDays={days}
+   */
+  const updateStockStatus = (id, stockStatus, availableInDays) =>
+    patch(`/api/v1/seller/products/${id}/stock-status?stockStatus=${stockStatus}${availableInDays != null ? `&availableInDays=${availableInDays}` : ''}`);
 
   // ── Delete ────────────────────────────────────────────────────
   const deleteProduct = (id) => del(`/api/v1/seller/products/${id}`);
@@ -185,34 +200,34 @@ const API = (() => {
   // ══════════════════════════════════════════════════════════════
   //  USER-SUBMITTED PRODUCTS (Approval Workflow)
   // ══════════════════════════════════════════════════════════════
-  const getAllProductRequests      = ()                      => get('/api/v1/user-products/seller/all');
+  const getAllProductRequests      = ()                         => get('/api/v1/user-products/seller/all');
   const getProductRequestsByStatus = (status, page=0, size=10) =>
     get(`/api/v1/user-products/seller/by-status?status=${status}&page=${page}&size=${size}`);
-  const getRecentProductRequests   = (page=0, size=10)      =>
+  const getRecentProductRequests   = (page=0, size=10)         =>
     get(`/api/v1/user-products/seller/recent?page=${page}&size=${size}`);
-  const getProductRequestById      = (id)                   => get(`/api/v1/user-products/seller/requests/${id}`);
-  const updateProductApproval      = (id, status)           =>
+  const getProductRequestById      = (id)                      => get(`/api/v1/user-products/seller/requests/${id}`);
+  const updateProductApproval      = (id, status)              =>
     patch(`/api/v1/user-products/seller/requests/${id}/status`, { status });
 
   // ══════════════════════════════════════════════════════════════
   //  PRE-ORDERS
   // ══════════════════════════════════════════════════════════════
-  const getAllActivePreOrders = ()       => get('/api/pre-orders/seller/all');
-  const getPreOrdersByProduct = (pid)    => get(`/api/pre-orders/seller/product/${pid}`);
-  const getPreOrdersByStatus  = (status) => get(`/api/pre-orders/seller/status/${status}`);
+  const getAllActivePreOrders = ()         => get('/api/pre-orders/seller/all');
+  const getPreOrdersByProduct = (pid)      => get(`/api/pre-orders/seller/product/${pid}`);
+  const getPreOrdersByStatus  = (status)   => get(`/api/pre-orders/seller/status/${status}`);
   const confirmSecondPayment  = (id, note) =>
     post(`/api/pre-orders/seller/${id}/confirm-payment`, note ? { adminNote: note } : {});
 
   // ══════════════════════════════════════════════════════════════
   //  AI TOOLS
   // ══════════════════════════════════════════════════════════════
-  const analyzeTrends    = ()                                    => get('/api/v1/ai/trends');
-  const generateListing  = (productName, basicDetails)           =>
+  const analyzeTrends     = ()                                       => get('/api/v1/ai/trends');
+  const generateListing   = (productName, basicDetails)              =>
     post(`/api/v1/ai/seller/generate-listing?productName=${encodeURIComponent(productName)}&basicDetails=${encodeURIComponent(basicDetails)}`);
-  const suggestPrice     = (productName, productDetails, condition) =>
+  const suggestPrice      = (productName, productDetails, condition) =>
     get(`/api/v1/ai/seller/suggest-price?productName=${encodeURIComponent(productName)}&productDetails=${encodeURIComponent(productDetails)}${condition ? `&condition=${condition}` : ''}`);
-  const analyzeInventory = ()                                    => get('/api/v1/ai/seller/inventory-analysis');
-  const improveVisibility= (productId)                           => get(`/api/v1/ai/seller/improve-visibility/${productId}`);
+  const analyzeInventory  = ()                                       => get('/api/v1/ai/seller/inventory-analysis');
+  const improveVisibility = (productId)                              => get(`/api/v1/ai/seller/improve-visibility/${productId}`);
 
   // ══════════════════════════════════════════════════════════════
   //  NOTIFICATIONS
@@ -297,12 +312,25 @@ function formatDate(str) {
 }
 function statusBadge(status) {
   const map = {
-    PENDING: 'badge-warning', APPROVED: 'badge-success', REJECTED: 'badge-danger',
-    ACTIVE: 'badge-success', INACTIVE: 'badge-muted', CANCELLED: 'badge-danger',
-    DELIVERED: 'badge-success', PROCESSING: 'badge-info', SHIPPED: 'badge-info',
-    IN_STOCK: 'badge-success', OUT_OF_STOCK: 'badge-danger', PRE_ORDER: 'badge-warning',
-    COMING_SOON: 'badge-info', CONFIRMED: 'badge-success', AWAITING_PAYMENT: 'badge-warning',
-    COMPLETED: 'badge-success', REFUNDED: 'badge-danger',
+    PENDING:          'badge-warning',
+    APPROVED:         'badge-success',
+    REJECTED:         'badge-danger',
+    ACTIVE:           'badge-success',
+    INACTIVE:         'badge-muted',
+    CANCELLED:        'badge-danger',
+    DELIVERED:        'badge-success',
+    PROCESSING:       'badge-info',
+    SHIPPED:          'badge-info',
+    IN_STOCK:         'badge-success',
+    OUT_OF_STOCK:     'badge-danger',
+    PRE_ORDER:        'badge-warning',
+    COMING_SOON:      'badge-info',
+    CONFIRMED:        'badge-success',
+    AWAITING_PAYMENT: 'badge-warning',
+    COMPLETED:        'badge-success',
+    REFUNDED:         'badge-danger',
+    LOW_STOCK:        'badge-warning',
+    DRAFT:            'badge-muted',
   };
   const cls = map[status] || 'badge-muted';
   return `<span class="badge ${cls}">${status?.replace(/_/g,' ') || '—'}</span>`;
