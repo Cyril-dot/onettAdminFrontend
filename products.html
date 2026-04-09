@@ -2,23 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Products — MarketPlace Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <link rel="stylesheet" href="styles.css"/>
   <style>
     :root {
-      --po-accent: #7C3AED;
-      --po-accent-light: #EDE9FE;
-      --po-accent-mid: #DDD6FE;
+      --po-accent:      #7C3AED;
+      --po-accent-light:#EDE9FE;
+      --po-accent-mid:  #DDD6FE;
       --po-accent-dark: #5B21B6;
       --po-accent-glow: rgba(124,58,237,.15);
-      --font-display: 'Bricolage Grotesque', sans-serif;
-      --font-mono: 'DM Mono', monospace;
+      --font-display:   'Bricolage Grotesque', sans-serif;
+      --font-mono:      'DM Mono', monospace;
     }
 
-    /* ── Base ── */
     *, *::before, *::after { box-sizing: border-box; }
 
     .nav-link.active { background: rgba(124,58,237,.14); }
@@ -27,7 +26,7 @@
     /* ── Page Header ── */
     .po-header {
       display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+      gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
     }
     .po-header-left .po-title {
       font-family: var(--font-display); font-size: 22px; font-weight: 800;
@@ -37,10 +36,10 @@
     .po-header-right { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
 
     /* ── Stats ── */
-    .po-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+    .po-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px; }
     .po-stat {
       background: var(--white); border-radius: 12px; border: 1px solid var(--gray-100);
-      padding: 14px 16px; position: relative; overflow: hidden;
+      padding: 14px 15px; position: relative; overflow: hidden;
       transition: transform .16s, box-shadow .16s;
     }
     .po-stat:active { transform: scale(.98); }
@@ -54,7 +53,7 @@
     .po-stat.blue::before   { background: #3B82F6; }
     .po-stat-icon {
       width: 32px; height: 32px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 9px;
     }
     .po-stat-icon .material-symbols-rounded { font-size: 17px; }
     .po-stat.purple .po-stat-icon { background: var(--po-accent-light); color: var(--po-accent); }
@@ -69,9 +68,9 @@
 
     /* ── Status Pill Tabs ── */
     .status-pills {
-      display: flex; gap: 6px; flex-wrap: nowrap; margin-bottom: 18px;
+      display: flex; gap: 6px; flex-wrap: nowrap; margin-bottom: 16px;
       overflow-x: auto; -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; padding-bottom: 4px;
+      scrollbar-width: none; padding-bottom: 2px;
     }
     .status-pills::-webkit-scrollbar { display: none; }
     .status-pill {
@@ -96,8 +95,8 @@
       box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
     }
     .po-card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 16px 12px; border-bottom: 1px solid var(--gray-100); gap: 10px; flex-wrap: wrap;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 14px 16px 12px; border-bottom: 1px solid var(--gray-100); gap: 10px; flex-wrap: wrap;
     }
     .po-card-title {
       font-family: var(--font-display); font-size: 14px; font-weight: 700;
@@ -119,26 +118,26 @@
     .po-search-wrap:focus-within { border-color: var(--po-accent); background: var(--po-accent-light); }
 
     .po-cat-select {
-      padding: 7px 10px; border-radius: 9px; border: 1.5px solid var(--gray-200);
+      padding: 7px 9px; border-radius: 9px; border: 1.5px solid var(--gray-200);
       font-family: var(--font-display); font-size: 12px; font-weight: 600;
       color: var(--text); background: var(--white); outline: none; cursor: pointer;
-      flex-shrink: 0; max-width: 130px;
+      flex-shrink: 0; max-width: 120px;
     }
 
     /* ── Mobile Product Cards ── */
     .po-product-cards { display: none; padding: 12px; }
     .po-product-card {
       background: var(--white); border: 1px solid var(--gray-100); border-radius: 12px;
-      padding: 12px; margin-bottom: 10px; transition: box-shadow .14s;
+      padding: 12px; margin-bottom: 10px;
     }
     .po-product-card:last-child { margin-bottom: 0; }
     .po-product-card-top { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
     .po-product-card-img {
-      width: 56px; height: 56px; border-radius: 10px; object-fit: cover;
+      width: 54px; height: 54px; border-radius: 10px; object-fit: cover;
       background: var(--gray-100); border: 1px solid var(--gray-200); flex-shrink: 0;
     }
     .po-product-card-img-placeholder {
-      width: 56px; height: 56px; border-radius: 10px; background: var(--gray-100);
+      width: 54px; height: 54px; border-radius: 10px; background: var(--gray-100);
       border: 1px solid var(--gray-200); display: flex; align-items: center;
       justify-content: center; flex-shrink: 0;
     }
@@ -154,7 +153,7 @@
     .po-product-card-price-row {
       display: flex; align-items: center; justify-content: space-between;
       background: var(--gray-50); border-radius: 8px; padding: 8px 10px;
-      margin-bottom: 10px; gap: 8px;
+      margin-bottom: 10px; gap: 8px; flex-wrap: wrap;
     }
     .po-product-card-price {
       font-family: var(--font-display); font-size: 15px; font-weight: 800; color: var(--text);
@@ -164,22 +163,19 @@
       font-family: var(--font-mono); font-size: 12px; font-weight: 600;
       color: var(--text); display: flex; align-items: center; gap: 4px;
     }
-    .po-product-card-actions {
-      display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 6px;
-    }
 
     /* ── Table (desktop) ── */
-    .po-table-wrap { overflow-x: auto; }
+    .po-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .po-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .po-table thead th {
-      text-align: left; padding: 9px 16px; font-size: 10px; font-weight: 700;
+      text-align: left; padding: 9px 14px; font-size: 10px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
       background: var(--gray-50); border-bottom: 1px solid var(--gray-200); white-space: nowrap;
     }
     .po-table tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .12s; }
     .po-table tbody tr:last-child { border-bottom: none; }
     .po-table tbody tr:hover { background: #FAFAF8; }
-    .po-table tbody td { padding: 12px 16px; vertical-align: middle; }
+    .po-table tbody td { padding: 11px 14px; vertical-align: middle; }
 
     .po-id {
       font-family: var(--font-mono); font-size: 11px; font-weight: 500;
@@ -208,23 +204,23 @@
       font-family: var(--font-display); white-space: nowrap;
     }
     .po-status .material-symbols-rounded { font-size: 12px; }
-    .po-status.ACTIVE      { background: #D1FAE5; color: #065F46; }
-    .po-status.INACTIVE    { background: #FEE2E2; color: #B91C1C; }
-    .po-status.DRAFT       { background: #F5F3FF; color: var(--po-accent-dark); }
-    .po-status.IN_STOCK    { background: #D1FAE5; color: #065F46; }
-    .po-status.LOW_STOCK   { background: #FEF3C7; color: #92400E; }
+    .po-status.ACTIVE       { background: #D1FAE5; color: #065F46; }
+    .po-status.INACTIVE     { background: #FEE2E2; color: #B91C1C; }
+    .po-status.DRAFT        { background: #F5F3FF; color: var(--po-accent-dark); }
+    .po-status.IN_STOCK     { background: #D1FAE5; color: #065F46; }
+    .po-status.LOW_STOCK    { background: #FEF3C7; color: #92400E; }
     .po-status.OUT_OF_STOCK { background: #FEE2E2; color: #B91C1C; }
-    .po-status.COMING_SOON { background: #DBEAFE; color: #1D4ED8; }
-    .po-status.PRE_ORDER   { background: #FEF3C7; color: #92400E; }
+    .po-status.COMING_SOON  { background: #DBEAFE; color: #1D4ED8; }
+    .po-status.PRE_ORDER    { background: #FEF3C7; color: #92400E; }
 
     /* Action Buttons */
     .po-action-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-      padding: 6px 11px; border-radius: 7px; font-size: 11px; font-weight: 700;
+      padding: 6px 10px; border-radius: 7px; font-size: 11px; font-weight: 700;
       cursor: pointer; border: none; transition: all .14s;
       font-family: var(--font-display); white-space: nowrap;
     }
-    .po-action-btn .material-symbols-rounded { font-size: 14px; }
+    .po-action-btn .material-symbols-rounded { font-size: 13px; }
     .po-action-btn.view   { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
     .po-action-btn.view:hover   { background: var(--gray-200); }
     .po-action-btn.edit   { background: #DBEAFE; color: #1D4ED8; border: 1px solid #BFDBFE; }
@@ -234,7 +230,7 @@
     .po-action-btn.danger { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
     .po-action-btn.danger:hover { background: #FECACA; }
 
-    /* Buttons */
+    /* Header Buttons */
     .po-refresh-btn {
       display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px;
       border-radius: 8px; background: var(--white); border: 1.5px solid var(--gray-200);
@@ -256,7 +252,7 @@
     .btn-ai .material-symbols-rounded { font-size: 15px; }
 
     .btn-add-product {
-      display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px;
       border-radius: 8px; background: var(--po-accent); color: #fff;
       font-size: 11px; font-weight: 700; cursor: pointer; border: none;
       font-family: var(--font-display); transition: all .14s; white-space: nowrap;
@@ -268,12 +264,12 @@
       display: inline-flex; align-items: center; gap: 5px;
       background: var(--po-accent-light); color: var(--po-accent-dark);
       border-radius: 99px; padding: 4px 10px; font-size: 11px; font-weight: 700;
-      font-family: var(--font-display); white-space: nowrap;
+      font-family: var(--font-display); white-space: nowrap; flex-shrink: 0;
     }
 
     /* Modal Buttons */
     .btn-po-primary {
-      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 15px;
       border-radius: 9px; background: var(--po-accent); color: #fff;
       font-size: 13px; font-weight: 700; font-family: var(--font-display);
       border: none; cursor: pointer; transition: all .15s;
@@ -283,7 +279,7 @@
     .btn-po-primary .material-symbols-rounded { font-size: 16px; }
 
     .btn-po-ghost {
-      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 15px;
       border-radius: 9px; background: var(--gray-100); color: var(--gray-700);
       font-size: 13px; font-weight: 700; font-family: var(--font-display);
       border: 1px solid var(--gray-200); cursor: pointer; transition: all .15s;
@@ -292,7 +288,7 @@
     .btn-po-ghost .material-symbols-rounded { font-size: 16px; }
 
     .btn-po-danger {
-      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 15px;
       border-radius: 9px; background: #FEE2E2; color: #B91C1C;
       font-size: 13px; font-weight: 700; font-family: var(--font-display);
       border: 1px solid #FECACA; cursor: pointer; transition: all .15s;
@@ -321,7 +317,7 @@
     .po-skel.sm  { width: 60px; height: 10px; }
     .po-skel.md  { width: 120px; }
     .po-skel.sq  { width: 40px; height: 40px; border-radius: 9px; }
-    .po-skel.sq2 { width: 56px; height: 56px; border-radius: 10px; }
+    .po-skel.sq2 { width: 54px; height: 54px; border-radius: 10px; }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -331,7 +327,7 @@
       gap: 10px; padding: 48px 24px; text-align: center;
     }
     .po-empty-icon {
-      width: 56px; height: 56px; border-radius: 16px; background: var(--po-accent-light);
+      width: 54px; height: 54px; border-radius: 16px; background: var(--po-accent-light);
       display: flex; align-items: center; justify-content: center;
     }
     .po-empty-icon .material-symbols-rounded { font-size: 26px; color: var(--po-accent); }
@@ -466,7 +462,7 @@
       text-align: right; font-family: var(--font-display);
     }
 
-    /* Quick Action Modal */
+    /* Quick Action */
     .quick-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .quick-action-btn {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -478,82 +474,87 @@
     .quick-action-btn .material-symbols-rounded { font-size: 20px; color: var(--po-accent); }
     .quick-action-btn span:last-child { font-size: 11px; font-weight: 700; color: var(--text); }
 
-    /* ─────────────────────────────── */
-    /*  RESPONSIVE                     */
-    /* ─────────────────────────────── */
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ─────────────────────────────────────────── */
 
-    /* Large desktop */
-    @media (min-width: 901px) {
+    /* Desktop: show table */
+    @media (min-width: 769px) {
       .po-table-wrap { display: block; }
       .po-product-cards { display: none !important; }
     }
 
     /* Tablet */
     @media (max-width: 900px) {
-      .po-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .po-stats { grid-template-columns: repeat(2,1fr); gap: 10px; }
     }
 
-    /* Mobile & Tablet — switch to card layout */
+    /* Mobile & Tablet: card layout */
     @media (max-width: 768px) {
       .po-table-wrap { display: none !important; }
       .po-product-cards { display: block !important; }
 
       .po-header { margin-bottom: 14px; }
       .po-header-left .po-title { font-size: 19px; }
-      .po-header-right { gap: 5px; }
 
-      .po-stats { grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 14px; }
-      .po-stat { padding: 12px 13px; }
+      .po-stats { grid-template-columns: repeat(2,1fr); gap: 9px; margin-bottom: 14px; }
+      .po-stat { padding: 12px 12px; }
       .po-stat-num { font-size: 20px; }
       .po-stat-label { font-size: 10px; }
 
-      .po-card-header { padding: 12px 14px 10px; }
+      .po-card-header { padding: 12px 13px 10px; }
       .po-card-header > div:last-child { width: 100%; }
-      .po-search-wrap { min-width: 0; }
 
       .po-form-grid { grid-template-columns: 1fr; }
       .po-form-field.span2 { grid-column: span 1; }
 
-      .modal-body-scroll { max-height: 70vh; padding: 14px 16px; }
+      .modal-body-scroll { max-height: 65vh; padding: 14px 16px; }
 
-      /* Modals: full-screen on mobile */
-      .modal {
-        width: 100% !important; max-width: 100% !important;
-        min-height: 50vh; border-radius: 20px 20px 0 0 !important;
-        position: fixed !important; bottom: 0 !important;
-        left: 0 !important; right: 0 !important; top: auto !important;
-        margin: 0 !important; transform: none !important;
-      }
-      .modal-overlay {
-        align-items: flex-end !important;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .po-stats { gap: 8px; }
-      .po-stat { padding: 10px 11px; }
-      .po-stat-icon { width: 28px; height: 28px; margin-bottom: 8px; }
-      .po-stat-num { font-size: 18px; }
       .btn-ai { display: none; }
     }
 
+    /* Small Mobile */
+    @media (max-width: 480px) {
+      .po-stats { gap: 8px; }
+      .po-stat { padding: 10px 10px; }
+      .po-stat-icon { width: 28px; height: 28px; margin-bottom: 7px; }
+      .po-stat-num { font-size: 17px; }
+      .po-stat-label { font-size: 9.5px; }
+
+      .po-header-right { gap: 5px; }
+      .po-header-left .po-title { font-size: 17px; }
+
+      .po-product-cards { padding: 10px; }
+      .po-product-card { padding: 11px; }
+
+      .btn-po-primary, .btn-po-ghost, .btn-po-danger { padding: 8px 12px; font-size: 12px; }
+    }
+
+    /* Extra Small */
     @media (max-width: 360px) {
-      .po-header-right .po-refresh-btn { display: none; }
+      .po-refresh-btn span:not(.material-symbols-rounded) { display: none; }
+      .po-stats { gap: 6px; }
+      .po-stat-num { font-size: 15px; }
+      .po-header-left .po-title { font-size: 16px; }
+      .po-product-cards { padding: 8px; }
     }
   </style>
 </head>
 <body>
 <div id="app"></div>
 
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!--  ADD PRODUCT MODAL                                            -->
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="addProductModal">
   <div class="modal" style="max-width:600px">
-    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:16px 18px 13px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:34px;height:34px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">add_box</span>
+        <div style="width:32px;height:32px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="material-symbols-rounded" style="font-size:16px;color:var(--po-accent)">add_box</span>
         </div>
         <div>
           <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Add New Product</div>
@@ -564,7 +565,6 @@
     </div>
 
     <div class="modal-body-scroll" id="addProductBody">
-      <!-- Basic Info -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">info</span>Basic Information</div>
         <div class="po-form-grid">
@@ -587,7 +587,6 @@
         </div>
       </div>
 
-      <!-- Pricing -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">payments</span>Pricing</div>
         <div class="po-form-grid">
@@ -616,7 +615,6 @@
         </div>
       </div>
 
-      <!-- Stock Status -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">inventory</span>Stock Status</div>
         <div class="po-form-grid">
@@ -638,7 +636,6 @@
         </div>
       </div>
 
-      <!-- Images -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">photo_library</span>Product Images</div>
         <div class="po-img-upload" onclick="document.getElementById('ap-images-input').click()">
@@ -650,7 +647,6 @@
         <div class="po-img-previews" id="apImagePreviews"></div>
       </div>
 
-      <!-- Video -->
       <div class="po-form-section">
         <div class="po-form-section-title">
           <span class="material-symbols-rounded">videocam</span>Product Video
@@ -664,7 +660,7 @@
       </div>
     </div>
 
-    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+    <div class="modal-footer" style="padding:11px 16px;gap:7px">
       <button class="btn-po-ghost" onclick="closeAddProductModal()"><span class="material-symbols-rounded">close</span>Cancel</button>
       <button class="btn-po-primary" id="saveProductBtn" onclick="doAddProduct()">
         <span class="material-symbols-rounded">add_box</span>Add Product
@@ -678,10 +674,10 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="editProductModal">
   <div class="modal" style="max-width:600px">
-    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:16px 18px 13px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:34px;height:34px;border-radius:9px;background:#DBEAFE;display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:17px;color:#1D4ED8">edit</span>
+        <div style="width:32px;height:32px;border-radius:9px;background:#DBEAFE;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="material-symbols-rounded" style="font-size:16px;color:#1D4ED8">edit</span>
         </div>
         <div>
           <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Edit Product</div>
@@ -692,7 +688,6 @@
     </div>
 
     <div class="modal-body-scroll">
-      <!-- Basic Info -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">info</span>Basic Information</div>
         <div class="po-form-grid">
@@ -715,7 +710,6 @@
         </div>
       </div>
 
-      <!-- Pricing -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">payments</span>Pricing</div>
         <div class="po-form-grid">
@@ -744,7 +738,6 @@
         </div>
       </div>
 
-      <!-- Stock Status -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">inventory</span>Stock Status</div>
         <div class="po-form-grid">
@@ -765,7 +758,6 @@
         </div>
       </div>
 
-      <!-- Product Status -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">toggle_on</span>Product Status</div>
         <div class="po-form-field">
@@ -778,7 +770,6 @@
         </div>
       </div>
 
-      <!-- Images -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">photo_library</span>Product Images</div>
         <div style="font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">
@@ -795,7 +786,6 @@
         <div class="po-img-previews" id="epNewImagePreviews"></div>
       </div>
 
-      <!-- Video -->
       <div class="po-form-section">
         <div class="po-form-section-title"><span class="material-symbols-rounded">videocam</span>Product Video</div>
         <div id="epCurrentVideo" style="margin-bottom:10px"></div>
@@ -814,7 +804,7 @@
       </div>
     </div>
 
-    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+    <div class="modal-footer" style="padding:11px 16px;gap:7px">
       <button class="btn-po-ghost" onclick="closeEditProductModal()"><span class="material-symbols-rounded">close</span>Cancel</button>
       <button class="btn-po-primary" id="updateProductBtn" onclick="doUpdateProduct()">
         <span class="material-symbols-rounded">save</span>Save Changes
@@ -828,17 +818,17 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="productModal">
   <div class="modal" style="max-width:540px">
-    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:16px 18px 13px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:34px;height:34px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">inventory_2</span>
+        <div style="width:32px;height:32px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="material-symbols-rounded" style="font-size:16px;color:var(--po-accent)">inventory_2</span>
         </div>
         <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Product Details</div>
       </div>
       <button class="icon-btn" onclick="closeModal('productModal')"><span class="material-symbols-rounded">close</span></button>
     </div>
     <div class="modal-body" id="pModalBody" style="padding:16px 18px;max-height:72vh;overflow-y:auto"></div>
-    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+    <div class="modal-footer" style="padding:11px 16px;gap:7px">
       <button class="btn-po-ghost" onclick="closeModal('productModal')"><span class="material-symbols-rounded">close</span>Close</button>
     </div>
   </div>
@@ -849,22 +839,22 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="stockModal">
   <div class="modal" style="max-width:380px">
-    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:16px 18px 13px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:34px;height:34px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">edit</span>
+        <div style="width:32px;height:32px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="material-symbols-rounded" style="font-size:16px;color:var(--po-accent)">edit</span>
         </div>
         <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Update Stock</div>
       </div>
       <button class="icon-btn" onclick="closeModal('stockModal')"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="modal-body" style="padding:18px 20px">
+    <div class="modal-body" style="padding:16px 18px">
       <div class="po-form-field">
         <label class="po-form-label">New Stock Quantity</label>
         <input type="number" id="stockInput" min="0" placeholder="e.g. 50" class="po-form-input" style="margin-top:2px"/>
       </div>
     </div>
-    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+    <div class="modal-footer" style="padding:11px 16px;gap:7px">
       <button class="btn-po-ghost" onclick="closeModal('stockModal')">Cancel</button>
       <button class="btn-po-primary" onclick="doUpdateStock()"><span class="material-symbols-rounded">save</span>Save Stock</button>
     </div>
@@ -872,20 +862,20 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════ -->
-<!--  STOCK STATUS MODAL (NEW)                                     -->
+<!--  STOCK STATUS MODAL                                           -->
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="stockStatusModal">
   <div class="modal" style="max-width:400px">
-    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:16px 18px 13px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:34px;height:34px;border-radius:9px;background:#D1FAE5;display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:17px;color:#059669">inventory_2</span>
+        <div style="width:32px;height:32px;border-radius:9px;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="material-symbols-rounded" style="font-size:16px;color:#059669">inventory_2</span>
         </div>
         <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Update Stock Status</div>
       </div>
       <button class="icon-btn" onclick="closeModal('stockStatusModal')"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="modal-body" style="padding:18px 20px">
+    <div class="modal-body" style="padding:16px 18px">
       <div class="po-form-field" style="margin-bottom:12px">
         <label class="po-form-label">Stock Status <span style="color:#EF4444;margin-left:2px">*</span></label>
         <select id="ssStatusSelect" class="po-form-select" onchange="handleSSStatusChange()" style="margin-top:2px">
@@ -902,7 +892,7 @@
         <div style="font-size:10px;color:var(--text-muted);margin-top:3px">Required for Coming Soon and Pre-Order</div>
       </div>
     </div>
-    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+    <div class="modal-footer" style="padding:11px 16px;gap:7px">
       <button class="btn-po-ghost" onclick="closeModal('stockStatusModal')">Cancel</button>
       <button class="btn-po-primary" onclick="doUpdateStockStatus()"><span class="material-symbols-rounded">save</span>Update Status</button>
     </div>
@@ -910,20 +900,20 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════ -->
-<!--  PRODUCT STATUS MODAL (NEW)                                   -->
+<!--  PRODUCT STATUS MODAL                                         -->
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="productStatusModal">
   <div class="modal" style="max-width:380px">
-    <div class="modal-header" style="padding:18px 20px 14px;border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:16px 18px 13px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:34px;height:34px;border-radius:9px;background:#F5F3FF;display:flex;align-items:center;justify-content:center">
-          <span class="material-symbols-rounded" style="font-size:17px;color:var(--po-accent)">toggle_on</span>
+        <div style="width:32px;height:32px;border-radius:9px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="material-symbols-rounded" style="font-size:16px;color:var(--po-accent)">toggle_on</span>
         </div>
         <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Update Product Status</div>
       </div>
       <button class="icon-btn" onclick="closeModal('productStatusModal')"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="modal-body" style="padding:18px 20px">
+    <div class="modal-body" style="padding:16px 18px">
       <div class="po-form-field">
         <label class="po-form-label">Visibility Status <span style="color:#EF4444;margin-left:2px">*</span></label>
         <select id="psStatusSelect" class="po-form-select" style="margin-top:2px">
@@ -941,7 +931,7 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer" style="padding:12px 18px;gap:7px">
+    <div class="modal-footer" style="padding:11px 16px;gap:7px">
       <button class="btn-po-ghost" onclick="closeModal('productStatusModal')">Cancel</button>
       <button class="btn-po-primary" onclick="doUpdateProductStatus()"><span class="material-symbols-rounded">save</span>Update Status</button>
     </div>
@@ -960,13 +950,13 @@ let epNewImages      = [];
 let epDeleteImageIds = [];
 
 const TAB_CONFIG = [
-  { mode: 'all',        label: 'All',       icon: 'select_all'   },
-  { mode: 'ACTIVE',     label: 'Active',    icon: 'check_circle' },
-  { mode: 'INACTIVE',   label: 'Inactive',  icon: 'unpublished'  },
-  { mode: 'DRAFT',      label: 'Draft',     icon: 'edit_note'    },
-  { mode: 'trending',   label: 'Trending',  icon: 'trending_up'  },
-  { mode: 'low',        label: 'Low Stock', icon: 'warning'      },
-  { mode: 'discounted', label: 'Discounted',icon: 'local_offer'  },
+  { mode: 'all',        label: 'All',        icon: 'select_all'   },
+  { mode: 'ACTIVE',     label: 'Active',     icon: 'check_circle' },
+  { mode: 'INACTIVE',   label: 'Inactive',   icon: 'unpublished'  },
+  { mode: 'DRAFT',      label: 'Draft',      icon: 'edit_note'    },
+  { mode: 'trending',   label: 'Trending',   icon: 'trending_up'  },
+  { mode: 'low',        label: 'Low Stock',  icon: 'warning'      },
+  { mode: 'discounted', label: 'Discounted', icon: 'local_offer'  },
 ];
 
 const STATUS_ICONS = {
@@ -980,7 +970,19 @@ const STATUS_ICONS = {
   PRE_ORDER:     { icon: 'shopping_bag',         label: 'Pre-Order'    },
 };
 
-// ── Page content ─────────────────────────────────────────────────
+/* ── Sidebar toggle ──────────────────────────────────────────────── */
+function openSidebar() {
+  document.querySelector('.sidebar')?.classList.add('open');
+  document.getElementById('sidebarOverlay')?.classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.querySelector('.sidebar')?.classList.remove('open');
+  document.getElementById('sidebarOverlay')?.classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+/* ── Page content ─────────────────────────────────────────────────── */
 const content = `
 <div class="po-header">
   <div class="po-header-left">
@@ -989,7 +991,7 @@ const content = `
   </div>
   <div class="po-header-right">
     <button class="po-refresh-btn" id="refreshBtn" onclick="loadProducts(currentTab)">
-      <span class="material-symbols-rounded">refresh</span>Refresh
+      <span class="material-symbols-rounded">refresh</span><span>Refresh</span>
     </button>
     <button class="btn-ai" onclick="window.location.href='ai.html'">
       <span class="material-symbols-rounded">auto_awesome</span>AI
@@ -1031,7 +1033,7 @@ const content = `
       <span class="material-symbols-rounded">inventory_2</span>Product Records
     </div>
     <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;width:100%">
-      <div class="po-search-wrap" style="flex:1;min-width:140px">
+      <div class="po-search-wrap">
         <span class="material-symbols-rounded">search</span>
         <input type="text" id="prodSearch" placeholder="Search products…" oninput="filterProducts()"/>
       </div>
@@ -1069,12 +1071,19 @@ const content = `
 `;
 
 renderLayout('Products', 'products.html', content);
+
+/* Wire up hamburger after layout renders */
+setTimeout(() => {
+  const ham = document.querySelector('.topbar-hamburger');
+  if (ham) ham.onclick = openSidebar;
+}, 0);
+
 buildTabPills();
 loadProducts('all');
 loadStats();
 loadCategories();
 
-// ── Skeleton ─────────────────────────────────────────────────────
+/* ── Skeleton ──────────────────────────────────────────────────── */
 function skeletonRows() {
   return Array(5).fill(0).map(() => `
     <tr>
@@ -1087,7 +1096,6 @@ function skeletonRows() {
       <td><div class="po-skel sm" style="width:130px"></div></td>
     </tr>`).join('');
 }
-
 function skeletonCards() {
   return Array(3).fill(0).map(() => `
     <div class="po-product-card">
@@ -1103,7 +1111,7 @@ function skeletonCards() {
     </div>`).join('');
 }
 
-// ── Tab pills ─────────────────────────────────────────────────────
+/* ── Tab pills ─────────────────────────────────────────────────── */
 function buildTabPills() {
   const container = document.getElementById('tabPills');
   if (!container) return;
@@ -1122,7 +1130,7 @@ function switchTab(mode) {
   loadProducts(mode);
 }
 
-// ── Stats ─────────────────────────────────────────────────────────
+/* ── Stats ─────────────────────────────────────────────────────── */
 async function loadStats() {
   const [all, low, disc] = await Promise.all([
     API.getMyProducts(), API.getLowStockProducts(5), API.getDiscountedProducts()
@@ -1133,7 +1141,7 @@ async function loadStats() {
   const discArr = toArr(disc);
 
   document.getElementById('totalProd').textContent  = allArr.length;
-  document.getElementById('activeProd').textContent = allArr.filter(p => (p.status || p.productStatus) === 'ACTIVE').length;
+  document.getElementById('activeProd').textContent = allArr.filter(p => (p.status||p.productStatus)==='ACTIVE').length;
   document.getElementById('lowProd').textContent    = lowArr.length;
   document.getElementById('discProd').textContent   = discArr.length;
 
@@ -1144,13 +1152,12 @@ async function loadStats() {
   updatePillCount('low',        lowArr.length);
   updatePillCount('discounted', discArr.length);
 }
-
 function updatePillCount(mode, count) {
   const el = document.getElementById(`pill-count-${mode}`);
   if (el) el.textContent = count;
 }
 
-// ── Categories ────────────────────────────────────────────────────
+/* ── Categories ───────────────────────────────────────────────── */
 async function loadCategories() {
   const res  = await API.getSellerCategories();
   const cats = res.data?.data || res.data || [];
@@ -1164,7 +1171,6 @@ async function loadCategories() {
   populateCategorySelect('ap-category', cats);
   populateCategorySelect('ep-category', cats, true);
 }
-
 function populateCategorySelect(selectId, cats, keepCurrent = false) {
   const sel = document.getElementById(selectId);
   if (!sel) return;
@@ -1179,7 +1185,7 @@ function populateCategorySelect(selectId, cats, keepCurrent = false) {
   });
 }
 
-// ── Load Products ─────────────────────────────────────────────────
+/* ── Load Products ────────────────────────────────────────────── */
 async function loadProducts(mode = 'all') {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
@@ -1201,17 +1207,17 @@ async function loadProducts(mode = 'all') {
   if (el) el.textContent = window._allProds.length;
 }
 
-// ── Filter ────────────────────────────────────────────────────────
+/* ── Filter ──────────────────────────────────────────────────── */
 function filterProducts() {
   const q   = (document.getElementById('prodSearch')?.value || '').toLowerCase();
   const cat = document.getElementById('catFilter')?.value || '';
   let list  = window._allProds || [];
-  if (q)   list = list.filter(p => (p.name || p.productName || '').toLowerCase().includes(q));
-  if (cat) list = list.filter(p => (p.category || p.categoryName || '').includes(cat));
+  if (q)   list = list.filter(p => (p.name||p.productName||'').toLowerCase().includes(q));
+  if (cat) list = list.filter(p => (p.category||p.categoryName||'').includes(cat));
   renderProducts(list);
 }
 
-// ── Render Products ───────────────────────────────────────────────
+/* ── Render ──────────────────────────────────────────────────── */
 function renderProducts(prods) {
   renderTable(prods);
   renderCards(prods);
@@ -1220,10 +1226,7 @@ function renderProducts(prods) {
 function renderTable(prods) {
   const tbody = document.getElementById('prodBody');
   if (!tbody) return;
-  if (!prods.length) {
-    tbody.innerHTML = `<tr><td colspan="7">${emptyState()}</td></tr>`;
-    return;
-  }
+  if (!prods.length) { tbody.innerHTML = `<tr><td colspan="7">${emptyState()}</td></tr>`; return; }
   tbody.innerHTML = prods.map(p => {
     const id      = p.productId || p.id;
     const img     = p.images?.[0] || p.primaryImageUrl || p.imageUrl || '';
@@ -1234,29 +1237,23 @@ function renderTable(prods) {
     return `<tr>
       <td>${img ? `<img src="${img}" class="prod-img" onerror="this.style.display='none'"/>` : `<div class="prod-img-placeholder"><span class="material-symbols-rounded">image</span></div>`}</td>
       <td>
-        <div class="po-product-name">${escHtml(p.name || p.productName || '—')}</div>
-        <div class="po-product-meta">${escHtml(p.brand || '')} ${escHtml(p.categoryName || '')}</div>
+        <div class="po-product-name">${escHtml(p.name||p.productName||'—')}</div>
+        <div class="po-product-meta">${escHtml(p.brand||'')} ${escHtml(p.categoryName||'')}</div>
       </td>
       <td>
         <div class="po-price">${fmtCur(p.price)}</div>
-        ${(p.discountedPrice || p.discountPrice) ? `<div class="po-price-disc">${fmtCur(p.discountedPrice || p.discountPrice)}</div>` : ''}
+        ${(p.discountedPrice||p.discountPrice)?`<div class="po-price-disc">${fmtCur(p.discountedPrice||p.discountPrice)}</div>`:''}
       </td>
-      <td><span style="font-family:var(--font-mono);font-size:12px;font-weight:600">${p.stock ?? '—'}</span></td>
-      <td>
-        <span class="po-status ${status}">
-          <span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}
-        </span>
-      </td>
-      <td>
-        ${stockSt ? `<span class="po-status ${stockSt}"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>` : '<span style="color:var(--gray-300);font-size:11px">—</span>'}
-      </td>
+      <td><span style="font-family:var(--font-mono);font-size:12px;font-weight:600">${p.stock??'—'}</span></td>
+      <td><span class="po-status ${status}"><span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}</span></td>
+      <td>${stockSt?`<span class="po-status ${stockSt}"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>`:'<span style="color:var(--gray-300);font-size:11px">—</span>'}</td>
       <td>
         <div style="display:flex;gap:4px;flex-wrap:wrap">
           <button class="po-action-btn view"  onclick="viewProduct('${id}')"><span class="material-symbols-rounded">open_in_new</span>View</button>
           <button class="po-action-btn edit"  onclick="openEditProductModal('${id}')"><span class="material-symbols-rounded">edit</span>Edit</button>
           <button class="po-action-btn stock" onclick="openStockModal('${id}')"><span class="material-symbols-rounded">inventory</span>Stock</button>
-          <button class="po-action-btn stock" onclick="openStockStatusModal('${id}', '${stockSt}')" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0"><span class="material-symbols-rounded">swap_vert</span>S.Status</button>
-          <button class="po-action-btn stock" onclick="openProductStatusModal('${id}', '${status}')" style="background:#F5F3FF;color:var(--po-accent-dark);border-color:var(--po-accent-mid)"><span class="material-symbols-rounded">toggle_on</span>P.Status</button>
+          <button class="po-action-btn stock" onclick="openStockStatusModal('${id}','${stockSt}')" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0"><span class="material-symbols-rounded">swap_vert</span>S.Status</button>
+          <button class="po-action-btn stock" onclick="openProductStatusModal('${id}','${status}')" style="background:#F5F3FF;color:var(--po-accent-dark);border-color:var(--po-accent-mid)"><span class="material-symbols-rounded">toggle_on</span>P.Status</button>
           <button class="po-action-btn danger" onclick="deleteProduct('${id}')"><span class="material-symbols-rounded">delete</span></button>
         </div>
       </td>
@@ -1267,10 +1264,7 @@ function renderTable(prods) {
 function renderCards(prods) {
   const container = document.getElementById('prodCards');
   if (!container) return;
-  if (!prods.length) {
-    container.innerHTML = emptyState();
-    return;
-  }
+  if (!prods.length) { container.innerHTML = emptyState(); return; }
   container.innerHTML = prods.map(p => {
     const id      = p.productId || p.id;
     const img     = p.images?.[0] || p.primaryImageUrl || p.imageUrl || '';
@@ -1281,26 +1275,24 @@ function renderCards(prods) {
     return `
     <div class="po-product-card">
       <div class="po-product-card-top">
-        ${img
-          ? `<img src="${img}" class="po-product-card-img" onerror="this.style.display='none'"/>`
-          : `<div class="po-product-card-img-placeholder"><span class="material-symbols-rounded">image</span></div>`}
+        ${img?`<img src="${img}" class="po-product-card-img" onerror="this.style.display='none'"/>`:`<div class="po-product-card-img-placeholder"><span class="material-symbols-rounded">image</span></div>`}
         <div class="po-product-card-info">
-          <div class="po-product-card-name">${escHtml(p.name || p.productName || '—')}</div>
-          <div class="po-product-card-meta">${escHtml(p.brand || '')}${p.brand && p.categoryName ? ' · ' : ''}${escHtml(p.categoryName || '')}</div>
+          <div class="po-product-card-name">${escHtml(p.name||p.productName||'—')}</div>
+          <div class="po-product-card-meta">${escHtml(p.brand||'')}${p.brand&&p.categoryName?' · ':''}${escHtml(p.categoryName||'')}</div>
           <div class="po-product-card-badges">
             <span class="po-status ${status}"><span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}</span>
-            ${stockSt ? `<span class="po-status ${stockSt}"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>` : ''}
+            ${stockSt?`<span class="po-status ${stockSt}"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>`:''}
           </div>
         </div>
       </div>
       <div class="po-product-card-price-row">
         <div>
           <div class="po-product-card-price">${fmtCur(p.price)}</div>
-          ${(p.discountedPrice || p.discountPrice) ? `<div class="po-product-card-disc">${fmtCur(p.discountedPrice || p.discountPrice)} sale</div>` : ''}
+          ${(p.discountedPrice||p.discountPrice)?`<div class="po-product-card-disc">${fmtCur(p.discountedPrice||p.discountPrice)} sale</div>`:''}
         </div>
         <div class="po-product-card-stock">
           <span class="material-symbols-rounded" style="font-size:14px;color:var(--text-muted)">inventory_2</span>
-          ${p.stock ?? '—'} units
+          ${p.stock??'—'} units
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px">
@@ -1310,10 +1302,10 @@ function renderCards(prods) {
         <button class="po-action-btn danger" style="justify-content:center" onclick="deleteProduct('${id}')"><span class="material-symbols-rounded">delete</span>Delete</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-        <button class="po-action-btn stock" style="justify-content:center;background:#D1FAE5;color:#065F46;border-color:#A7F3D0" onclick="openStockStatusModal('${id}', '${stockSt}')">
+        <button class="po-action-btn stock" style="justify-content:center;background:#D1FAE5;color:#065F46;border-color:#A7F3D0" onclick="openStockStatusModal('${id}','${stockSt}')">
           <span class="material-symbols-rounded">swap_vert</span>Stock Status
         </button>
-        <button class="po-action-btn stock" style="justify-content:center;background:#F5F3FF;color:var(--po-accent-dark);border-color:var(--po-accent-mid)" onclick="openProductStatusModal('${id}', '${status}')">
+        <button class="po-action-btn stock" style="justify-content:center;background:#F5F3FF;color:var(--po-accent-dark);border-color:var(--po-accent-mid)" onclick="openProductStatusModal('${id}','${status}')">
           <span class="material-symbols-rounded">toggle_on</span>Prod. Status
         </button>
       </div>
@@ -1329,24 +1321,21 @@ function emptyState() {
   </div>`;
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  SHARED FORM HELPERS
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   FORM HELPERS
+══════════════════════════════════════════════════════════════════ */
 function toggleDiscount(toggleId, wrapId) {
   const toggle = document.getElementById(toggleId);
   const wrap   = document.getElementById(wrapId);
   const isOn   = toggle.classList.toggle('on');
   wrap.style.display = isOn ? 'flex' : 'none';
 }
-
 function handleStockStatusChange(selectId, wrapId) {
   const status   = document.getElementById(selectId).value;
   const wrap     = document.getElementById(wrapId);
   const needDays = status === 'COMING_SOON' || status === 'PRE_ORDER';
   wrap.style.display = needDays ? 'flex' : 'none';
 }
-
 function handleImageSelect(event, previewContainerId, prefix) {
   const files = Array.from(event.target.files);
   const arr   = prefix === 'ap' ? apSelectedImages : epNewImages;
@@ -1368,7 +1357,6 @@ function handleImageSelect(event, previewContainerId, prefix) {
   });
   event.target.value = '';
 }
-
 function removeNewImage(idx, previewContainerId, prefix) {
   const arr = prefix === 'ap' ? apSelectedImages : epNewImages;
   arr.splice(idx, 1);
@@ -1387,20 +1375,17 @@ function removeNewImage(idx, previewContainerId, prefix) {
   });
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  ADD PRODUCT
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   ADD PRODUCT
+══════════════════════════════════════════════════════════════════ */
 function openAddProductModal() {
   resetAddProductForm();
   document.getElementById('addProductModal').classList.add('open');
 }
-
 function closeAddProductModal() {
   document.getElementById('addProductModal').classList.remove('open');
   resetAddProductForm();
 }
-
 function resetAddProductForm() {
   apSelectedImages = [];
   ['ap-name','ap-brand','ap-price','ap-stock','ap-discount-pct','ap-description','ap-available-days']
@@ -1415,7 +1400,6 @@ function resetAddProductForm() {
   const btn = document.getElementById('saveProductBtn');
   if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-rounded">add_box</span>Add Product'; }
 }
-
 async function doAddProduct() {
   const name        = document.getElementById('ap-name')?.value?.trim();
   const categoryId  = document.getElementById('ap-category')?.value;
@@ -1438,13 +1422,13 @@ async function doAddProduct() {
     showToast('Available in days is required for this stock status', 'error'); return;
   }
 
-  const requestPayload = {
+ const requestPayload = {
   name, categoryId,
   price: parseFloat(price),
   stock: parseInt(stock),
   stockStatus,
-  discounted: isDiscOn,                                                    // ← was isDiscounted
-  discountPercentage: isDiscOn && discPct ? parseFloat(discPct) : null,   // ← always send this
+  discounted: isDiscOn,                                           // ← fixed
+  discountPercentage: isDiscOn && discPct ? parseFloat(discPct) : null, // ← fixed
   ...(brand       && { brand }),
   ...(description && { productDescription: description }),
   ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
@@ -1471,14 +1455,12 @@ async function doAddProduct() {
     loadStats();
   } else {
     showToast(res.data?.message || res.data?.error || 'Failed to add product', 'error');
-    console.error('addProduct error:', res);
   }
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  EDIT PRODUCT
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   EDIT PRODUCT
+══════════════════════════════════════════════════════════════════ */
 async function openEditProductModal(id) {
   currentProductId = id;
   epNewImages = []; epDeleteImageIds = [];
@@ -1494,7 +1476,6 @@ async function openEditProductModal(id) {
   document.getElementById('editProductSubtitle').textContent = escHtml(p.name || p.productName || '');
 
   const setVal = (elId, val) => { const el = document.getElementById(elId); if (el && val != null) el.value = val; };
-
   setVal('ep-name',        p.name || p.productName || '');
   setVal('ep-brand',       p.brand || '');
   setVal('ep-price',       p.price);
@@ -1505,18 +1486,14 @@ async function openEditProductModal(id) {
   if (pStatus) pStatus.value = p.productStatus || p.status || 'ACTIVE';
 
   const ssEl = document.getElementById('ep-stock-status');
-  if (ssEl) { ssEl.value = p.stockStatus || 'IN_STOCK'; handleStockStatusChange('ep-stock-status', 'editAvailableInDaysWrap'); }
+  if (ssEl) { ssEl.value = p.stockStatus || 'IN_STOCK'; handleStockStatusChange('ep-stock-status','editAvailableInDaysWrap'); }
   if (p.availableInDays) setVal('ep-available-days', p.availableInDays);
 
   const editDiscToggle = document.getElementById('editDiscountToggle');
   const editDiscWrap   = document.getElementById('editDiscountPctWrap');
   const isDisc = p.discounted || p.isDiscounted || false;
-  if (isDisc) {
-    editDiscToggle.classList.add('on'); editDiscWrap.style.display = 'flex';
-    setVal('ep-discount-pct', p.discountPercentage);
-  } else {
-    editDiscToggle.classList.remove('on'); editDiscWrap.style.display = 'none';
-  }
+  if (isDisc) { editDiscToggle.classList.add('on'); editDiscWrap.style.display = 'flex'; setVal('ep-discount-pct', p.discountPercentage); }
+  else        { editDiscToggle.classList.remove('on'); editDiscWrap.style.display = 'none'; }
 
   const existingContainer = document.getElementById('epExistingImages');
   existingContainer.innerHTML = '';
@@ -1527,7 +1504,7 @@ async function openEditProductModal(id) {
     const item  = document.createElement('div');
     item.className = 'po-existing-img-item';
     item.id = `existing-img-${imgId}`;
-    item.innerHTML = `<img src="${url}" alt="img" onerror="this.style.display='none'"/>${imgId ? `<button class="del-overlay" onclick="toggleDeleteExistingImage(${imgId}, this)" title="Mark for deletion">✕</button>` : ''}`;
+    item.innerHTML = `<img src="${url}" alt="img" onerror="this.style.display='none'"/>${imgId?`<button class="del-overlay" onclick="toggleDeleteExistingImage(${imgId},this)" title="Mark for deletion">✕</button>`:''}`;
     existingContainer.appendChild(item);
   });
 
@@ -1544,12 +1521,10 @@ async function openEditProductModal(id) {
   const vidInput = document.getElementById('ep-video-input');
   if (vidInput) vidInput.value = '';
 }
-
 function closeEditProductModal() {
   document.getElementById('editProductModal').classList.remove('open');
   epNewImages = []; epDeleteImageIds = [];
 }
-
 function toggleDeleteExistingImage(imgId, btn) {
   const idx = epDeleteImageIds.indexOf(imgId);
   if (idx === -1) {
@@ -1564,11 +1539,7 @@ function toggleDeleteExistingImage(imgId, btn) {
     btn.title = 'Mark for deletion';
   }
 }
-
-function toggleDeleteVideo() {
-  document.getElementById('deleteVideoToggle').classList.toggle('on');
-}
-
+function toggleDeleteVideo() { document.getElementById('deleteVideoToggle').classList.toggle('on'); }
 
 async function doUpdateProduct() {
   if (!currentProductId) return;
@@ -1636,10 +1607,9 @@ async function doUpdateProduct() {
   }
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  PRODUCT DETAIL VIEW
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   PRODUCT DETAIL VIEW
+══════════════════════════════════════════════════════════════════ */
 async function viewProduct(id) {
   currentProductId = id;
   document.getElementById('productModal').classList.add('open');
@@ -1655,22 +1625,22 @@ async function viewProduct(id) {
   }
 
   const p     = res.data?.data || res.data;
-  const imgs  = p.images || (p.imageUrl ? [p.imageUrl] : []) || (p.primaryImageUrl ? [p.primaryImageUrl] : []);
+  const imgs  = p.images || (p.imageUrl?[p.imageUrl]:[]) || (p.primaryImageUrl?[p.primaryImageUrl]:[]);
   const imgUrls = imgs.map(i => typeof i === 'string' ? i : i.imageUrl).filter(Boolean);
   const status  = p.status || p.productStatus || '';
   const stockSt = p.stockStatus || '';
   const sCfg    = STATUS_ICONS[status]  || { icon: 'radio_button_unchecked', label: '—' };
-  const stCfg   = STATUS_ICONS[stockSt] || { icon: 'radio_button_unchecked', label: stockSt || '—' };
+  const stCfg   = STATUS_ICONS[stockSt] || { icon: 'radio_button_unchecked', label: stockSt||'—' };
 
   document.getElementById('pModalBody').innerHTML = `
-    ${imgUrls.length ? `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
-      ${imgUrls.map(url => `<img src="${url}" style="width:64px;height:64px;border-radius:9px;object-fit:cover;border:1px solid var(--gray-200)" onerror="this.style.display='none'"/>`).join('')}
-    </div>` : ''}
+    ${imgUrls.length?`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+      ${imgUrls.map(url=>`<img src="${url}" style="width:62px;height:62px;border-radius:9px;object-fit:cover;border:1px solid var(--gray-200)" onerror="this.style.display='none'"/>`).join('')}
+    </div>`:''}
 
-    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--gray-100)">
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--gray-100)">
       <div style="flex:1;min-width:0">
-        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--text)">${escHtml(p.name || p.productName || '—')}</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${escHtml(p.brand || '')}${p.brand && p.category?.name ? ' · ' : ''}${escHtml(p.category?.name || p.categoryName || '')}</div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--text)">${escHtml(p.name||p.productName||'—')}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${escHtml(p.brand||'')}${p.brand&&p.category?.name?' · ':''}${escHtml(p.category?.name||p.categoryName||'')}</div>
       </div>
       <span class="po-status ${status}"><span class="material-symbols-rounded">${sCfg.icon}</span>${sCfg.label}</span>
     </div>
@@ -1679,50 +1649,50 @@ async function viewProduct(id) {
       <div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;text-align:center">
         <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:3px">Price</div>
         <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">${fmtCur(p.price)}</div>
-        ${(p.discountedPrice||p.discountPrice) ? `<div style="font-size:10px;color:#059669;font-family:var(--font-mono);margin-top:2px">${fmtCur(p.discountedPrice||p.discountPrice)} sale</div>` : ''}
+        ${(p.discountedPrice||p.discountPrice)?`<div style="font-size:10px;color:#059669;font-family:var(--font-mono);margin-top:2px">${fmtCur(p.discountedPrice||p.discountPrice)} sale</div>`:''}
       </div>
       <div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;text-align:center">
         <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:3px">Stock</div>
-        <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">${p.stock ?? p.quantity ?? '—'}</div>
-        ${stockSt ? `<span class="po-status ${stockSt}" style="margin-top:3px;display:inline-flex"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>` : ''}
+        <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">${p.stock??p.quantity??'—'}</div>
+        ${stockSt?`<span class="po-status ${stockSt}" style="margin-top:3px;display:inline-flex"><span class="material-symbols-rounded">${stCfg.icon}</span>${stCfg.label}</span>`:''}
       </div>
     </div>
 
-    ${p.viewsCount != null ? `<div style="background:var(--gray-50);border-radius:9px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:7px">
+    ${p.viewsCount!=null?`<div style="background:var(--gray-50);border-radius:9px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:7px">
       <span class="material-symbols-rounded" style="font-size:15px;color:var(--po-accent)">visibility</span>
       <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--text)">${p.viewsCount} views</span>
-    </div>` : ''}
+    </div>`:''}
 
-    ${p.availableInDays ? `<div style="background:#DBEAFE;border-radius:9px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:7px">
+    ${p.availableInDays?`<div style="background:#DBEAFE;border-radius:9px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:7px">
       <span class="material-symbols-rounded" style="font-size:15px;color:#1D4ED8">schedule</span>
-      <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:#1D4ED8">Available in ${p.availableInDays} day${p.availableInDays > 1 ? 's' : ''}</span>
-    </div>` : ''}
+      <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:#1D4ED8">Available in ${p.availableInDays} day${p.availableInDays>1?'s':''}</span>
+    </div>`:''}
 
-    ${p.productDescription || p.description ? `<div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;margin-bottom:12px">
+    ${p.productDescription||p.description?`<div style="background:var(--gray-50);border-radius:9px;padding:11px 13px;margin-bottom:12px">
       <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:5px">Description</div>
-      <div style="font-size:12px;color:var(--text);line-height:1.6">${escHtml(p.productDescription || p.description)}</div>
-    </div>` : ''}
+      <div style="font-size:12px;color:var(--text);line-height:1.6">${escHtml(p.productDescription||p.description)}</div>
+    </div>`:''}
 
-    ${(p.video?.videoUrl || p.productVideo?.videoUrl) ? `<div style="margin-bottom:14px">
+    ${(p.video?.videoUrl||p.productVideo?.videoUrl)?`<div style="margin-bottom:14px">
       <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:7px">Product Video</div>
-      <video src="${p.video?.videoUrl || p.productVideo?.videoUrl}" controls style="width:100%;border-radius:9px;border:1px solid var(--gray-200);max-height:180px"></video>
-    </div>` : ''}
+      <video src="${p.video?.videoUrl||p.productVideo?.videoUrl}" controls style="width:100%;border-radius:9px;border:1px solid var(--gray-200);max-height:180px"></video>
+    </div>`:''}
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
-      <button class="btn-po-primary" style="justify-content:center" onclick="closeModal('productModal');openEditProductModal('${p.productId || p.id}')">
+      <button class="btn-po-primary" style="justify-content:center" onclick="closeModal('productModal');openEditProductModal('${p.productId||p.id}')">
         <span class="material-symbols-rounded">edit</span>Edit
       </button>
-      <button onclick="doImproveVisibility('${p.productId || p.id}')"
-        style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border-radius:9px;background:var(--po-accent-light);color:var(--po-accent-dark);border:1px solid var(--po-accent-mid);font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer;transition:background .14s">
+      <button onclick="doImproveVisibility('${p.productId||p.id}')"
+        style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border-radius:9px;background:var(--po-accent-light);color:var(--po-accent-dark);border:1px solid var(--po-accent-mid);font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer">
         <span class="material-symbols-rounded" style="font-size:15px">auto_awesome</span>AI Tips
       </button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-      <button onclick="closeModal('productModal');openStockStatusModal('${p.productId || p.id}', '${stockSt}')"
+      <button onclick="closeModal('productModal');openStockStatusModal('${p.productId||p.id}','${stockSt}')"
         style="display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px;border-radius:9px;background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0;font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer">
         <span class="material-symbols-rounded" style="font-size:15px">swap_vert</span>Stock Status
       </button>
-      <button onclick="closeModal('productModal');openProductStatusModal('${p.productId || p.id}', '${status}')"
+      <button onclick="closeModal('productModal');openProductStatusModal('${p.productId||p.id}','${status}')"
         style="display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px;border-radius:9px;background:#F5F3FF;color:var(--po-accent-dark);border:1px solid var(--po-accent-mid);font-family:var(--font-display);font-size:12px;font-weight:700;cursor:pointer">
         <span class="material-symbols-rounded" style="font-size:15px">toggle_on</span>Prod. Status
       </button>
@@ -1741,12 +1711,12 @@ async function doImproveVisibility(pid) {
     return;
   }
 
-  const raw = (res.data?.data?.reply) || (res.data?.reply) || (res.data?.message) || '';
+  const raw = (res.data?.data?.reply)||(res.data?.reply)||(res.data?.message)||'';
   let parsed = null; let extraText = '';
   const fm = raw.match(/```json\s*([\s\S]*?)```/i);
   if (fm) {
     try { parsed = JSON.parse(fm[1].trim()); } catch(e) {}
-    const after = raw.slice(raw.indexOf(fm[0]) + fm[0].length).trim();
+    const after = raw.slice(raw.indexOf(fm[0])+fm[0].length).trim();
     extraText = after.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br/><br/>').replace(/\n/g,' ');
   } else { try { parsed = JSON.parse(raw.trim()); } catch(e) {} }
 
@@ -1756,7 +1726,7 @@ async function doImproveVisibility(pid) {
     return;
   }
 
-  const sec = (icon, color, bg, title, body) =>
+  const sec = (icon,color,bg,title,body) =>
     `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:5px;margin-bottom:7px">
         <span class="material-symbols-rounded" style="font-size:15px;color:${color}">${icon}</span>
@@ -1764,7 +1734,6 @@ async function doImproveVisibility(pid) {
       </div>
       <div style="font-size:12px;color:#374151;line-height:1.6;background:${bg};padding:9px 11px;border-radius:8px">${body}</div>
     </div>`;
-
   const pill = t => `<span style="display:inline-flex;padding:3px 10px;border-radius:99px;background:#DBEAFE;color:#1D4ED8;font-size:10.5px;font-weight:700;margin:2px 2px 0 0">${escHtml(t)}</span>`;
   const bul  = t => `<div style="display:flex;gap:7px;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--po-accent);flex-shrink:0;margin-top:5px;display:block"></span><span style="font-size:12px;color:#374151;line-height:1.5">${escHtml(t)}</span></div>`;
 
@@ -1774,28 +1743,26 @@ async function doImproveVisibility(pid) {
       <span style="font-family:var(--font-display);font-size:12px;font-weight:800">AI Visibility Report</span>
     </div><div style="padding:12px;background:var(--po-accent-light)">`;
 
-  if (parsed.improvedTitle) html += sec('title','#7C3AED','var(--po-accent-light)','Suggested Title',`<span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:#1F2937">&ldquo;${escHtml(parsed.improvedTitle)}&rdquo;</span>`);
-  if (parsed.improvedDescription) html += sec('description','#059669','#F0FDF4','Improved Description', escHtml(parsed.improvedDescription));
+  if (parsed.improvedTitle)            html += sec('title','#7C3AED','var(--po-accent-light)','Suggested Title',`<span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:#1F2937">&ldquo;${escHtml(parsed.improvedTitle)}&rdquo;</span>`);
+  if (parsed.improvedDescription)      html += sec('description','#059669','#F0FDF4','Improved Description',escHtml(parsed.improvedDescription));
   if (parsed.recommendedKeywords?.length) html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)"><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span class="material-symbols-rounded" style="font-size:15px;color:#2563EB">label</span><span style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#2563EB">Keywords</span></div><div>${parsed.recommendedKeywords.map(pill).join('')}</div></div>`;
-  if (parsed.pricingAdvice) html += sec('payments','#D97706','#FFFBEB','Pricing Advice', escHtml(parsed.pricingAdvice));
-  if (parsed.promotionTips?.length) html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)"><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span class="material-symbols-rounded" style="font-size:15px;color:var(--po-accent)">campaign</span><span style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--po-accent)">Promotion Tips</span></div>${parsed.promotionTips.map(bul).join('')}</div>`;
-  if (parsed.trendAlignment) html += sec('trending_up','#0891B2','#ECFEFF','Trend Alignment', escHtml(parsed.trendAlignment));
-  if (extraText) html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;border:1px solid var(--gray-100)"><div style="font-size:12px;color:#374151;line-height:1.7">${extraText}</div></div>`;
+  if (parsed.pricingAdvice)            html += sec('payments','#D97706','#FFFBEB','Pricing Advice',escHtml(parsed.pricingAdvice));
+  if (parsed.promotionTips?.length)    html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;margin-bottom:9px;border:1px solid var(--gray-100)"><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px"><span class="material-symbols-rounded" style="font-size:15px;color:var(--po-accent)">campaign</span><span style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--po-accent)">Promotion Tips</span></div>${parsed.promotionTips.map(bul).join('')}</div>`;
+  if (parsed.trendAlignment)           html += sec('trending_up','#0891B2','#ECFEFF','Trend Alignment',escHtml(parsed.trendAlignment));
+  if (extraText)                       html += `<div style="background:#fff;border-radius:9px;padding:10px 13px;border:1px solid var(--gray-100)"><div style="font-size:12px;color:#374151;line-height:1.7">${extraText}</div></div>`;
 
   html += '</div></div>';
   el.innerHTML = html;
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  STOCK QUANTITY MODAL
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   STOCK QUANTITY MODAL
+══════════════════════════════════════════════════════════════════ */
 function openStockModal(id) {
   currentProductId = id;
   document.getElementById('stockInput').value = '';
   document.getElementById('stockModal').classList.add('open');
 }
-
 async function doUpdateStock() {
   const stock = parseInt(document.getElementById('stockInput').value);
   if (isNaN(stock) || stock < 0) { showToast('Enter a valid stock number', 'error'); return; }
@@ -1810,10 +1777,9 @@ async function doUpdateStock() {
   }
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  STOCK STATUS MODAL (NEW)
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   STOCK STATUS MODAL
+══════════════════════════════════════════════════════════════════ */
 function openStockStatusModal(id, currentStatus) {
   currentProductId = id;
   const sel = document.getElementById('ssStatusSelect');
@@ -1821,24 +1787,20 @@ function openStockStatusModal(id, currentStatus) {
   handleSSStatusChange();
   document.getElementById('stockStatusModal').classList.add('open');
 }
-
 function handleSSStatusChange() {
   const status   = document.getElementById('ssStatusSelect').value;
   const needDays = status === 'COMING_SOON' || status === 'PRE_ORDER';
   document.getElementById('ssDaysWrap').style.display = needDays ? 'block' : 'none';
   if (!needDays) document.getElementById('ssDaysInput').value = '';
 }
-
 async function doUpdateStockStatus() {
   const status   = document.getElementById('ssStatusSelect').value;
   const daysVal  = document.getElementById('ssDaysInput').value;
   const needDays = status === 'COMING_SOON' || status === 'PRE_ORDER';
-
   if (!status) { showToast('Please select a stock status', 'error'); return; }
   if (needDays && (!daysVal || isNaN(parseInt(daysVal)) || parseInt(daysVal) < 1)) {
     showToast('Available in days is required for this status', 'error'); return;
   }
-
   const days = needDays ? parseInt(daysVal) : undefined;
   const res  = await API.updateStockStatus(currentProductId, status, days);
   if (res.ok) {
@@ -1851,17 +1813,15 @@ async function doUpdateStockStatus() {
   }
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  PRODUCT STATUS MODAL (NEW)
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   PRODUCT STATUS MODAL
+══════════════════════════════════════════════════════════════════ */
 function openProductStatusModal(id, currentStatus) {
   currentProductId = id;
   const sel = document.getElementById('psStatusSelect');
   if (sel && currentStatus) sel.value = currentStatus;
   document.getElementById('productStatusModal').classList.add('open');
 }
-
 async function doUpdateProductStatus() {
   const status = document.getElementById('psStatusSelect').value;
   if (!status) { showToast('Please select a status', 'error'); return; }
@@ -1876,10 +1836,9 @@ async function doUpdateProductStatus() {
   }
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  DELETE PRODUCT
-// ══════════════════════════════════════════════════════════════════
-
+/* ══════════════════════════════════════════════════════════════════
+   DELETE PRODUCT
+══════════════════════════════════════════════════════════════════ */
 async function deleteProduct(id) {
   if (!confirm('Delete this product? This cannot be undone.')) return;
   const res = await API.deleteProduct(id);
@@ -1892,16 +1851,16 @@ async function deleteProduct(id) {
   }
 }
 
-// ── Generic close ─────────────────────────────────────────────────
+/* ── Generic close ──────────────────────────────────────────────── */
 function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
 
-// ── Helpers ───────────────────────────────────────────────────────
+/* ── Helpers ────────────────────────────────────────────────────── */
 function fmtCur(val) {
   if (val == null) return '—';
   return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits: 2 });
 }
 function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 </script>
 </body>
