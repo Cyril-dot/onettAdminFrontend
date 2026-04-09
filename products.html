@@ -1569,6 +1569,7 @@ function toggleDeleteVideo() {
   document.getElementById('deleteVideoToggle').classList.toggle('on');
 }
 
+
 async function doUpdateProduct() {
   if (!currentProductId) return;
   const name        = document.getElementById('ep-name')?.value?.trim();
@@ -1590,22 +1591,21 @@ async function doUpdateProduct() {
     showToast('Available in days is required for this stock status', 'error'); return;
   }
 
- 
   const requestPayload = {
-  ...(name        && { name }),
-  ...(brand       && { brand }),
-  ...(description && { productDescription: description }),
-  ...(price       && { price: parseFloat(price) }),
-  ...(stock !== '' && stock != null && { stock: parseInt(stock) }),
-  ...(categoryId  && { categoryId }),
-  ...(stockStatus && { stockStatus }),
-  ...(productStat && { productStatus: productStat }),
-  discounted: isDiscOn,                                            // ← fixed
-  discountPercentage: isDiscOn && discPct ? parseFloat(discPct) : null, // ← fixed
-  ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
-  isDeleteVideo: deleteVideo,
-  ...(epDeleteImageIds.length > 0 && { imageIdsToDelete: epDeleteImageIds }),
-};
+    ...(name        && { name }),
+    ...(brand       && { brand }),
+    ...(description && { productDescription: description }),
+    ...(price       && { price: parseFloat(price) }),
+    ...(stock !== '' && stock != null && { stock: parseInt(stock) }),
+    ...(categoryId  && { categoryId }),
+    ...(stockStatus && { stockStatus }),
+    // ← productStatus removed: not in UpdateProductRequest, handled separately below
+    isDiscounted: isDiscOn,                                               // ← Boolean wrapper field
+    discountPercentage: isDiscOn && discPct ? parseFloat(discPct) : null,
+    ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
+    isDeleteVideo: deleteVideo,
+    ...(epDeleteImageIds.length > 0 && { imageIdsToDelete: epDeleteImageIds }),
+  };
 
   const formData = new FormData();
   formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: 'application/json' }));
@@ -1622,6 +1622,10 @@ async function doUpdateProduct() {
   btn.innerHTML = '<span class="material-symbols-rounded">save</span>Save Changes';
 
   if (res.ok) {
+    // Handle productStatus via its dedicated PATCH endpoint
+    if (productStat) {
+      await API.updateProductStatus(currentProductId, productStat);
+    }
     showToast('Product updated successfully!');
     closeEditProductModal();
     loadProducts(currentTab);
