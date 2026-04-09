@@ -149,6 +149,25 @@
       .right-col { flex-direction: row; flex-wrap: wrap; }
       .right-col > * { flex: 1 1 280px; }
     }
+    @media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid { grid-template-columns: 1fr; }
+  .right-col { flex-direction: row; flex-wrap: wrap; }
+  .right-col > * { flex: 1 1 260px; }
+}
+
+@media (max-width: 560px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 12px; gap: 10px; }
+  .stat-value { font-size: 17px; }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .quick-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .quick-btn { padding: 10px 4px; }
+  .card { padding: 14px; }
+  .right-col { flex-direction: column; }
+  .right-col > * { flex: none; }
+  .chart-wrap { height: 90px; }
+}
   </style>
 </head>
 <body>
@@ -257,6 +276,12 @@ const content = `
     <div class="card">
       <div class="card-title" style="margin-bottom:14px;">Quick Actions</div>
       <div class="quick-grid">
+
+        <a href="categories.html" class="quick-btn">
+  <span class="material-symbols-outlined">category</span>
+  <span class="quick-btn-label">Categories</span>
+</a>
+
         <a href="products.html" class="quick-btn">
           <span class="material-symbols-outlined">add_box</span>
           <span class="quick-btn-label">Products</span>
