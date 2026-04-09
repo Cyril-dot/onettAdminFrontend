@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MarketPlace — Seller Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <style>
+    :root {
+      --orange: #F97316;
+      --orange-dark: #EA6C0A;
+      --orange-light: rgba(249,115,22,0.12);
+      --orange-glow: rgba(249,115,22,0.25);
+      --bg: #0D0D0D;
+      --surface: #161616;
+      --surface2: #1E1E1E;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(249,115,22,0.4);
+      --text: #FFFFFF;
+      --text-muted: rgba(255,255,255,0.45);
+      --text-sub: rgba(255,255,255,0.7);
+      --error: #F87171;
+      --error-bg: rgba(248,113,113,0.1);
+      --success: #4ADE80;
+      --transition: 0.2s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow: auto;
+    }
+
+    /* ── Left panel ── */
+    .left-panel {
+      width: 45%;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 48px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      top: -120px; left: -120px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 64px;
+      z-index: 1;
+      align-self: flex-start;
+    }
+    .brand-icon {
+      width: 46px; height: 46px;
+      background: var(--orange);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 24px var(--orange-glow);
+    }
+    .brand-icon .material-symbols-outlined { font-size: 24px; color: #fff; }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 800; color: var(--text);
+    }
+    .brand-name span { color: var(--orange); }
+
+    .left-copy { z-index: 1; align-self: flex-start; max-width: 380px; }
+    .left-copy h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 38px; font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .left-copy h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .left-copy p {
+      font-size: 15px; color: var(--text-muted); line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .feature-list { display: flex; flex-direction: column; gap: 16px; }
+    .feature-item {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .feature-dot {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: var(--orange-light);
+      border: 1px solid rgba(249,115,22,0.2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature-dot .material-symbols-outlined { font-size: 16px; color: var(--orange); }
+    .feature-item span { font-size: 14px; color: var(--text-sub); }
+
+    /* ── Right panel ── */
+    .right-panel {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 60px 32px;
+      overflow-y: auto;
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+      padding-bottom: 60px;
+    }
+
+    /* ── Tabs ── */
+    .auth-tabs {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 9px;
+      transition: all var(--transition);
+      font-family: 'DM Sans', sans-serif;
+      border: none;
+      background: none;
+    }
+    .auth-tab.active {
+      background: var(--orange);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--orange-glow);
+    }
+
+    /* ── Forms ── */
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    .form-head { margin-bottom: 24px; }
+    .form-head h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 800; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .form-head p { font-size: 13px; color: var(--text-muted); }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 12px; font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-control {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    .form-control::placeholder { color: var(--text-muted); }
+    .form-control:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px var(--orange-light);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .password-wrap { position: relative; }
+    .password-wrap .form-control { padding-right: 42px; }
+    .toggle-pass {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      cursor: pointer; color: var(--text-muted);
+      background: none; border: none; padding: 0;
+      display: flex; align-items: center;
+      transition: color var(--transition);
+    }
+    .toggle-pass:hover { color: var(--orange); }
+    .toggle-pass .material-symbols-outlined { font-size: 17px; }
+
+    .alert {
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .alert.show { display: flex; }
+    .alert-error {
+      background: var(--error-bg);
+      border: 1px solid rgba(248,113,113,0.25);
+      color: var(--error);
+    }
+    .alert-success {
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.25);
+      color: var(--success);
+    }
+    .alert .material-symbols-outlined { font-size: 16px; flex-shrink: 0; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all var(--transition);
+      margin-top: 4px;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: var(--orange-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--orange-glow);
+    }
+    .submit-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+    .form-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 14px;
+    }
+    .form-note a {
+      color: var(--orange);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--border);
+    }
+    .divider span { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .left-panel { display: none; }
+      .right-panel { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left branding panel -->
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-icon">
+        <span class="material-symbols-outlined">storefront</span>
+      </div>
+      <div class="brand-name">Market<span>Place</span></div>
+    </div>
+
+    <div class="left-copy">
+      <h1>Sell smarter,<br/><em>grow faster.</em></h1>
+      <p>Your all-in-one seller dashboard — manage products, track orders, respond to customers, and use AI to scale.</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-dot">
+            <span class="material-symbols-outlined">inventory_2</span>
+          </div>
+          <span>Real-time inventory & product management</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot">
+            <span class="material-symbols-outlined">receipt_long</span>
+          </div>
+          <span>Order tracking and fulfilment</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot">
+            <span class="material-symbols-outlined">auto_awesome</span>
+          </div>
+          <span>AI-powered pricing and listing tools</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot">
+            <span class="material-symbols-outlined">forum</span>
+          </div>
+          <span>Direct buyer messaging & notifications</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right auth panel -->
+  <div class="right-panel">
+    <div class="auth-box">
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="form-panel active" id="panelLogin">
+        <div class="form-head">
+          <h2>Welcome back</h2>
+          <p>Sign in to your seller dashboard</p>
+        </div>
+
+        <div class="alert alert-error" id="loginError">
+          <span class="material-symbols-outlined">error</span>
+          <span id="loginErrorMsg"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="seller@example.com"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-wrap">
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••"/>
+            <button class="toggle-pass" onclick="togglePass('loginPassword','eyeLogin')">
+              <span class="material-symbols-outlined" id="eyeLogin">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="submit-btn" id="loginBtn" onclick="doLogin()">
+          <span class="material-symbols-outlined">login</span>
+          Sign In
+        </button>
+
+        <p class="form-note">Don't have an account? <a href="#" onclick="switchTab('register')">Create one</a></p>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="form-panel" id="panelRegister">
+        <div class="form-head">
+          <h2>Create your store</h2>
+          <p>Set up your seller account to start selling</p>
+        </div>
+
+        <div class="alert alert-error" id="regError">
+          <span class="material-symbols-outlined">error</span>
+          <span id="regErrorMsg"></span>
+        </div>
+        <div class="alert alert-success" id="regSuccess">
+          <span class="material-symbols-outlined">check_circle</span>
+          <span id="regSuccessMsg"></span>
+        </div>
+
+        <!-- Personal Info -->
+        <div class="section-label">Personal Info</div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="regName" class="form-control" placeholder="Kwame Mensah"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="you@example.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="0244000000"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="regPassword" class="form-control" placeholder="••••••••"/>
+              <button class="toggle-pass" onclick="togglePass('regPassword','eyeReg')">
+                <span class="material-symbols-outlined" id="eyeReg">visibility</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" id="regLocation" class="form-control" placeholder="Accra, Ghana"/>
+          </div>
+        </div>
+
+        <div class="divider"><span>Store Details</span></div>
+        <div class="section-label">Store Details</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Store Name</label>
+            <input type="text" id="regStoreName" class="form-control" placeholder="My Awesome Store"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tax ID</label>
+            <input type="text" id="regTaxId" class="form-control" placeholder="GH-TAX-XXXXX"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Address</label>
+          <input type="text" id="regBizAddress" class="form-control" placeholder="123 Oxford St, Osu, Accra"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Store Description</label>
+          <input type="text" id="regStoreDesc" class="form-control" placeholder="What does your store sell?"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Seller Bio</label>
+          <input type="text" id="regBio" class="form-control" placeholder="A little about you…"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Profile Picture</label>
+          <input type="file" id="regProfilePic" class="form-control" accept="image/*"/>
+        </div>
+
+        <button class="submit-btn" id="regBtn" onclick="doRegister()">
+          <span class="material-symbols-outlined">storefront</span>
+          Create Account
+        </button>
+
+        <p class="form-note">Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Config ──────────────────────────────────────────────────
+    const BASE = 'https://onettbackend.onrender.com';
+
+    function getToken() { return localStorage.getItem('admin_token') || ''; }
+    function setToken(t) { localStorage.setItem('admin_token', t); }
+    function setSellerId(id) { localStorage.setItem('admin_seller_id', String(id)); }
+
+    // Redirect if already logged in
+    if (getToken()) window.location.href = 'index.html';
+
+    // ── Tab Switch ───────────────────────────────────────────────
+    function switchTab(tab) {
+      document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    }
+
+    // ── Toggle password visibility ───────────────────────────────
+    function togglePass(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (inp.type === 'password') { inp.type = 'text'; icon.textContent = 'visibility_off'; }
+      else { inp.type = 'password'; icon.textContent = 'visibility'; }
+    }
+
+    // ── Enter key ───────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (document.getElementById('panelLogin').classList.contains('active')) doLogin();
+        else doRegister();
+      }
+    });
+
+    // ── LOGIN ────────────────────────────────────────────────────
+    async function doLogin() {
+      const btn = document.getElementById('loginBtn');
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass  = document.getElementById('loginPassword').value;
+
+      hideAlert('loginError');
+      if (!email || !pass) { showError('loginError', 'loginErrorMsg', 'Please enter your email and password.'); return; }
+
+      setLoading(btn, true, 'Signing in…');
+
+      try {
+        const res = await fetch(`${BASE}/api/v1/sellers/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: JSON.stringify({ email, password: pass })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          // Extract token — backend returns accessToken
+          const token = data.accessToken || data.token || data.data?.accessToken || data.data?.token;
+          if (token) setToken(token);
+
+          // Extract seller ID
+          const sid = data.id || data.sellerId || data.data?.id || data.data?.sellerId;
+          if (sid) setSellerId(sid);
+
+          window.location.href = 'index.html';
+        } else {
+          showError('loginError', 'loginErrorMsg', data?.message || 'Login failed. Check your credentials.');
+        }
+      } catch (err) {
+        showError('loginError', 'loginErrorMsg', 'Network error. Please try again.');
+      }
+
+      setLoading(btn, false, '<span class="material-symbols-outlined">login</span> Sign In');
+    }
+
+    // ── REGISTER ─────────────────────────────────────────────────
+    async function doRegister() {
+      const btn = document.getElementById('regBtn');
+      hideAlert('regError');
+      hideAlert('regSuccess');
+
+      const fullName        = document.getElementById('regName').value.trim();
+      const email           = document.getElementById('regEmail').value.trim();
+      const phoneNumber     = document.getElementById('regPhone').value.trim();
+      const password        = document.getElementById('regPassword').value;
+      const location        = document.getElementById('regLocation').value.trim();
+      const storeName       = document.getElementById('regStoreName').value.trim();
+      const taxId           = document.getElementById('regTaxId').value.trim();
+      const businessAddress = document.getElementById('regBizAddress').value.trim();
+      const storeDescription= document.getElementById('regStoreDesc').value.trim();
+      const sellerBio       = document.getElementById('regBio').value.trim();
+      const picFile         = document.getElementById('regProfilePic').files[0];
+
+      if (!fullName || !email || !phoneNumber || !password || !storeName || !taxId || !businessAddress) {
+        showError('regError', 'regErrorMsg', 'Please fill in all required fields.');
+        return;
+      }
+      if (!picFile) {
+        showError('regError', 'regErrorMsg', 'Please upload a profile picture.');
+        return;
+      }
+
+      setLoading(btn, true, 'Creating account…');
+
+      try {
+        // Backend expects multipart: "data" part (JSON) + "profilePic" part (file)
+        const formData = new FormData();
+        const requestBlob = new Blob([JSON.stringify({
+          fullName, email, phoneNumber, password,
+          location, storeName, taxId, businessAddress,
+          storeDescription, sellerBio
+        })], { type: 'application/json' });
+        formData.append('data', requestBlob);
+        formData.append('profilePic', picFile);
+
+        const res = await fetch(`${BASE}/api/v1/sellers/register`, {
+          method: 'POST',
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          body: formData
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          showSuccess('regSuccess', 'regSuccessMsg', 'Account created! You can now sign in.');
+          // Clear form
+          ['regName','regEmail','regPhone','regPassword','regLocation','regStoreName',
+           'regTaxId','regBizAddress','regStoreDesc','regBio'].forEach(id => {
+            document.getElementById(id).value = '';
+          });
+          document.getElementById('regProfilePic').value = '';
+          setTimeout(() => switchTab('login'), 1800);
+        } else {
+          showError('regError', 'regErrorMsg', data?.message || 'Registration failed. Try again.');
+        }
+      } catch (err) {
+        showError('regError', 'regErrorMsg', 'Network error. Please try again.');
+      }
+
+      setLoading(btn, false, '<span class="material-symbols-outlined">storefront</span> Create Account');
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function showError(alertId, msgId, msg) {
+      document.getElementById(msgId).textContent = msg;
+      document.getElementById(alertId).classList.add('show');
+    }
+    function showSuccess(alertId, msgId, msg) {
+      document.getElementById(msgId).textContent = msg;
+      document.getElementById(alertId).classList.add('show');
+    }
+    function hideAlert(alertId) {
+      document.getElementById(alertId).classList.remove('show');
+    }
+    function setLoading(btn, loading, html) {
+      btn.disabled = loading;
+      if (loading) {
+        btn.innerHTML = `<span class="material-symbols-outlined spin">progress_activity</span> ${html}`;
+      } else {
+        btn.innerHTML = html;
+      }
+    }
+  </script>
+</body>
+</html>

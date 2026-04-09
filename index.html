@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — MarketPlace</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* ── Dashboard-specific ── */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Chart */
+    .chart-wrap {
+      display: flex; align-items: flex-end; gap: 6px;
+      height: 130px; padding: 0 4px;
+    }
+    .chart-col {
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      flex: 1;
+    }
+    .chart-bar {
+      width: 100%; background: var(--orange);
+      border-radius: 5px 5px 0 0;
+      transition: height .5s cubic-bezier(.34,1.56,.64,1);
+      min-height: 4px; cursor: pointer; position: relative;
+    }
+    .chart-bar::after {
+      content: attr(title);
+      position: absolute; bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--gray-900); color: #fff;
+      padding: 3px 7px; border-radius: 4px;
+      font-size: 11px; white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition);
+    }
+    .chart-bar:hover { background: var(--orange-dark); }
+    .chart-bar:hover::after { opacity: 1; }
+    .chart-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+    /* Revenue card */
+    .rev-card {
+      background: var(--gray-900);
+      border-radius: var(--radius);
+      padding: 22px;
+      color: #fff;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.04);
+    }
+    .rev-card::before {
+      content: '';
+      position: absolute; top: -30px; right: -30px;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(249,115,22,.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .rev-card-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .8px;
+      text-transform: uppercase; color: rgba(255,255,255,.4);
+      margin-bottom: 8px;
+    }
+    .rev-card-value {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 30px; font-weight: 700;
+      color: #fff; letter-spacing: -1px;
+      line-height: 1;
+    }
+    .rev-card-sub {
+      font-size: 11.5px; color: rgba(255,255,255,.35);
+      margin-top: 10px; line-height: 1.6;
+    }
+    .rev-card-sub span { color: var(--orange); font-weight: 700; }
+
+    /* Recent orders */
+    .order-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background var(--transition);
+    }
+    .order-row:last-child { border-bottom: none; }
+    .order-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--orange); flex-shrink: 0;
+    }
+    .order-info { flex: 1; min-width: 0; }
+    .order-id {
+      font-size: 12.5px; font-weight: 700; color: var(--text);
+      font-family: 'Clash Display', sans-serif;
+    }
+    .order-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* Quick actions */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .quick-btn {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 7px; padding: 14px 8px;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-100);
+      border-radius: var(--radius-sm);
+      text-decoration: none; color: var(--text);
+      text-align: center;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .quick-btn:hover {
+      border-color: var(--orange);
+      background: var(--orange-pale);
+      transform: translateY(-1px);
+    }
+    .quick-btn .material-symbols-outlined { font-size: 20px; color: var(--orange); }
+    .quick-btn-label { font-size: 11px; font-weight: 700; color: var(--gray-700); }
+
+    /* Trending */
+    .trend-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+    }
+    .trend-row:last-child { border-bottom: none; }
+    .trend-num {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--gray-200); width: 26px; flex-shrink: 0;
+      text-align: center;
+    }
+    .trend-row:first-child .trend-num { color: var(--orange); }
+    .trend-info { flex: 1; min-width: 0; }
+    .trend-name {
+      font-size: 12.5px; font-weight: 700; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .trend-cat { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* Sidebar right panel vertical stack */
+    .right-col { display: flex; flex-direction: column; gap: 16px; }
+
+    @media (max-width: 1050px) {
+      .dash-grid { grid-template-columns: 1fr; }
+      .right-col { flex-direction: row; flex-wrap: wrap; }
+      .right-col > * { flex: 1 1 280px; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+
+const content = `
+<div class="page-header">
+  <div>
+    <div class="page-header-title">Dashboard</div>
+    <div class="page-header-sub">Welcome back — here's what's happening today</div>
+  </div>
+  <button class="btn btn-primary" onclick="loadAll()">
+    <span class="material-symbols-outlined">refresh</span> Refresh
+  </button>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" id="statsGrid">
+  <div class="stat-card accent-orange">
+    <div class="stat-icon orange"><span class="material-symbols-outlined">receipt_long</span></div>
+    <div class="stat-body">
+      <div class="stat-value" id="totalOrders">—</div>
+      <div class="stat-label">Total Orders</div>
+    </div>
+  </div>
+  <div class="stat-card accent-green">
+    <div class="stat-icon green"><span class="material-symbols-outlined">payments</span></div>
+    <div class="stat-body">
+      <div class="stat-value" id="totalRevenue">—</div>
+      <div class="stat-label">Total Revenue</div>
+    </div>
+  </div>
+  <div class="stat-card accent-blue">
+    <div class="stat-icon blue"><span class="material-symbols-outlined">inventory_2</span></div>
+    <div class="stat-body">
+      <div class="stat-value" id="totalProducts">—</div>
+      <div class="stat-label">Products Listed</div>
+    </div>
+  </div>
+  <div class="stat-card accent-red">
+    <div class="stat-icon red"><span class="material-symbols-outlined">pending_actions</span></div>
+    <div class="stat-body">
+      <div class="stat-value" id="pendingRequests">—</div>
+      <div class="stat-label">Pending Requests</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main grid -->
+<div class="dash-grid">
+
+  <!-- Left col -->
+  <div style="display:flex;flex-direction:column;gap:18px;">
+
+    <!-- Bar chart -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Orders This Week</div>
+          <div class="card-subtitle">Daily order volume</div>
+        </div>
+        <a href="orders.html" class="btn btn-sm btn-outline">View All</a>
+      </div>
+      <div class="chart-wrap" id="chartWrap">
+        <div class="empty-state" style="flex:1;padding:20px 0;">
+          <span class="material-symbols-outlined">bar_chart</span>
+          <span>Loading chart…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent orders -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Today's Orders</div>
+          <div class="card-subtitle">Most recent first</div>
+        </div>
+        <a href="orders.html" class="btn btn-sm btn-outline">See all</a>
+      </div>
+      <div id="recentOrdersList">
+        <div class="empty-state" style="padding:24px 0;">
+          <span class="material-symbols-outlined">hourglass_empty</span>
+          <span>Loading…</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right col -->
+  <div class="right-col">
+
+    <!-- Revenue summary -->
+    <div class="rev-card">
+      <div class="rev-card-label">Revenue Summary</div>
+      <div class="rev-card-value" id="revSummary">—</div>
+      <div class="rev-card-sub" id="revBreakdown">Loading breakdown…</div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Quick Actions</div>
+      <div class="quick-grid">
+        <a href="products.html" class="quick-btn">
+          <span class="material-symbols-outlined">add_box</span>
+          <span class="quick-btn-label">Products</span>
+        </a>
+        <a href="orders.html" class="quick-btn">
+          <span class="material-symbols-outlined">receipt_long</span>
+          <span class="quick-btn-label">Orders</span>
+        </a>
+        <a href="ai.html" class="quick-btn">
+          <span class="material-symbols-outlined">auto_awesome</span>
+          <span class="quick-btn-label">AI Tools</span>
+        </a>
+        <a href="requests.html" class="quick-btn">
+          <span class="material-symbols-outlined">pending_actions</span>
+          <span class="quick-btn-label">Requests</span>
+        </a>
+        <a href="preorders.html" class="quick-btn">
+          <span class="material-symbols-outlined">schedule</span>
+          <span class="quick-btn-label">Pre-Orders</span>
+        </a>
+        <a href="chat.html" class="quick-btn">
+          <span class="material-symbols-outlined">forum</span>
+          <span class="quick-btn-label">Messages</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Trending products -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Trending Now</div>
+          <div class="card-subtitle">Top performing products</div>
+        </div>
+        <span class="material-symbols-outlined" style="color:var(--orange);font-size:18px;">trending_up</span>
+      </div>
+      <div id="trendingList">
+        <div class="empty-state" style="padding:20px 0;">
+          <span class="material-symbols-outlined">hourglass_empty</span>
+          <span>Loading…</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+`;
+
+renderLayout('Dashboard', 'dashboard.html', content);
+loadAll();
+
+async function loadAll() {
+  await Promise.all([loadSummary(), loadChart(), loadRecentOrders(), loadProducts(), loadPending(), loadTrending()]);
+}
+
+async function loadSummary() {
+  const [sumRes, revRes] = await Promise.all([API.getOrderSummary(), API.getSellerRevenue()]);
+  if (sumRes.ok) {
+    const d = sumRes.data?.data || sumRes.data;
+    document.getElementById('totalOrders').textContent = d?.totalOrders ?? d?.total ?? '—';
+  }
+  if (revRes.ok) {
+    const d = revRes.data?.data || revRes.data;
+    const total = d?.totalRevenue ?? d?.total;
+    document.getElementById('revSummary').textContent = total != null ? formatCurrency(total) : '—';
+    document.getElementById('totalRevenue').textContent = total != null ? formatCurrency(total) : '—';
+    const parts = [];
+    if (d?.completedRevenue) parts.push(`<span>Completed</span> ${formatCurrency(d.completedRevenue)}`);
+    if (d?.pendingRevenue)   parts.push(`<span>Pending</span> ${formatCurrency(d.pendingRevenue)}`);
+    document.getElementById('revBreakdown').innerHTML = parts.join('&nbsp;&nbsp;·&nbsp;&nbsp;') || 'No breakdown available';
+  }
+}
+
+async function loadChart() {
+  const res = await API.getDailyCounts();
+  const wrap = document.getElementById('chartWrap');
+  if (!res.ok) {
+    wrap.innerHTML = '<div class="empty-state" style="flex:1;padding:20px 0;"><span class="material-symbols-outlined">error</span><span>No data</span></div>';
+    return;
+  }
+  const data = res.data?.data || res.data;
+  const entries = Object.entries(data || {});
+  if (!entries.length) {
+    wrap.innerHTML = '<div class="empty-state" style="flex:1;padding:20px 0;"><span class="material-symbols-outlined">bar_chart</span><span>No orders yet</span></div>';
+    return;
+  }
+  const max = Math.max(...entries.map(([,v]) => Number(v)), 1);
+  wrap.innerHTML = entries.map(([day, count]) => `
+    <div class="chart-col">
+      <div class="chart-bar" style="height:${Math.round((Number(count)/max)*118)}px" title="${day}: ${count} orders"></div>
+      <div class="chart-label">${day.slice(0,3)}</div>
+    </div>
+  `).join('');
+}
+
+async function loadRecentOrders() {
+  const res = await API.getOrdersToday();
+  const el = document.getElementById('recentOrdersList');
+  const orders = res.data?.data || res.data || [];
+  if (!Array.isArray(orders) || !orders.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:24px 0;"><span class="material-symbols-outlined">inbox</span><h4>No orders today</h4></div>';
+    return;
+  }
+  el.innerHTML = orders.slice(0,6).map(o => `
+    <div class="order-row">
+      <div class="order-dot"></div>
+      <div class="order-info">
+        <div class="order-id">#${String(o.orderId || o.id || '').slice(-8).toUpperCase()}</div>
+        <div class="order-meta">${formatDate(o.createdAt)}&nbsp;&nbsp;·&nbsp;&nbsp;${formatCurrency(o.total ?? o.totalAmount)}</div>
+      </div>
+      ${statusBadge(o.status)}
+    </div>
+  `).join('');
+}
+
+async function loadProducts() {
+  const res = await API.getMyProducts();
+  const prods = res.data?.data || res.data || [];
+  document.getElementById('totalProducts').textContent = Array.isArray(prods) ? prods.length : '—';
+}
+
+async function loadPending() {
+  const res = await API.getProductRequestsByStatus('PENDING');
+  const d = res.data?.data?.content || res.data?.content || res.data?.data || [];
+  document.getElementById('pendingRequests').textContent =
+    Array.isArray(d) ? d.length : (res.data?.data?.totalElements ?? '—');
+}
+
+async function loadTrending() {
+  const res = await API.getTrendingProducts();
+  const el = document.getElementById('trendingList');
+  const prods = res.data?.data || res.data || [];
+  if (!Array.isArray(prods) || !prods.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:20px 0;"><span class="material-symbols-outlined">trending_up</span><h4>No data yet</h4></div>';
+    return;
+  }
+  el.innerHTML = prods.slice(0,5).map((p, i) => `
+    <div class="trend-row">
+      <div class="trend-num">${i+1}</div>
+      <div class="trend-info">
+        <div class="trend-name">${p.name || p.productName || 'Product'}</div>
+        <div class="trend-cat">${p.category || p.categoryName || '—'}&nbsp;·&nbsp;${formatCurrency(p.price)}</div>
+      </div>
+      ${statusBadge(p.stockStatus || p.status)}
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>

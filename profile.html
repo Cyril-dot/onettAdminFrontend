@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile — MarketPlace Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    :root {
+      --pr-accent:       #7C3AED;
+      --pr-accent-light: #EDE9FE;
+      --pr-accent-mid:   #DDD6FE;
+      --pr-accent-dark:  #5B21B6;
+      --pr-accent-glow:  rgba(124,58,237,.15);
+      --font-display:    'Bricolage Grotesque', sans-serif;
+      --font-mono:       'DM Mono', monospace;
+    }
+
+    /* ── Page Header ── */
+    .pr-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .pr-header-left .pr-title {
+      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      color: var(--text); letter-spacing: -.6px; line-height: 1.15;
+    }
+    .pr-header-left .pr-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
+    .pr-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Hero Card ── */
+    .pr-hero {
+      background: linear-gradient(135deg, var(--pr-accent) 0%, var(--pr-accent-dark) 100%);
+      border-radius: 16px; padding: 32px 36px;
+      display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+      margin-bottom: 24px; box-shadow: 0 12px 40px var(--pr-accent-glow);
+      position: relative; overflow: hidden;
+    }
+    .pr-hero::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(255,255,255,.06); pointer-events: none;
+    }
+    .pr-hero::after {
+      content: ''; position: absolute; bottom: -60px; right: 80px;
+      width: 140px; height: 140px; border-radius: 50%;
+      background: rgba(255,255,255,.04); pointer-events: none;
+    }
+
+    /* ── FIXED: Avatar styles ── */
+    .pr-avatar {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 34px; font-weight: 800;
+      color: #fff; flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,.35);
+      overflow: hidden; position: relative; z-index: 1;
+      /* Ensure text initial is centered when no image */
+      line-height: 1;
+    }
+    /* Image fills avatar completely — no leftover initial text beside it */
+    .pr-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    /* Fallback initial sits behind the image */
+    .pr-avatar .pr-avatar-initial {
+      position: relative;
+      z-index: 0;
+    }
+
+    .pr-hero-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+    .pr-hero-name {
+      font-family: var(--font-display); font-size: 22px; font-weight: 800;
+      color: #fff; letter-spacing: -.4px; line-height: 1.2;
+    }
+    .pr-hero-email { font-size: 13px; color: rgba(255,255,255,.75); margin-top: 4px; font-family: var(--font-mono); }
+    .pr-hero-tags { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .pr-hero-tag {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,.14); border-radius: 99px;
+      padding: 5px 12px; font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,.9); backdrop-filter: blur(4px);
+    }
+    .pr-hero-tag .material-symbols-rounded { font-size: 14px; }
+    .pr-hero-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.15); border-radius: 10px;
+      padding: 8px 16px; font-size: 12px; font-weight: 700; color: #fff;
+      border: 1px solid rgba(255,255,255,.25); align-self: flex-start; margin-top: 4px;
+      position: relative; z-index: 1;
+    }
+    .pr-hero-badge .material-symbols-rounded { font-size: 16px; }
+
+    /* ── Stats Row ── */
+    .pr-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+    .pr-stat {
+      background: var(--white); border-radius: 14px; border: 1px solid var(--gray-100);
+      padding: 18px 20px; position: relative; overflow: hidden;
+      transition: transform .16s, box-shadow .16s; cursor: default;
+    }
+    .pr-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .pr-stat::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; border-radius: 14px 14px 0 0;
+    }
+    .pr-stat.purple::before { background: var(--pr-accent); }
+    .pr-stat.green::before  { background: #10B981; }
+    .pr-stat.blue::before   { background: #3B82F6; }
+    .pr-stat-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+    }
+    .pr-stat-icon .material-symbols-rounded { font-size: 20px; }
+    .pr-stat.purple .pr-stat-icon { background: var(--pr-accent-light); color: var(--pr-accent); }
+    .pr-stat.green  .pr-stat-icon { background: #D1FAE5; color: #059669; }
+    .pr-stat.blue   .pr-stat-icon { background: #DBEAFE; color: #2563EB; }
+    .pr-stat-num {
+      font-family: var(--font-display); font-size: 28px; font-weight: 800;
+      letter-spacing: -.8px; color: var(--text); line-height: 1;
+    }
+    .pr-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+
+    /* ── Cards ── */
+    .pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pr-card {
+      background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
+    }
+    .pr-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-100);
+    }
+    .pr-card-title {
+      font-family: var(--font-display); font-size: 15px; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 8px;
+    }
+    .pr-card-title .material-symbols-rounded { font-size: 18px; color: var(--pr-accent); }
+    .pr-card-body { padding: 20px 24px; }
+
+    /* ── Detail rows ── */
+    .pr-detail-row {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 11px 0; border-bottom: 1px solid var(--gray-100); gap: 16px;
+    }
+    .pr-detail-row:last-child { border-bottom: none; }
+    .pr-detail-key {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .7px; white-space: nowrap;
+      display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    }
+    .pr-detail-key .material-symbols-rounded { font-size: 14px; }
+    .pr-detail-val {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      text-align: right; font-family: var(--font-display); word-break: break-word;
+    }
+    .pr-detail-val.muted { color: var(--text-muted); font-weight: 500; font-style: italic; }
+    .pr-detail-val.mono { font-family: var(--font-mono); font-weight: 500; }
+
+    /* Verified badge */
+    .pr-verified {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #D1FAE5; color: #065F46; border-radius: 99px;
+      padding: 3px 10px; font-size: 11px; font-weight: 700; font-family: var(--font-display);
+    }
+    .pr-verified .material-symbols-rounded { font-size: 13px; }
+    .pr-unverified {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #FEF3C7; color: #92400E; border-radius: 99px;
+      padding: 3px 10px; font-size: 11px; font-weight: 700; font-family: var(--font-display);
+    }
+    .pr-unverified .material-symbols-rounded { font-size: 13px; }
+
+    /* ── Stat item inside card ── */
+    .pr-store-stat {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 13px 16px; border-radius: 12px; margin-bottom: 10px;
+    }
+    .pr-store-stat:last-child { margin-bottom: 0; }
+    .pr-store-stat-left { display: flex; align-items: center; gap: 10px; }
+    .pr-store-stat-left .material-symbols-rounded { font-size: 18px; }
+    .pr-store-stat-label { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text); }
+    .pr-store-stat-num {
+      font-family: var(--font-display); font-size: 20px; font-weight: 800;
+      color: var(--text); letter-spacing: -.5px;
+    }
+
+    /* Description block */
+    .pr-description {
+      background: var(--gray-50); border-radius: 10px; padding: 14px 16px;
+      font-size: 13px; color: var(--text); line-height: 1.65; font-weight: 500;
+      border: 1px solid var(--gray-100); margin-bottom: 0;
+    }
+
+    /* Refresh / Edit buttons */
+    .pr-refresh-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+      border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
+      color: var(--gray-600); font-size: 12px; font-weight: 700; cursor: pointer;
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .pr-refresh-btn:hover { border-color: var(--pr-accent); color: var(--pr-accent); background: var(--pr-accent-light); }
+    .pr-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
+    .pr-refresh-btn .material-symbols-rounded { font-size: 16px; }
+
+    .pr-edit-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+      border-radius: 9px; background: var(--pr-accent); color: #fff;
+      font-size: 12px; font-weight: 700; cursor: pointer; border: none;
+      font-family: var(--font-display); transition: all .14s; text-decoration: none;
+    }
+    .pr-edit-btn:hover { background: var(--pr-accent-dark); box-shadow: 0 4px 14px var(--pr-accent-glow); }
+    .pr-edit-btn .material-symbols-rounded { font-size: 16px; }
+
+    /* Skeleton */
+    .pr-skel {
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    .pr-skel.line { height: 14px; width: 100%; margin-bottom: 6px; }
+    .pr-skel.short { height: 12px; width: 60%; }
+    .pr-skel.avatar { width: 88px; height: 88px; border-radius: 50%; flex-shrink: 0; }
+    .pr-skel.stat { height: 28px; width: 80px; }
+    .pr-skel.tag { height: 28px; width: 100px; border-radius: 99px; }
+
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Full-width description row ── */
+    .pr-detail-row.full { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .pr-detail-row.full .pr-detail-val { text-align: left; }
+
+    @media (max-width: 900px) {
+      .pr-grid { grid-template-columns: 1fr; }
+      .pr-stats { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .pr-stats { grid-template-columns: 1fr; }
+      .pr-hero { padding: 24px 20px; }
+      .pr-header-left .pr-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+
+const content = `
+<div class="pr-header">
+  <div class="pr-header-left">
+    <div class="pr-title">My Profile</div>
+    <div class="pr-subtitle">View and manage your seller account</div>
+  </div>
+  <div class="pr-header-right">
+    <button class="pr-refresh-btn" id="refreshBtn" onclick="refreshAll()">
+      <span class="material-symbols-rounded">refresh</span>
+      Refresh
+    </button>
+    <a href="profile-edit.html" class="pr-edit-btn">
+      <span class="material-symbols-rounded">edit</span>
+      Edit Profile
+    </a>
+  </div>
+</div>
+
+<!-- Hero -->
+<div id="profileHero">
+  <div class="pr-hero" style="margin-bottom:24px">
+    <div class="pr-skel avatar"></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+      <div class="pr-skel line" style="width:200px;height:20px"></div>
+      <div class="pr-skel line" style="width:160px;height:13px"></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <div class="pr-skel tag"></div>
+        <div class="pr-skel tag" style="width:80px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="pr-stats">
+  <div class="pr-stat purple">
+    <div class="pr-stat-icon"><span class="material-symbols-rounded">inventory_2</span></div>
+    <div class="pr-stat-num" id="statProducts">—</div>
+    <div class="pr-stat-label">Total Products</div>
+  </div>
+  <div class="pr-stat green">
+    <div class="pr-stat-icon"><span class="material-symbols-rounded">receipt_long</span></div>
+    <div class="pr-stat-num" id="statOrders">—</div>
+    <div class="pr-stat-label">Total Orders</div>
+  </div>
+  <div class="pr-stat blue">
+    <div class="pr-stat-icon"><span class="material-symbols-rounded">payments</span></div>
+    <div class="pr-stat-num" id="statRevenue">—</div>
+    <div class="pr-stat-label">Total Revenue</div>
+  </div>
+</div>
+
+<!-- Detail grid -->
+<div class="pr-grid">
+  <!-- Account Info -->
+  <div class="pr-card">
+    <div class="pr-card-header">
+      <div class="pr-card-title">
+        <span class="material-symbols-rounded">manage_accounts</span>
+        Account Information
+      </div>
+    </div>
+    <div class="pr-card-body" id="accountInfo">
+      ${skelDetailRows(6)}
+    </div>
+  </div>
+
+  <!-- Store Info -->
+  <div class="pr-card">
+    <div class="pr-card-header">
+      <div class="pr-card-title">
+        <span class="material-symbols-rounded">storefront</span>
+        Store Details
+      </div>
+    </div>
+    <div class="pr-card-body" id="storeInfo">
+      ${skelDetailRows(5)}
+    </div>
+  </div>
+</div>
+`;
+
+renderLayout('My Profile', 'profile.html', content);
+refreshAll();
+
+function skelDetailRows(n) {
+  return Array(n).fill(0).map(() => `
+    <div class="pr-detail-row">
+      <div class="pr-skel line" style="width:90px;height:11px"></div>
+      <div class="pr-skel line" style="width:140px;height:13px"></div>
+    </div>
+  `).join('');
+}
+
+async function refreshAll() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.classList.add('loading');
+  await Promise.all([loadProfile(), loadStoreStats()]);
+  if (btn) btn.classList.remove('loading');
+}
+
+// ── Load Profile ──────────────────────────────────────────────────
+async function loadProfile() {
+  const res = await API.sellerMe();
+  if (!res.ok) { showToast('Failed to load profile', 'error'); return; }
+
+  const s = res.data?.data || res.data;
+  if (!s) return;
+
+  // Resolve display fields — cover all response shape variants
+  const name        = s.storeName || s.businessName || s.fullName || s.name || 'Seller';
+  const email       = s.email || '—';
+  const phone       = s.phoneNumber || s.phone || '';
+  const location    = s.location || s.address || '';
+  const businessAddr= s.businessAddress || s.address || '';
+  const storeName   = s.storeName || '';
+  const fullName    = s.fullName || s.name || '';
+  const taxId       = s.taxId || '';
+  const isVerified  = s.isVerified ?? s.verified ?? false;
+  const role        = s.role || '';
+  const createdAt   = s.createdAt || '';
+  const updatedAt   = s.updatedAt || '';
+  const storeDesc   = s.storeDescription || s.description || '';
+  const sellerBio   = s.sellerBio || s.bio || '';
+  const picUrl      = s.profilePic?.imageUrl || s.profilePicUrl || s.profilePic || s.avatarUrl || '';
+  const initial     = name.charAt(0).toUpperCase();
+
+  // ── FIXED: Avatar HTML — image sits absolutely inside the avatar circle,
+  //    fallback initial is always in the DOM but visually behind the image.
+  //    onerror hides the broken image so the initial shows through.
+  const avatarHtml = `
+    <span class="pr-avatar-initial">${initial}</span>
+    ${picUrl ? `<img
+        src="${picUrl}"
+        alt="${initial}"
+        onerror="this.style.display='none'"
+    />` : ''}
+  `;
+
+  // ── Hero ──
+  document.getElementById('profileHero').innerHTML = `
+    <div class="pr-hero" style="margin-bottom:24px">
+      <div class="pr-avatar">${avatarHtml}</div>
+      <div class="pr-hero-info">
+        <div class="pr-hero-name">${esc(name)}</div>
+        <div class="pr-hero-email">${esc(email)}</div>
+        <div class="pr-hero-tags">
+          ${phone    ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">phone</span>${esc(phone)}</div>` : ''}
+          ${location ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">location_on</span>${esc(location)}</div>` : ''}
+          ${createdAt ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">calendar_today</span>Since ${new Date(createdAt).getFullYear()}</div>` : ''}
+        </div>
+      </div>
+      <div>
+        ${isVerified
+          ? `<div class="pr-hero-badge"><span class="material-symbols-rounded">verified</span>Verified Seller</div>`
+          : `<div class="pr-hero-badge" style="background:rgba(255,255,255,.1)"><span class="material-symbols-rounded">pending</span>Unverified</div>`}
+        ${role ? `<div style="margin-top:8px;font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.6);text-align:center">${esc(role)}</div>` : ''}
+      </div>
+    </div>
+  `;
+
+  // ── Account Info Card ──
+  document.getElementById('accountInfo').innerHTML = `
+    ${detailRow('person', 'Full Name', esc(fullName) || '—')}
+    ${detailRow('alternate_email', 'Email', `<span class="pr-detail-val mono">${esc(email)}</span>`, true)}
+    ${detailRow('phone', 'Phone', esc(phone) || '—')}
+    ${detailRow('location_on', 'Location', esc(location) || '—')}
+    ${detailRow('home_work', 'Business Address', esc(businessAddr) || '—')}
+    ${detailRow('receipt', 'Tax ID', taxId ? `<span class="pr-detail-val mono">${esc(taxId)}</span>` : '<span class="pr-detail-val muted">Not set</span>', true)}
+    ${detailRow('verified_user', 'Verification', isVerified
+        ? `<span class="pr-verified"><span class="material-symbols-rounded">check_circle</span>Verified</span>`
+        : `<span class="pr-unverified"><span class="material-symbols-rounded">schedule</span>Pending</span>`, true)}
+    ${detailRow('calendar_today', 'Member Since', createdAt ? formatDate(createdAt) : '—')}
+    ${updatedAt ? detailRow('edit_calendar', 'Last Updated', formatDate(updatedAt)) : ''}
+  `;
+
+  // ── Store Info Card ──
+  document.getElementById('storeInfo').innerHTML = `
+    ${detailRow('storefront', 'Store Name', esc(storeName) || '—')}
+    ${storeDesc ? `
+      <div class="pr-detail-row full">
+        <div class="pr-detail-key"><span class="material-symbols-rounded">description</span>Store Description</div>
+        <div class="pr-description">${esc(storeDesc)}</div>
+      </div>` : detailRow('description', 'Store Description', '<span class="pr-detail-val muted">Not set</span>', true)}
+    ${sellerBio ? `
+      <div class="pr-detail-row full">
+        <div class="pr-detail-key"><span class="material-symbols-rounded">person_outline</span>Seller Bio</div>
+        <div class="pr-description">${esc(sellerBio)}</div>
+      </div>` : detailRow('person_outline', 'Seller Bio', '<span class="pr-detail-val muted">Not set</span>', true)}
+  `;
+}
+
+// ── Load Store Stats ──────────────────────────────────────────────
+async function loadStoreStats() {
+  const [prods, orders, rev] = await Promise.all([
+    API.getMyProducts(),
+    API.getSellerOrders(),
+    API.getSellerRevenue()
+  ]);
+
+  const toArr = r => { const d = r.data?.data || r.data; return Array.isArray(d) ? d : []; };
+
+  const prodCount  = toArr(prods).length;
+  const orderCount = toArr(orders).length;
+
+  const revData    = rev.data?.data || rev.data;
+  const revTotal   = revData?.totalRevenue ?? revData?.total ?? revData?.revenue ?? null;
+
+  const el = id => document.getElementById(id);
+  if (el('statProducts')) el('statProducts').textContent = prodCount;
+  if (el('statOrders'))   el('statOrders').textContent   = orderCount;
+  if (el('statRevenue'))  el('statRevenue').textContent  = revTotal != null
+    ? '₵' + parseFloat(revTotal).toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    : '—';
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
+function detailRow(icon, label, valHtml, rawHtml = false) {
+  const val = rawHtml ? valHtml : `<div class="pr-detail-val">${valHtml}</div>`;
+  return `
+    <div class="pr-detail-row">
+      <div class="pr-detail-key">
+        <span class="material-symbols-rounded">${icon}</span>${label}
+      </div>
+      ${val}
+    </div>`;
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  try {
+    return new Date(dateStr).toLocaleDateString('en-GH', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+  } catch { return dateStr; }
+}
+</script>
+</body>
+</html>

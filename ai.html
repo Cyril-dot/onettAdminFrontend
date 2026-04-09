@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Tools — MarketPlace Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    :root {
+      --po-accent: #7C3AED;
+      --po-accent-light: #EDE9FE;
+      --po-accent-mid: #DDD6FE;
+      --po-accent-dark: #5B21B6;
+      --po-accent-glow: rgba(124,58,237,.15);
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── Page Header ── */
+    .po-header {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px; margin-bottom:28px; flex-wrap:wrap;
+    }
+    .po-header-left .po-title {
+      font-family:var(--font-display); font-size:26px; font-weight:800;
+      color:var(--text); letter-spacing:-.6px; line-height:1.15;
+    }
+    .po-header-left .po-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; font-weight:400; }
+
+    /* ── Grid Layout ── */
+    .ai-grid {
+      display:grid; grid-template-columns:repeat(2,1fr); gap:20px;
+    }
+    .ai-grid .span2 { grid-column:1/-1; }
+
+    /* ── Tool Card ── */
+    .ai-card {
+      background:var(--white); border-radius:16px;
+      border:1px solid var(--gray-100);
+      box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;
+    }
+    .ai-card-header {
+      display:flex; align-items:center; gap:14px;
+      padding:20px 24px 0;
+    }
+    .ai-card-icon {
+      width:44px; height:44px; border-radius:11px; flex-shrink:0;
+      background:var(--po-accent-light); color:var(--po-accent);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .ai-card-icon .material-symbols-rounded { font-size:22px; }
+    .ai-card-title {
+      font-family:var(--font-display); font-size:15px; font-weight:800;
+      color:var(--text); line-height:1.2;
+    }
+    .ai-card-desc { font-size:12px; color:var(--text-muted); margin-top:3px; font-weight:400; }
+    .ai-card-body { padding:16px 24px 20px; }
+
+    /* ── Form Elements ── */
+    .ai-form-group { margin-bottom:12px; }
+    .ai-form-label {
+      display:block; font-size:11px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.6px; color:var(--text-muted);
+      margin-bottom:5px;
+    }
+    .ai-form-input {
+      width:100%; padding:9px 12px; border-radius:10px;
+      border:1.5px solid var(--gray-200); font-family:var(--font-display);
+      font-size:13px; font-weight:600; color:var(--text); background:var(--white);
+      outline:none; transition:border-color .14s; box-sizing:border-box;
+    }
+    .ai-form-input:focus { border-color:var(--po-accent); background:var(--po-accent-light); }
+    .ai-form-select {
+      width:100%; padding:9px 12px; border-radius:10px;
+      border:1.5px solid var(--gray-200); font-family:var(--font-display);
+      font-size:13px; font-weight:600; color:var(--text); background:var(--white);
+      outline:none; cursor:pointer; transition:border-color .14s; box-sizing:border-box;
+    }
+    .ai-form-select:focus { border-color:var(--po-accent); }
+    .ai-form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .ai-form-row.three { grid-template-columns:1fr 1fr 1fr; }
+
+    /* ── Run Button ── */
+    .btn-ai-run {
+      display:inline-flex; align-items:center; gap:6px; padding:9px 18px;
+      border-radius:10px; background:var(--po-accent); color:#fff;
+      font-family:var(--font-display); font-size:13px; font-weight:700;
+      border:none; cursor:pointer; transition:all .15s; margin-top:4px;
+    }
+    .btn-ai-run:hover { background:var(--po-accent-dark); box-shadow:0 4px 16px var(--po-accent-glow); }
+    .btn-ai-run:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-ai-run .material-symbols-rounded { font-size:16px; }
+    .btn-ai-run .spinner { animation:spin .8s linear infinite; }
+
+    /* ── AI Response Block ── */
+    .ai-result { margin-top:16px; }
+    .ai-response {
+      background:var(--po-accent-light); border-radius:12px;
+      border:1px solid var(--po-accent-mid); padding:16px 18px;
+      animation:fadeIn .25s ease;
+    }
+    .ai-response.error {
+      background:#FEF2F2; border-color:#FECACA;
+    }
+    .ai-response-header {
+      display:flex; align-items:center; gap:7px; margin-bottom:12px;
+      font-family:var(--font-display); font-size:12px; font-weight:800;
+      color:var(--po-accent); text-transform:uppercase; letter-spacing:.7px;
+    }
+    .ai-response-header .material-symbols-rounded { font-size:15px; }
+    .ai-response.error .ai-response-header { color:#B91C1C; }
+
+    /* JSON response styled output */
+    .ai-response-body { font-size:13px; color:var(--po-accent-dark); line-height:1.7; }
+    .ai-response-body p { margin:0 0 8px; }
+    .ai-response-body p:last-child { margin-bottom:0; }
+
+    /* Structured JSON blocks */
+    .ai-json-block {
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .ai-json-field {
+      background:rgba(255,255,255,.65); border-radius:8px;
+      padding:10px 14px; border:1px solid var(--po-accent-mid);
+    }
+    .ai-json-field-key {
+      font-size:10.5px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.7px; color:var(--po-accent); margin-bottom:5px;
+      display:flex; align-items:center; gap:5px;
+    }
+    .ai-json-field-key .material-symbols-rounded { font-size:13px; }
+    .ai-json-field-val {
+      font-size:13px; color:var(--po-accent-dark); line-height:1.65;
+      font-family:var(--font-display); font-weight:500;
+    }
+    .ai-json-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+    .ai-json-tag {
+      background:var(--po-accent-light); color:var(--po-accent-dark);
+      border:1px solid var(--po-accent-mid); border-radius:99px;
+      padding:3px 10px; font-size:11px; font-weight:700;
+      font-family:var(--font-display);
+    }
+    .ai-json-feature-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px; }
+    .ai-json-feature-list li {
+      display:flex; align-items:flex-start; gap:6px;
+      font-size:13px; color:var(--po-accent-dark); line-height:1.55;
+    }
+    .ai-json-feature-list li::before {
+      content:''; width:6px; height:6px; border-radius:50%;
+      background:var(--po-accent); flex-shrink:0; margin-top:5px;
+    }
+
+    /* Price suggestion highlight */
+    .ai-price-highlight {
+      background:var(--po-accent); color:#fff; border-radius:10px;
+      padding:12px 16px; text-align:center; margin-bottom:10px;
+    }
+    .ai-price-highlight .label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; opacity:.8; }
+    .ai-price-highlight .value { font-size:28px; font-weight:800; font-family:var(--font-display); letter-spacing:-.6px; }
+
+    /* Demand badge */
+    .demand-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:4px 12px; border-radius:99px; font-size:12px; font-weight:700;
+      font-family:var(--font-display);
+    }
+    .demand-badge.High { background:#D1FAE5; color:#065F46; }
+    .demand-badge.Medium { background:#FEF3C7; color:#92400E; }
+    .demand-badge.Low { background:#FEE2E2; color:#B91C1C; }
+
+    /* Loading state */
+    .ai-loading {
+      display:flex; align-items:center; gap:10px;
+      padding:14px 0; color:var(--po-accent);
+      font-family:var(--font-display); font-size:13px; font-weight:700;
+    }
+    .ai-loading .material-symbols-rounded { animation:spin .8s linear infinite; font-size:20px; }
+
+    /* ── Product Picker (for Visibility Booster) ── */
+    .prod-picker-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;
+    }
+    .prod-picker-item {
+      border:1.5px solid var(--gray-200); border-radius:10px; padding:10px;
+      cursor:pointer; transition:all .14s; background:var(--white);
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .prod-picker-item:hover { border-color:var(--po-accent); background:var(--po-accent-light); }
+    .prod-picker-item.selected {
+      border-color:var(--po-accent); background:var(--po-accent-light);
+      box-shadow:0 0 0 3px var(--po-accent-glow);
+    }
+    .prod-picker-img {
+      width:100%; aspect-ratio:1; border-radius:7px; object-fit:cover;
+      background:var(--gray-100); border:1px solid var(--gray-200);
+    }
+    .prod-picker-placeholder {
+      width:100%; aspect-ratio:1; border-radius:7px;
+      background:var(--gray-100); border:1px solid var(--gray-200);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .prod-picker-placeholder .material-symbols-rounded { font-size:22px; color:var(--gray-300); }
+    .prod-picker-name {
+      font-family:var(--font-display); font-size:12px; font-weight:700;
+      color:var(--text); line-height:1.3;
+    }
+    .prod-picker-price {
+      font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
+    }
+    .prod-picker-check {
+      display:none; width:18px; height:18px; border-radius:50%;
+      background:var(--po-accent); align-items:center; justify-content:center;
+      align-self:flex-end; margin-top:-2px;
+    }
+    .prod-picker-check .material-symbols-rounded { font-size:12px; color:#fff; }
+    .prod-picker-item.selected .prod-picker-check { display:flex; }
+
+    .prod-picker-skel {
+      height:100%; aspect-ratio:1; border-radius:7px;
+      background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);
+      background-size:200% 100%; animation:shimmer 1.4s infinite;
+    }
+    .prod-picker-loading { grid-column:1/-1; display:flex; align-items:center; gap:8px; padding:8px 0; color:var(--text-muted); font-size:13px; }
+    .prod-picker-loading .material-symbols-rounded { animation:spin .8s linear infinite; font-size:16px; }
+
+    /* Selected product display */
+    .selected-prod-banner {
+      display:flex; align-items:center; gap:12px; padding:10px 14px;
+      background:var(--po-accent-light); border-radius:10px;
+      border:1.5px solid var(--po-accent-mid); margin-bottom:14px;
+    }
+    .selected-prod-banner img { width:40px; height:40px; border-radius:8px; object-fit:cover; }
+    .selected-prod-banner .prod-name { font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--po-accent-dark); }
+    .selected-prod-banner .prod-price { font-family:var(--font-mono); font-size:11px; color:var(--po-accent); }
+    .selected-prod-banner .clear-btn {
+      margin-left:auto; background:none; border:none; cursor:pointer;
+      color:var(--po-accent); display:flex; align-items:center;
+    }
+
+    /* Inventory analysis sections */
+    .inv-section { margin-bottom:12px; }
+    .inv-section-label {
+      font-size:11px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.7px; color:var(--po-accent); margin-bottom:6px;
+      display:flex; align-items:center; gap:5px;
+    }
+    .inv-section-label .material-symbols-rounded { font-size:14px; }
+    .inv-chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .inv-chip {
+      padding:4px 12px; border-radius:99px; font-size:12px; font-weight:700;
+      font-family:var(--font-display); border:1px solid;
+    }
+    .inv-chip.alert { background:#FEF3C7; color:#92400E; border-color:#FDE68A; }
+    .inv-chip.out { background:#FEE2E2; color:#B91C1C; border-color:#FECACA; }
+    .inv-chip.top { background:#D1FAE5; color:#065F46; border-color:#A7F3D0; }
+    .inv-chip.trend { background:var(--po-accent-light); color:var(--po-accent-dark); border-color:var(--po-accent-mid); }
+
+    .inv-health-badge {
+      display:inline-flex; align-items:center; gap:6px; padding:6px 14px;
+      border-radius:99px; font-size:13px; font-weight:700; font-family:var(--font-display);
+    }
+    .inv-health-badge.Good { background:#D1FAE5; color:#065F46; }
+    .inv-health-badge.Fair { background:#FEF3C7; color:#92400E; }
+    .inv-health-badge.Poor { background:#FEE2E2; color:#B91C1C; }
+
+    /* Trend cards */
+    .trend-section {
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .trend-item {
+      background:rgba(255,255,255,.7); border-radius:10px;
+      padding:12px 14px; border:1px solid var(--po-accent-mid);
+    }
+    .trend-item-num {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:22px; height:22px; border-radius:50%;
+      background:var(--po-accent); color:#fff;
+      font-size:11px; font-weight:800; margin-bottom:6px;
+    }
+    .trend-item-text { font-size:13px; color:var(--po-accent-dark); line-height:1.6; }
+
+    @media(max-width:900px) { .ai-grid { grid-template-columns:1fr; } .ai-grid .span2 { grid-column:1; } }
+    @media(max-width:640px) { .ai-form-row, .ai-form-row.three { grid-template-columns:1fr; } .prod-picker-grid { grid-template-columns:repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+
+const content = `
+<div class="po-header">
+  <div class="po-header-left">
+    <div class="po-title">AI Tools</div>
+    <div class="po-subtitle">Powered by AI to help you sell smarter</div>
+  </div>
+</div>
+
+<div class="ai-grid">
+
+  <!-- 1. Trending Analyzer -->
+  <div class="ai-card">
+    <div class="ai-card-header">
+      <div class="ai-card-icon"><span class="material-symbols-rounded">trending_up</span></div>
+      <div>
+        <div class="ai-card-title">Trending Analyzer</div>
+        <div class="ai-card-desc">Discover what's trending across the marketplace</div>
+      </div>
+    </div>
+    <div class="ai-card-body">
+      <button class="btn-ai-run" id="btnTrends" onclick="runTrends()">
+        <span class="material-symbols-rounded">auto_awesome</span> Analyze Trends
+      </button>
+      <div id="trendsResult" class="ai-result"></div>
+    </div>
+  </div>
+
+  <!-- 2. Inventory Analysis -->
+  <div class="ai-card">
+    <div class="ai-card-header">
+      <div class="ai-card-icon"><span class="material-symbols-rounded">warehouse</span></div>
+      <div>
+        <div class="ai-card-title">Inventory Analysis</div>
+        <div class="ai-card-desc">Get AI insights on your current inventory health</div>
+      </div>
+    </div>
+    <div class="ai-card-body">
+      <button class="btn-ai-run" id="btnInventory" onclick="runInventory()">
+        <span class="material-symbols-rounded">auto_awesome</span> Analyze Inventory
+      </button>
+      <div id="inventoryResult" class="ai-result"></div>
+    </div>
+  </div>
+
+  <!-- 3. Listing Generator -->
+  <div class="ai-card span2">
+    <div class="ai-card-header">
+      <div class="ai-card-icon"><span class="material-symbols-rounded">edit_note</span></div>
+      <div>
+        <div class="ai-card-title">AI Listing Generator</div>
+        <div class="ai-card-desc">Generate a professional product listing from basic details</div>
+      </div>
+    </div>
+    <div class="ai-card-body">
+      <div class="ai-form-row">
+        <div class="ai-form-group">
+          <label class="ai-form-label">Product Name</label>
+          <input type="text" id="listingName" class="ai-form-input" placeholder="e.g. Wireless Bluetooth Headphones"/>
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-form-label">Basic Details</label>
+          <input type="text" id="listingDetails" class="ai-form-input" placeholder="e.g. Over-ear, 30hr battery, ANC, foldable"/>
+        </div>
+      </div>
+      <button class="btn-ai-run" id="btnListing" onclick="runListing()">
+        <span class="material-symbols-rounded">auto_awesome</span> Generate Listing
+      </button>
+      <div id="listingResult" class="ai-result"></div>
+    </div>
+  </div>
+
+  <!-- 4. Price Suggester -->
+  <div class="ai-card span2">
+    <div class="ai-card-header">
+      <div class="ai-card-icon"><span class="material-symbols-rounded">price_check</span></div>
+      <div>
+        <div class="ai-card-title">Smart Price Suggester</div>
+        <div class="ai-card-desc">Get an AI-recommended price based on product details</div>
+      </div>
+    </div>
+    <div class="ai-card-body">
+      <div class="ai-form-row three">
+        <div class="ai-form-group">
+          <label class="ai-form-label">Product Name</label>
+          <input type="text" id="priceName" class="ai-form-input" placeholder="e.g. iPhone 14 Pro"/>
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-form-label">Product Details</label>
+          <input type="text" id="priceDetails" class="ai-form-input" placeholder="e.g. 256GB, Space Black, unlocked"/>
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-form-label">Condition (optional)</label>
+          <select id="priceCondition" class="ai-form-select">
+            <option value="">Any</option>
+            <option>NEW</option><option>USED</option><option>REFURBISHED</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-ai-run" id="btnPrice" onclick="runPrice()">
+        <span class="material-symbols-rounded">auto_awesome</span> Suggest Price
+      </button>
+      <div id="priceResult" class="ai-result"></div>
+    </div>
+  </div>
+
+  <!-- 5. Visibility Booster -->
+  <div class="ai-card span2">
+    <div class="ai-card-header">
+      <div class="ai-card-icon"><span class="material-symbols-rounded">visibility</span></div>
+      <div>
+        <div class="ai-card-title">Product Visibility Booster</div>
+        <div class="ai-card-desc">Select a product to get AI-powered visibility tips</div>
+      </div>
+    </div>
+    <div class="ai-card-body">
+      <div id="visBanner" style="display:none"></div>
+      <div id="visProductPicker">
+        <div class="ai-form-group" style="margin-bottom:12px">
+          <label class="ai-form-label">Search products</label>
+          <input type="text" id="visSearch" class="ai-form-input" placeholder="Search by name…" oninput="filterVisPicker()"/>
+        </div>
+        <div class="prod-picker-grid" id="visPickerGrid">
+          <div class="prod-picker-loading">
+            <span class="material-symbols-rounded">progress_activity</span> Loading products…
+          </div>
+        </div>
+      </div>
+      <button class="btn-ai-run" id="btnVis" onclick="runVisibility()" disabled>
+        <span class="material-symbols-rounded">auto_awesome</span> Improve Visibility
+      </button>
+      <div id="visResult" class="ai-result"></div>
+    </div>
+  </div>
+
+</div>
+`;
+
+renderLayout('AI Tools', 'ai.html', content);
+loadVisProducts();
+
+/* ── Helpers ─────────────────────────────────────────────────────── */
+let _visProducts = [];
+let _selectedVisId = null;
+
+function setLoading(btnId, on) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = on;
+  if (on) {
+    btn.innerHTML = '<span class="material-symbols-rounded spinner">progress_activity</span> Thinking…';
+  } else {
+    const labels = {
+      btnTrends: '<span class="material-symbols-rounded">auto_awesome</span> Analyze Trends',
+      btnInventory: '<span class="material-symbols-rounded">auto_awesome</span> Analyze Inventory',
+      btnListing: '<span class="material-symbols-rounded">auto_awesome</span> Generate Listing',
+      btnPrice: '<span class="material-symbols-rounded">auto_awesome</span> Suggest Price',
+      btnVis: '<span class="material-symbols-rounded">auto_awesome</span> Improve Visibility',
+    };
+    btn.innerHTML = labels[btnId] || 'Run';
+  }
+}
+
+function showLoading(elId, label) {
+  document.getElementById(elId).innerHTML = `
+    <div class="ai-loading">
+      <span class="material-symbols-rounded">progress_activity</span> ${label}
+    </div>`;
+}
+
+function showError(elId, msg) {
+  document.getElementById(elId).innerHTML = `
+    <div class="ai-response error">
+      <div class="ai-response-header">
+        <span class="material-symbols-rounded">error</span> Request failed
+      </div>
+      <div class="ai-response-body">${msg || 'Something went wrong. Please try again.'}</div>
+    </div>`;
+}
+
+function tryParseJson(str) {
+  if (!str) return null;
+  try {
+    const clean = str.replace(/```json|```/g, '').trim();
+    const first = clean.indexOf('{');
+    const last  = clean.lastIndexOf('}');
+    if (first !== -1 && last !== -1) return JSON.parse(clean.slice(first, last + 1));
+  } catch(e) {}
+  return null;
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function fmtCur(val) {
+  if (val == null || isNaN(val)) return null;
+  return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits:2 });
+}
+
+function plainTextToHtml(text) {
+  if (!text) return '';
+  return escHtml(text)
+    .split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+}
+
+/* ── TRENDS ─────────────────────────────────────────────────────── */
+async function runTrends() {
+  setLoading('btnTrends', true);
+  showLoading('trendsResult', 'Analyzing marketplace trends…');
+  const res = await API.analyzeTrends();
+  setLoading('btnTrends', false);
+  if (!res.ok) { showError('trendsResult', res.data?.message); return; }
+
+  const raw   = res.data?.data?.reply || res.data?.reply || res.data?.data?.message || res.data?.message || '';
+  const prods = res.data?.data?.products || res.data?.products || [];
+
+  document.getElementById('trendsResult').innerHTML = `
+    <div class="ai-response">
+      <div class="ai-response-header">
+        <span class="material-symbols-rounded">auto_awesome</span> Trending Analysis
+      </div>
+      <div class="ai-response-body">
+        <div class="trend-section">
+          ${parseTrendSections(raw)}
+        </div>
+        ${prods.length ? renderProductCards(prods.slice(0,6)) : ''}
+      </div>
+    </div>`;
+}
+
+function parseTrendSections(text) {
+  if (!text) return '<p style="color:var(--po-accent-dark);font-size:13px">No trend data available.</p>';
+  const lines = text.split('\n').filter(l => l.trim());
+  let html = '';
+  let inSection = false;
+  let sectionContent = '';
+  let sectionNum = 0;
+
+  lines.forEach(line => {
+    const numberedMatch = line.match(/^(\d+)\.\s+(.*)/);
+    if (numberedMatch) {
+      if (inSection) {
+        html += `<div class="trend-item"><div class="trend-item-num">${sectionNum}</div><div class="trend-item-text">${escHtml(sectionContent.trim())}</div></div>`;
+      }
+      sectionNum = numberedMatch[1];
+      sectionContent = numberedMatch[2];
+      inSection = true;
+    } else if (inSection && line.trim()) {
+      sectionContent += ' ' + line.trim();
+    }
+  });
+  if (inSection) {
+    html += `<div class="trend-item"><div class="trend-item-num">${sectionNum}</div><div class="trend-item-text">${escHtml(sectionContent.trim())}</div></div>`;
+  }
+  if (!html) html = `<div class="trend-item"><div class="trend-item-text">${escHtml(text)}</div></div>`;
+  return html;
+}
+
+/* ── INVENTORY ───────────────────────────────────────────────────── */
+async function runInventory() {
+  setLoading('btnInventory', true);
+  showLoading('inventoryResult', 'Analyzing your inventory…');
+  const res = await API.analyzeInventory();
+  setLoading('btnInventory', false);
+  if (!res.ok) { showError('inventoryResult', res.data?.message); return; }
+
+  const raw = res.data?.data?.reply || res.data?.reply || res.data?.data?.message || res.data?.message || '';
+  const parsed = tryParseJson(raw);
+
+  if (parsed) {
+    document.getElementById('inventoryResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header">
+          <span class="material-symbols-rounded">auto_awesome</span> Inventory Analysis
+        </div>
+        <div class="ai-response-body ai-json-block">
+          ${parsed.overallHealthScore ? `
+          <div class="ai-json-field" style="display:flex;align-items:center;gap:12px">
+            <div style="flex:1">
+              <div class="ai-json-field-key">Overall Health</div>
+              <span class="inv-health-badge ${parsed.overallHealthScore}">
+                <span class="material-symbols-rounded" style="font-size:15px">${parsed.overallHealthScore==='Good'?'check_circle':parsed.overallHealthScore==='Fair'?'warning':'error'}</span>
+                ${escHtml(parsed.overallHealthScore)}
+              </span>
+            </div>
+          </div>` : ''}
+          ${parsed.summary ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">summarize</span>Summary</div>
+            <div class="ai-json-field-val">${escHtml(parsed.summary)}</div>
+          </div>` : ''}
+          ${renderInvSection('Low Stock Alerts', 'warning', 'alert', parsed.lowStockAlerts)}
+          ${renderInvSection('Out of Stock', 'remove_shopping_cart', 'out', parsed.outOfStock)}
+          ${renderInvSection('Top Performers', 'star', 'top', parsed.topPerformers)}
+          ${renderInvSection('Trending Opportunities', 'trending_up', 'trend', parsed.trendingOpportunities)}
+          ${parsed.restockSuggestions?.length ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">inventory</span>Restock Suggestions</div>
+            <ul class="ai-json-feature-list">${parsed.restockSuggestions.map(s => `<li>${escHtml(s)}</li>`).join('')}</ul>
+          </div>` : ''}
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('inventoryResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Inventory Analysis</div>
+        <div class="ai-response-body">${plainTextToHtml(raw)}</div>
+      </div>`;
+  }
+}
+
+function renderInvSection(label, icon, cls, arr) {
+  if (!arr || !arr.length) return '';
+  return `<div class="ai-json-field">
+    <div class="inv-section-label"><span class="material-symbols-rounded">${icon}</span>${escHtml(label)}</div>
+    <div class="inv-chips">${arr.map(i => `<span class="inv-chip ${cls}">${escHtml(i)}</span>`).join('')}</div>
+  </div>`;
+}
+
+/* ── LISTING ─────────────────────────────────────────────────────── */
+async function runListing() {
+  const name    = document.getElementById('listingName').value.trim();
+  const details = document.getElementById('listingDetails').value.trim();
+  if (!name || !details) { showToast('Enter product name and details', 'error'); return; }
+  setLoading('btnListing', true);
+  showLoading('listingResult', 'Crafting your listing…');
+  const res = await API.generateListing(name, details);
+  setLoading('btnListing', false);
+  if (!res.ok) { showError('listingResult', res.data?.message); return; }
+
+  const raw    = res.data?.data?.reply || res.data?.reply || res.data?.data?.message || res.data?.message || '';
+  const parsed = tryParseJson(raw);
+
+  if (parsed) {
+    document.getElementById('listingResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Generated Listing</div>
+        <div class="ai-response-body ai-json-block">
+          ${parsed.title ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">title</span>Title</div>
+            <div class="ai-json-field-val" style="font-size:15px;font-weight:800;">${escHtml(parsed.title)}</div>
+          </div>` : ''}
+          ${parsed.description ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">description</span>Description</div>
+            <div class="ai-json-field-val">${escHtml(parsed.description)}</div>
+          </div>` : ''}
+          ${parsed.keyFeatures?.length ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">checklist</span>Key Features</div>
+            <ul class="ai-json-feature-list">${parsed.keyFeatures.map(f => `<li>${escHtml(f)}</li>`).join('')}</ul>
+          </div>` : ''}
+          ${parsed.tags?.length ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">tag</span>Tags</div>
+            <div class="ai-json-tags">${parsed.tags.map(t => `<span class="ai-json-tag">${escHtml(t)}</span>`).join('')}</div>
+          </div>` : ''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            ${parsed.suggestedPrice ? `
+            <div class="ai-json-field">
+              <div class="ai-json-field-key"><span class="material-symbols-rounded">payments</span>Suggested Price</div>
+              <div class="ai-json-field-val" style="font-size:16px;font-weight:800;">${escHtml(parsed.suggestedPrice)}</div>
+            </div>` : ''}
+            ${parsed.targetAudience ? `
+            <div class="ai-json-field">
+              <div class="ai-json-field-key"><span class="material-symbols-rounded">people</span>Target Audience</div>
+              <div class="ai-json-field-val">${escHtml(parsed.targetAudience)}</div>
+            </div>` : ''}
+          </div>
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('listingResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Generated Listing</div>
+        <div class="ai-response-body">${plainTextToHtml(raw)}</div>
+      </div>`;
+  }
+}
+
+/* ── PRICE ───────────────────────────────────────────────────────── */
+async function runPrice() {
+  const name    = document.getElementById('priceName').value.trim();
+  const details = document.getElementById('priceDetails').value.trim();
+  const cond    = document.getElementById('priceCondition').value;
+  if (!name || !details) { showToast('Enter product name and details', 'error'); return; }
+  setLoading('btnPrice', true);
+  showLoading('priceResult', 'Calculating the best price…');
+  const res = await API.suggestPrice(name, details, cond || null);
+  setLoading('btnPrice', false);
+  if (!res.ok) { showError('priceResult', res.data?.message); return; }
+
+  const raw    = res.data?.data?.reply || res.data?.reply || res.data?.data?.message || res.data?.message || '';
+  const parsed = tryParseJson(raw);
+
+  if (parsed) {
+    const demand = parsed.expectedDemand || '';
+    document.getElementById('priceResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Price Recommendation</div>
+        <div class="ai-response-body">
+          ${parsed.suggestedPrice ? `
+          <div class="ai-price-highlight">
+            <div class="label">Suggested Price</div>
+            <div class="value">${fmtCur(parsed.suggestedPrice) || escHtml(String(parsed.suggestedPrice))}</div>
+          </div>` : ''}
+          <div class="ai-json-block">
+            ${parsed.priceRange ? `
+            <div class="ai-json-field" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div>
+                <div class="ai-json-field-key">Min Price</div>
+                <div class="ai-json-field-val">${fmtCur(parsed.priceRange.min) || '—'}</div>
+              </div>
+              <div>
+                <div class="ai-json-field-key">Max Price</div>
+                <div class="ai-json-field-val">${fmtCur(parsed.priceRange.max) || '—'}</div>
+              </div>
+            </div>` : ''}
+            ${demand ? `
+            <div class="ai-json-field" style="display:flex;align-items:center;justify-content:space-between">
+              <div class="ai-json-field-key" style="margin-bottom:0">Expected Demand</div>
+              <span class="demand-badge ${demand}">${escHtml(demand)}</span>
+            </div>` : ''}
+            ${parsed.reasoning ? `
+            <div class="ai-json-field">
+              <div class="ai-json-field-key"><span class="material-symbols-rounded">lightbulb</span>Reasoning</div>
+              <div class="ai-json-field-val">${escHtml(parsed.reasoning)}</div>
+            </div>` : ''}
+            ${parsed.discountSuggestion ? `
+            <div class="ai-json-field">
+              <div class="ai-json-field-key"><span class="material-symbols-rounded">local_offer</span>Discount Strategy</div>
+              <div class="ai-json-field-val">${escHtml(parsed.discountSuggestion)}</div>
+            </div>` : ''}
+          </div>
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('priceResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Price Recommendation</div>
+        <div class="ai-response-body">${plainTextToHtml(raw)}</div>
+      </div>`;
+  }
+}
+
+/* ── VISIBILITY PRODUCT PICKER ───────────────────────────────────── */
+async function loadVisProducts() {
+  const res = await API.getMyProducts();
+  _visProducts = Array.isArray(res.data?.data || res.data) ? (res.data?.data || res.data) : [];
+  renderVisPicker(_visProducts);
+}
+
+function filterVisPicker() {
+  const q = document.getElementById('visSearch').value.toLowerCase();
+  const filtered = q ? _visProducts.filter(p => (p.name || p.productName || '').toLowerCase().includes(q)) : _visProducts;
+  renderVisPicker(filtered);
+}
+
+function renderVisPicker(prods) {
+  const grid = document.getElementById('visPickerGrid');
+  if (!grid) return;
+  if (!prods.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;font-size:13px;color:var(--text-muted);padding:8px 0">No products found.</div>';
+    return;
+  }
+  grid.innerHTML = prods.slice(0, 12).map(p => {
+    const id    = p.productId || p.id;
+    const name  = p.name || p.productName || '—';
+    const img   = p.primaryImageUrl || p.images?.[0] || '';
+    const price = p.price != null ? '₵' + parseFloat(p.price).toFixed(2) : '';
+    const sel   = _selectedVisId === id;
+    return `
+      <div class="prod-picker-item ${sel?'selected':''}" onclick="selectVisProd('${id}','${escHtml(name)}','${img}','${price}')">
+        ${img ? `<img src="${img}" class="prod-picker-img" onerror="this.style.display='none'"/>` : `<div class="prod-picker-placeholder"><span class="material-symbols-rounded">image</span></div>`}
+        <div class="prod-picker-name">${escHtml(name)}</div>
+        ${price ? `<div class="prod-picker-price">${price}</div>` : ''}
+        <div class="prod-picker-check"><span class="material-symbols-rounded">check</span></div>
+      </div>`;
+  }).join('');
+}
+
+function selectVisProd(id, name, img, price) {
+  _selectedVisId = id;
+  renderVisPicker(_visProducts.filter(p => {
+    const q = document.getElementById('visSearch')?.value?.toLowerCase() || '';
+    return !q || (p.name || p.productName || '').toLowerCase().includes(q);
+  }));
+  const btn = document.getElementById('btnVis');
+  if (btn) btn.disabled = false;
+  const banner = document.getElementById('visBanner');
+  if (banner) {
+    banner.style.display = 'flex';
+    banner.innerHTML = `
+      <div class="selected-prod-banner">
+        ${img ? `<img src="${img}" alt="${escHtml(name)}"/>` : ''}
+        <div>
+          <div class="prod-name">${escHtml(name)}</div>
+          ${price ? `<div class="prod-price">${price}</div>` : ''}
+        </div>
+        <button class="clear-btn" onclick="clearVisProd()" title="Clear selection">
+          <span class="material-symbols-rounded" style="font-size:18px">close</span>
+        </button>
+      </div>`;
+  }
+}
+
+function clearVisProd() {
+  _selectedVisId = null;
+  const btn = document.getElementById('btnVis');
+  if (btn) btn.disabled = true;
+  const banner = document.getElementById('visBanner');
+  if (banner) banner.style.display = 'none';
+  renderVisPicker(_visProducts);
+  document.getElementById('visResult').innerHTML = '';
+}
+
+async function runVisibility() {
+  if (!_selectedVisId) { showToast('Select a product first', 'error'); return; }
+  setLoading('btnVis', true);
+  showLoading('visResult', 'Generating visibility tips…');
+  const res = await API.improveVisibility(_selectedVisId);
+  setLoading('btnVis', false);
+  if (!res.ok) { showError('visResult', res.data?.message); return; }
+
+  const raw    = res.data?.data?.reply || res.data?.reply || res.data?.data?.message || res.data?.message || '';
+  const parsed = tryParseJson(raw);
+
+  if (parsed) {
+    document.getElementById('visResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Visibility Tips</div>
+        <div class="ai-response-body ai-json-block">
+          ${parsed.improvedTitle ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">title</span>Improved Title</div>
+            <div class="ai-json-field-val" style="font-weight:800">${escHtml(parsed.improvedTitle)}</div>
+          </div>` : ''}
+          ${parsed.improvedDescription ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">description</span>Improved Description</div>
+            <div class="ai-json-field-val">${escHtml(parsed.improvedDescription)}</div>
+          </div>` : ''}
+          ${parsed.recommendedKeywords?.length ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">search</span>Recommended Keywords</div>
+            <div class="ai-json-tags">${parsed.recommendedKeywords.map(k => `<span class="ai-json-tag">${escHtml(k)}</span>`).join('')}</div>
+          </div>` : ''}
+          ${parsed.promotionTips?.length ? `
+          <div class="ai-json-field">
+            <div class="ai-json-field-key"><span class="material-symbols-rounded">campaign</span>Promotion Tips</div>
+            <ul class="ai-json-feature-list">${parsed.promotionTips.map(t => `<li>${escHtml(t)}</li>`).join('')}</ul>
+          </div>` : ''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            ${parsed.pricingAdvice ? `
+            <div class="ai-json-field">
+              <div class="ai-json-field-key"><span class="material-symbols-rounded">price_check</span>Pricing Advice</div>
+              <div class="ai-json-field-val">${escHtml(parsed.pricingAdvice)}</div>
+            </div>` : ''}
+            ${parsed.trendAlignment ? `
+            <div class="ai-json-field">
+              <div class="ai-json-field-key"><span class="material-symbols-rounded">trending_up</span>Trend Alignment</div>
+              <div class="ai-json-field-val">${escHtml(parsed.trendAlignment)}</div>
+            </div>` : ''}
+          </div>
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('visResult').innerHTML = `
+      <div class="ai-response">
+        <div class="ai-response-header"><span class="material-symbols-rounded">auto_awesome</span> Visibility Tips</div>
+        <div class="ai-response-body">${plainTextToHtml(raw)}</div>
+      </div>`;
+  }
+}
+
+/* ── Product cards (used in trends result) ───────────────────────── */
+function renderProductCards(prods) {
+  if (!prods || !prods.length) return '';
+  return `
+    <div style="margin-top:14px;border-top:1px solid var(--po-accent-mid);padding-top:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--po-accent);margin-bottom:10px">Top Products Right Now</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        ${prods.map(p => {
+          const img   = p.primaryImageUrl || '';
+          const name  = p.name || '—';
+          const price = p.price != null ? '₵' + parseFloat(p.price).toFixed(2) : '';
+          const views = p.viewsCount != null ? p.viewsCount + ' views' : '';
+          return `
+            <div style="background:rgba(255,255,255,.7);border-radius:9px;border:1px solid var(--po-accent-mid);overflow:hidden">
+              ${img ? `<img src="${img}" style="width:100%;height:70px;object-fit:cover;" onerror="this.style.display='none'"/>` : `<div style="width:100%;height:70px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center"><span class="material-symbols-rounded" style="color:var(--po-accent);font-size:24px">image</span></div>`}
+              <div style="padding:8px">
+                <div style="font-size:12px;font-weight:700;color:var(--po-accent-dark);font-family:var(--font-display);line-height:1.3">${escHtml(name)}</div>
+                ${price ? `<div style="font-size:11px;font-family:var(--font-mono);color:var(--po-accent);margin-top:2px">${price}</div>` : ''}
+                ${views ? `<div style="font-size:10px;color:var(--text-muted);margin-top:2px">${views}</div>` : ''}
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>

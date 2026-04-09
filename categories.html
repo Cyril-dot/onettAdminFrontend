@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Categories — MarketPlace Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    :root {
+      --cat-accent:       #0EA5E9;
+      --cat-accent-light: #E0F2FE;
+      --cat-accent-mid:   #BAE6FD;
+      --cat-accent-dark:  #0369A1;
+      --cat-accent-glow:  rgba(14,165,233,.15);
+      --font-display:     'Bricolage Grotesque', sans-serif;
+      --font-mono:        'DM Mono', monospace;
+    }
+
+    /* ── Page Header ── */
+    .cat-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .cat-header-left .cat-title {
+      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      color: var(--text); letter-spacing: -.6px; line-height: 1.15;
+    }
+    .cat-header-left .cat-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
+    .cat-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Buttons ── */
+    .cat-refresh-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+      border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
+      color: var(--gray-600); font-size: 12px; font-weight: 700; cursor: pointer;
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .cat-refresh-btn:hover { border-color: var(--cat-accent); color: var(--cat-accent); background: var(--cat-accent-light); }
+    .cat-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
+    .cat-refresh-btn .material-symbols-rounded { font-size: 16px; }
+
+    .cat-add-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+      border-radius: 9px; background: var(--cat-accent); color: #fff;
+      font-size: 12px; font-weight: 700; cursor: pointer; border: none;
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .cat-add-btn:hover { background: var(--cat-accent-dark); box-shadow: 0 4px 14px var(--cat-accent-glow); }
+    .cat-add-btn .material-symbols-rounded { font-size: 16px; }
+
+    /* ── Stats Row ── */
+    .cat-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+    .cat-stat {
+      background: var(--white); border-radius: 14px; border: 1px solid var(--gray-100);
+      padding: 18px 20px; position: relative; overflow: hidden;
+      transition: transform .16s, box-shadow .16s; cursor: default;
+    }
+    .cat-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .cat-stat::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; border-radius: 14px 14px 0 0;
+    }
+    .cat-stat.blue::before   { background: var(--cat-accent); }
+    .cat-stat.green::before  { background: #10B981; }
+    .cat-stat.orange::before { background: #F59E0B; }
+    .cat-stat-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+    }
+    .cat-stat-icon .material-symbols-rounded { font-size: 20px; }
+    .cat-stat.blue   .cat-stat-icon { background: var(--cat-accent-light); color: var(--cat-accent); }
+    .cat-stat.green  .cat-stat-icon { background: #D1FAE5; color: #059669; }
+    .cat-stat.orange .cat-stat-icon { background: #FEF3C7; color: #D97706; }
+    .cat-stat-num {
+      font-family: var(--font-display); font-size: 28px; font-weight: 800;
+      letter-spacing: -.8px; color: var(--text); line-height: 1;
+    }
+    .cat-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+
+    /* ── Category Grid ── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── Category Card ── */
+    .cat-card {
+      background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
+      transition: transform .16s, box-shadow .16s;
+      display: flex; flex-direction: column;
+    }
+    .cat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.10); }
+
+    .cat-card-top {
+      padding: 20px 20px 16px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .cat-icon-wrap {
+      width: 52px; height: 52px; border-radius: 13px;
+      background: var(--cat-accent-light); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border: 1px solid var(--cat-accent-mid);
+    }
+    .cat-icon-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; }
+    .cat-icon-wrap .material-symbols-rounded { font-size: 24px; color: var(--cat-accent); }
+    .cat-card-info { flex: 1; min-width: 0; }
+    .cat-card-name {
+      font-family: var(--font-display); font-size: 15px; font-weight: 800;
+      color: var(--text); letter-spacing: -.3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cat-card-slug {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+      margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .cat-card-body {
+      padding: 14px 20px 16px; flex: 1;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cat-card-meta { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .cat-card-meta span { font-weight: 700; color: var(--text); font-family: var(--font-display); }
+
+    .cat-card-actions { display: flex; gap: 6px; }
+    .cat-action-btn {
+      width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--gray-200);
+      background: var(--white); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; transition: all .13s; color: var(--gray-500);
+    }
+    .cat-action-btn .material-symbols-rounded { font-size: 16px; }
+    .cat-action-btn:hover.edit   { border-color: var(--cat-accent); color: var(--cat-accent); background: var(--cat-accent-light); }
+    .cat-action-btn:hover.delete { border-color: #EF4444; color: #EF4444; background: #FEF2F2; }
+
+    /* ── Empty State ── */
+    .cat-empty {
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 20px;
+      background: var(--white); border-radius: 16px; border: 1px dashed var(--gray-200);
+    }
+    .cat-empty .material-symbols-rounded { font-size: 48px; color: var(--gray-300); margin-bottom: 12px; }
+    .cat-empty-title { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .cat-empty-sub   { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+    /* ── Skeleton ── */
+    .cat-skel {
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    .cat-skel.icon  { width: 52px; height: 52px; border-radius: 13px; flex-shrink: 0; }
+    .cat-skel.line  { height: 13px; width: 100%; margin-bottom: 6px; }
+    .cat-skel.short { height: 11px; width: 60%; }
+
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes spin    { to { transform: rotate(360deg); } }
+
+    /* ── Modal Overlay ── */
+    .cat-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(3px);
+      z-index: 9999; display: flex; align-items: center; justify-content: center;
+      padding: 16px; opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .cat-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .cat-modal {
+      background: var(--white); border-radius: 20px; width: 100%; max-width: 480px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.18); overflow: hidden;
+      transform: translateY(16px) scale(.97); transition: transform .22s;
+    }
+    .cat-modal-overlay.open .cat-modal { transform: translateY(0) scale(1); }
+
+    .cat-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 24px 18px; border-bottom: 1px solid var(--gray-100);
+    }
+    .cat-modal-title {
+      font-family: var(--font-display); font-size: 17px; font-weight: 800;
+      color: var(--text); display: flex; align-items: center; gap: 8px;
+    }
+    .cat-modal-title .material-symbols-rounded { font-size: 20px; color: var(--cat-accent); }
+    .cat-modal-close {
+      width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--gray-200);
+      background: var(--white); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: var(--gray-500);
+      transition: all .13s;
+    }
+    .cat-modal-close:hover { border-color: #EF4444; color: #EF4444; background: #FEF2F2; }
+    .cat-modal-close .material-symbols-rounded { font-size: 18px; }
+
+    .cat-modal-body { padding: 22px 24px; }
+
+    /* ── Form ── */
+    .cat-form-group { margin-bottom: 18px; }
+    .cat-form-group:last-child { margin-bottom: 0; }
+    .cat-label {
+      display: block; font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .7px; margin-bottom: 7px;
+    }
+    .cat-input {
+      width: 100%; padding: 10px 13px; border-radius: 9px;
+      border: 1.5px solid var(--gray-200); background: var(--white);
+      font-size: 13px; font-weight: 600; color: var(--text);
+      font-family: var(--font-display); transition: border-color .14s, box-shadow .14s;
+      box-sizing: border-box;
+    }
+    .cat-input:focus { outline: none; border-color: var(--cat-accent); box-shadow: 0 0 0 3px var(--cat-accent-glow); }
+    .cat-input::placeholder { color: var(--gray-300); font-weight: 400; }
+
+    /* Icon upload area */
+    .cat-icon-upload {
+      border: 2px dashed var(--gray-200); border-radius: 12px;
+      padding: 18px; text-align: center; cursor: pointer;
+      transition: border-color .14s, background .14s;
+      position: relative;
+    }
+    .cat-icon-upload:hover { border-color: var(--cat-accent); background: var(--cat-accent-light); }
+    .cat-icon-upload input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .cat-icon-upload .material-symbols-rounded { font-size: 28px; color: var(--gray-300); margin-bottom: 6px; }
+    .cat-icon-upload-text { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .cat-icon-preview {
+      width: 52px; height: 52px; border-radius: 10px; object-fit: cover;
+      border: 2px solid var(--cat-accent-mid); margin: 0 auto 8px;
+      display: none;
+    }
+
+    .cat-modal-footer {
+      display: flex; gap: 10px; justify-content: flex-end;
+      padding: 16px 24px; border-top: 1px solid var(--gray-100);
+    }
+    .cat-btn-cancel {
+      padding: 9px 18px; border-radius: 9px; border: 1.5px solid var(--gray-200);
+      background: var(--white); color: var(--gray-600);
+      font-size: 12px; font-weight: 700; cursor: pointer; font-family: var(--font-display);
+      transition: all .13s;
+    }
+    .cat-btn-cancel:hover { border-color: var(--gray-400); background: var(--gray-50); }
+    .cat-btn-save {
+      padding: 9px 20px; border-radius: 9px; border: none;
+      background: var(--cat-accent); color: #fff;
+      font-size: 12px; font-weight: 700; cursor: pointer; font-family: var(--font-display);
+      transition: all .13s; display: flex; align-items: center; gap: 6px;
+    }
+    .cat-btn-save:hover { background: var(--cat-accent-dark); box-shadow: 0 4px 14px var(--cat-accent-glow); }
+    .cat-btn-save:disabled { opacity: .6; cursor: not-allowed; }
+    .cat-btn-save .material-symbols-rounded { font-size: 15px; }
+
+    /* ── Delete Confirm Modal ── */
+    .cat-delete-modal {
+      background: var(--white); border-radius: 20px; width: 100%; max-width: 380px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.18); overflow: hidden;
+      transform: translateY(16px) scale(.97); transition: transform .22s; padding: 28px;
+    }
+    .cat-modal-overlay.open .cat-delete-modal { transform: translateY(0) scale(1); }
+    .cat-delete-icon {
+      width: 52px; height: 52px; border-radius: 14px; background: #FEF2F2;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+    }
+    .cat-delete-icon .material-symbols-rounded { font-size: 26px; color: #EF4444; }
+    .cat-delete-title {
+      font-family: var(--font-display); font-size: 17px; font-weight: 800;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .cat-delete-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 22px; }
+    .cat-delete-actions { display: flex; gap: 10px; }
+    .cat-btn-del-cancel {
+      flex: 1; padding: 10px; border-radius: 9px; border: 1.5px solid var(--gray-200);
+      background: var(--white); color: var(--gray-600);
+      font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font-display);
+      transition: all .13s;
+    }
+    .cat-btn-del-cancel:hover { background: var(--gray-50); }
+    .cat-btn-del-confirm {
+      flex: 1; padding: 10px; border-radius: 9px; border: none;
+      background: #EF4444; color: #fff;
+      font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font-display);
+      transition: all .13s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .cat-btn-del-confirm:hover { background: #DC2626; }
+    .cat-btn-del-confirm:disabled { opacity: .6; cursor: not-allowed; }
+
+    @media (max-width: 600px) {
+      .cat-stats { grid-template-columns: 1fr; }
+      .cat-grid  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Add / Edit Modal -->
+<div class="cat-modal-overlay" id="catModal">
+  <div class="cat-modal">
+    <div class="cat-modal-header">
+      <div class="cat-modal-title" id="modalTitle">
+        <span class="material-symbols-rounded">category</span>
+        Add Category
+      </div>
+      <button class="cat-modal-close" onclick="closeModal()">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div class="cat-modal-body">
+      <div class="cat-form-group">
+        <label class="cat-label">Category Name *</label>
+        <input id="catNameInput" class="cat-input" type="text" placeholder="e.g. Electronics" maxlength="80"/>
+      </div>
+      <div class="cat-form-group">
+        <label class="cat-label">Slug (auto-generated if blank)</label>
+        <input id="catSlugInput" class="cat-input" type="text" placeholder="e.g. electronics" maxlength="80"/>
+      </div>
+      <div class="cat-form-group">
+        <label class="cat-label">Category Icon</label>
+        <div class="cat-icon-upload" id="iconUploadArea">
+          <input type="file" accept="image/*" id="iconFileInput" onchange="handleIconSelect(event)"/>
+          <img class="cat-icon-preview" id="iconPreview" src="" alt=""/>
+          <div class="material-symbols-rounded" id="iconUploadIcon">add_photo_alternate</div>
+          <div class="cat-icon-upload-text" id="iconUploadText">Click to upload icon (optional)</div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-modal-footer">
+      <button class="cat-btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="cat-btn-save" id="saveBtn" onclick="saveCategory()">
+        <span class="material-symbols-rounded">save</span>
+        Save Category
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="cat-modal-overlay" id="deleteModal">
+  <div class="cat-delete-modal">
+    <div class="cat-delete-icon">
+      <span class="material-symbols-rounded">delete_forever</span>
+    </div>
+    <div class="cat-delete-title">Delete Category?</div>
+    <div class="cat-delete-sub" id="deleteModalSub">
+      This will permanently delete this category. Products assigned to it may be unlinked.
+    </div>
+    <div class="cat-delete-actions">
+      <button class="cat-btn-del-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button class="cat-btn-del-confirm" id="confirmDeleteBtn" onclick="confirmDelete()">
+        <span class="material-symbols-rounded">delete</span>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+
+const content = `
+<div class="cat-header">
+  <div class="cat-header-left">
+    <div class="cat-title">Categories</div>
+    <div class="cat-subtitle">Manage your product categories</div>
+  </div>
+  <div class="cat-header-right">
+    <button class="cat-refresh-btn" id="refreshBtn" onclick="loadCategories()">
+      <span class="material-symbols-rounded">refresh</span>
+      Refresh
+    </button>
+    <button class="cat-add-btn" onclick="openAddModal()">
+      <span class="material-symbols-rounded">add</span>
+      Add Category
+    </button>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="cat-stats">
+  <div class="cat-stat blue">
+    <div class="cat-stat-icon"><span class="material-symbols-rounded">category</span></div>
+    <div class="cat-stat-num" id="statTotal">—</div>
+    <div class="cat-stat-label">Total Categories</div>
+  </div>
+  <div class="cat-stat green">
+    <div class="cat-stat-icon"><span class="material-symbols-rounded">image</span></div>
+    <div class="cat-stat-num" id="statWithIcon">—</div>
+    <div class="cat-stat-label">With Icons</div>
+  </div>
+  <div class="cat-stat orange">
+    <div class="cat-stat-icon"><span class="material-symbols-rounded">hide_image</span></div>
+    <div class="cat-stat-num" id="statNoIcon">—</div>
+    <div class="cat-stat-label">Without Icons</div>
+  </div>
+</div>
+
+<!-- Grid -->
+<div class="cat-grid" id="catGrid">
+  ${skelCards(6)}
+</div>
+`;
+
+renderLayout('Categories', 'categories.html', content);
+loadCategories();
+
+// ── State ─────────────────────────────────────────────────────────
+let allCategories = [];
+let editingCategoryId = null;
+let deletingCategoryId = null;
+let selectedIconFile = null;
+
+// ── Skeleton helpers ──────────────────────────────────────────────
+function skelCards(n) {
+  return Array(n).fill(0).map(() => `
+    <div class="cat-card">
+      <div class="cat-card-top">
+        <div class="cat-skel icon"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:7px">
+          <div class="cat-skel line" style="width:70%;height:14px"></div>
+          <div class="cat-skel short"></div>
+        </div>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-skel line" style="width:50%;height:11px"></div>
+        <div style="display:flex;gap:6px">
+          <div class="cat-skel line" style="width:32px;height:32px;border-radius:8px;margin:0"></div>
+          <div class="cat-skel line" style="width:32px;height:32px;border-radius:8px;margin:0"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Load Categories ───────────────────────────────────────────────
+async function loadCategories() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.classList.add('loading');
+
+  const res = await API.getSellerCategories();
+
+  if (btn) btn.classList.remove('loading');
+
+  if (!res.ok) {
+    showToast('Failed to load categories', 'error');
+    document.getElementById('catGrid').innerHTML = `
+      <div class="cat-empty">
+        <div class="material-symbols-rounded">error</div>
+        <div class="cat-empty-title">Failed to load</div>
+        <div class="cat-empty-sub">Could not fetch categories. Please refresh.</div>
+      </div>`;
+    return;
+  }
+
+  const data = res.data?.data || res.data;
+  allCategories = Array.isArray(data) ? data : [];
+
+  renderStats();
+  renderGrid();
+}
+
+function renderStats() {
+  const total    = allCategories.length;
+  const withIcon = allCategories.filter(c => c.icon?.imageUrl).length;
+  const noIcon   = total - withIcon;
+
+  const el = id => document.getElementById(id);
+  if (el('statTotal'))    el('statTotal').textContent    = total;
+  if (el('statWithIcon')) el('statWithIcon').textContent = withIcon;
+  if (el('statNoIcon'))   el('statNoIcon').textContent   = noIcon;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('catGrid');
+  if (!grid) return;
+
+  if (!allCategories.length) {
+    grid.innerHTML = `
+      <div class="cat-empty">
+        <div class="material-symbols-rounded">category</div>
+        <div class="cat-empty-title">No categories yet</div>
+        <div class="cat-empty-sub">Create your first category to start organising your products.</div>
+        <button class="cat-add-btn" onclick="openAddModal()">
+          <span class="material-symbols-rounded">add</span>
+          Add First Category
+        </button>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = allCategories.map(cat => renderCatCard(cat)).join('');
+}
+
+function renderCatCard(cat) {
+  const iconHtml = cat.icon?.imageUrl
+    ? `<img src="${esc(cat.icon.imageUrl)}" alt="${esc(cat.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+       <span class="material-symbols-rounded" style="display:none">category</span>`
+    : `<span class="material-symbols-rounded">category</span>`;
+
+  return `
+    <div class="cat-card">
+      <div class="cat-card-top">
+        <div class="cat-icon-wrap">${iconHtml}</div>
+        <div class="cat-card-info">
+          <div class="cat-card-name">${esc(cat.name)}</div>
+          <div class="cat-card-slug">/${esc(cat.slug)}</div>
+        </div>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-meta">
+          Icon: <span>${cat.icon?.imageUrl ? 'Yes' : 'None'}</span>
+        </div>
+        <div class="cat-card-actions">
+          <button class="cat-action-btn edit" title="Edit" onclick="openEditModal('${esc(cat.id)}')">
+            <span class="material-symbols-rounded">edit</span>
+          </button>
+          <button class="cat-action-btn delete" title="Delete" onclick="openDeleteModal('${esc(cat.id)}', '${esc(cat.name)}')">
+            <span class="material-symbols-rounded">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Add Modal ─────────────────────────────────────────────────────
+function openAddModal() {
+  editingCategoryId = null;
+  selectedIconFile  = null;
+
+  document.getElementById('modalTitle').innerHTML =
+    `<span class="material-symbols-rounded">add_circle</span> Add Category`;
+  document.getElementById('catNameInput').value = '';
+  document.getElementById('catSlugInput').value = '';
+  resetIconPreview();
+
+  document.getElementById('catModal').classList.add('open');
+}
+
+// ── Edit Modal ────────────────────────────────────────────────────
+function openEditModal(categoryId) {
+  const cat = allCategories.find(c => String(c.id) === String(categoryId));
+  if (!cat) return;
+
+  editingCategoryId = cat.id;
+  selectedIconFile  = null;
+
+  document.getElementById('modalTitle').innerHTML =
+    `<span class="material-symbols-rounded">edit</span> Edit Category`;
+  document.getElementById('catNameInput').value = cat.name || '';
+  document.getElementById('catSlugInput').value = cat.slug || '';
+
+  // Show existing icon preview
+  if (cat.icon?.imageUrl) {
+    const preview = document.getElementById('iconPreview');
+    preview.src = cat.icon.imageUrl;
+    preview.style.display = 'block';
+    document.getElementById('iconUploadIcon').style.display = 'none';
+    document.getElementById('iconUploadText').textContent = 'Click to replace icon';
+  } else {
+    resetIconPreview();
+  }
+
+  document.getElementById('catModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('catModal').classList.remove('open');
+  editingCategoryId = null;
+  selectedIconFile  = null;
+  resetIconPreview();
+}
+
+function resetIconPreview() {
+  document.getElementById('iconPreview').style.display = 'none';
+  document.getElementById('iconPreview').src = '';
+  document.getElementById('iconUploadIcon').style.display = '';
+  document.getElementById('iconUploadText').textContent = 'Click to upload icon (optional)';
+  document.getElementById('iconFileInput').value = '';
+}
+
+function handleIconSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  selectedIconFile = file;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('iconPreview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('iconUploadIcon').style.display = 'none';
+    document.getElementById('iconUploadText').textContent = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Save Category (Add or Edit) ────────────────────────────────────
+async function saveCategory() {
+  const name = document.getElementById('catNameInput').value.trim();
+  const slug = document.getElementById('catSlugInput').value.trim();
+
+  if (!name) { showToast('Category name is required', 'error'); return; }
+
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = `<span class="material-symbols-rounded" style="animation:spin .8s linear infinite">refresh</span> Saving…`;
+
+  const formData = new FormData();
+  const requestBlob = new Blob([JSON.stringify({ name, slug: slug || undefined })], { type: 'application/json' });
+  formData.append('request', requestBlob);
+  if (selectedIconFile) formData.append('iconFile', selectedIconFile);
+
+  let res;
+  if (editingCategoryId) {
+    res = await API.updateCategory(editingCategoryId, formData);
+  } else {
+    res = await API.createCategory(formData);
+  }
+
+  saveBtn.disabled = false;
+  saveBtn.innerHTML = `<span class="material-symbols-rounded">save</span> Save Category`;
+
+  if (res.ok) {
+    showToast(editingCategoryId ? 'Category updated!' : 'Category created!', 'success');
+    closeModal();
+    loadCategories();
+  } else {
+    const msg = res.data?.message || res.data?.error || 'Failed to save category';
+    showToast(msg, 'error');
+  }
+}
+
+// ── Delete Modal ──────────────────────────────────────────────────
+function openDeleteModal(categoryId, categoryName) {
+  deletingCategoryId = categoryId;
+  document.getElementById('deleteModalSub').textContent =
+    `This will permanently delete "${categoryName}". Products assigned to it may be unlinked.`;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  deletingCategoryId = null;
+}
+
+async function confirmDelete() {
+  if (!deletingCategoryId) return;
+
+  const btn = document.getElementById('confirmDeleteBtn');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="material-symbols-rounded" style="animation:spin .8s linear infinite">refresh</span> Deleting…`;
+
+  const res = await API.deleteCategory(deletingCategoryId);
+
+  btn.disabled = false;
+  btn.innerHTML = `<span class="material-symbols-rounded">delete</span> Delete`;
+
+  if (res.ok) {
+    showToast('Category deleted successfully', 'success');
+    closeDeleteModal();
+    loadCategories();
+  } else {
+    const msg = res.data?.message || 'Failed to delete category';
+    showToast(msg, 'error');
+  }
+}
+
+// Close modals on overlay click
+document.getElementById('catModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDeleteModal();
+});
+
+// ── Helpers ───────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

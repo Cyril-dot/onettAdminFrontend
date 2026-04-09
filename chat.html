@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Messages — MarketPlace Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    :root {
+      --po-accent: #7C3AED;
+      --po-accent-light: #EDE9FE;
+      --po-accent-mid: #DDD6FE;
+      --po-accent-dark: #5B21B6;
+      --po-accent-glow: rgba(124,58,237,.15);
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── Page Header ── */
+    .po-header {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px; margin-bottom:24px; flex-wrap:wrap;
+    }
+    .po-title { font-family:var(--font-display); font-size:26px; font-weight:800; color:var(--text); letter-spacing:-.6px; }
+    .po-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; }
+
+    /* ── Chat Layout ── */
+    .chat-layout {
+      display:grid; grid-template-columns:340px 1fr; gap:16px;
+      height:calc(100vh - 180px); min-height:500px;
+    }
+
+    /* ── Conversation List Panel ── */
+    .conv-panel {
+      background:var(--white); border-radius:16px;
+      border:1px solid var(--gray-100); box-shadow:0 1px 4px rgba(0,0,0,.06);
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    .conv-panel-header {
+      padding:16px 18px 12px; border-bottom:1px solid var(--gray-100); flex-shrink:0;
+    }
+    .conv-panel-title {
+      font-family:var(--font-display); font-size:14px; font-weight:800;
+      color:var(--text); display:flex; align-items:center; gap:8px; margin-bottom:10px;
+    }
+    .conv-panel-title .material-symbols-rounded { font-size:17px; color:var(--po-accent); }
+    .conv-search-wrap {
+      display:flex; align-items:center; gap:8px;
+      background:var(--gray-50); border:1.5px solid var(--gray-200);
+      border-radius:10px; padding:7px 11px;
+    }
+    .conv-search-wrap .material-symbols-rounded { font-size:16px; color:var(--text-muted); flex-shrink:0; }
+    .conv-search-wrap input {
+      border:none; background:transparent; font-size:13px; color:var(--text);
+      outline:none; font-family:var(--font-display); width:100%;
+    }
+    .conv-search-wrap:focus-within { border-color:var(--po-accent); background:var(--po-accent-light); }
+    .conv-list-scroll { flex:1; overflow-y:auto; }
+    .conv-list-scroll::-webkit-scrollbar { width:3px; }
+    .conv-list-scroll::-webkit-scrollbar-thumb { background:var(--gray-200); border-radius:99px; }
+
+    /* ── Conversation Item ── */
+    .conv-item {
+      display:flex; align-items:flex-start; gap:11px; padding:13px 16px;
+      border-bottom:1px solid var(--gray-100); cursor:pointer;
+      transition:background .12s; position:relative;
+    }
+    .conv-item:last-child { border-bottom:none; }
+    .conv-item:hover { background:var(--gray-50); }
+    .conv-item.active { background:var(--po-accent-light); }
+    .conv-item.active .conv-name { color:var(--po-accent-dark); }
+    .conv-avatar {
+      width:40px; height:40px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-display); font-weight:800; font-size:15px; color:#fff;
+    }
+    .conv-avatar.order { background:var(--po-accent); }
+    .conv-avatar.buyer { background:#0EA5E9; }
+    .conv-meta { flex:1; min-width:0; }
+    .conv-name {
+      font-family:var(--font-display); font-weight:700; font-size:13px;
+      color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .conv-product {
+      font-size:11px; color:var(--po-accent); font-weight:600;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      font-family:var(--font-display); margin-top:1px;
+    }
+    .conv-preview {
+      font-size:11.5px; color:var(--text-muted); white-space:nowrap;
+      overflow:hidden; text-overflow:ellipsis; margin-top:2px; font-weight:400;
+    }
+    .conv-item.active .conv-preview { color:var(--po-accent-dark); opacity:.8; }
+    .conv-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+    .conv-time { font-size:10px; color:var(--text-muted); font-family:var(--font-mono); white-space:nowrap; }
+    .unread-badge {
+      background:var(--po-accent); color:#fff; border-radius:99px;
+      padding:1px 7px; font-size:10px; font-weight:800; font-family:var(--font-display);
+      min-width:18px; text-align:center;
+    }
+    .chat-type-pill {
+      display:inline-flex; align-items:center; gap:3px; padding:2px 7px;
+      border-radius:99px; font-size:9px; font-weight:800; font-family:var(--font-display);
+      text-transform:uppercase; letter-spacing:.4px;
+    }
+    .chat-type-pill.ORDER_SUPPORT { background:#DBEAFE; color:#1D4ED8; }
+    .chat-type-pill.BUYER_SELLER { background:#D1FAE5; color:#065F46; }
+
+    /* ── Skeleton for conv list ── */
+    .conv-skel {
+      padding:13px 16px; border-bottom:1px solid var(--gray-100);
+      display:flex; align-items:center; gap:11px;
+    }
+    .skel-circle {
+      width:40px; height:40px; border-radius:50%; flex-shrink:0;
+      background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);
+      background-size:200% 100%; animation:shimmer 1.4s infinite;
+    }
+    .skel-line {
+      border-radius:6px;
+      background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);
+      background-size:200% 100%; animation:shimmer 1.4s infinite;
+    }
+
+    /* ── Chat Panel ── */
+    .chat-panel {
+      background:var(--white); border-radius:16px;
+      border:1px solid var(--gray-100); box-shadow:0 1px 4px rgba(0,0,0,.06);
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+
+    /* Chat Header */
+    .chat-header {
+      padding:14px 20px; border-bottom:1px solid var(--gray-100);
+      display:flex; align-items:center; gap:12px; flex-shrink:0;
+    }
+    .chat-header-avatar {
+      width:38px; height:38px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-display); font-weight:800; font-size:14px; color:#fff;
+    }
+    .chat-header-info { flex:1; min-width:0; }
+    .chat-header-name {
+      font-family:var(--font-display); font-size:15px; font-weight:800;
+      color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .chat-header-sub { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .chat-header-actions { display:flex; gap:6px; }
+    .chat-icon-btn {
+      width:34px; height:34px; border-radius:9px; border:1.5px solid var(--gray-200);
+      background:var(--white); display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all .14s; color:var(--text-muted);
+    }
+    .chat-icon-btn:hover { border-color:var(--po-accent); color:var(--po-accent); background:var(--po-accent-light); }
+    .chat-icon-btn .material-symbols-rounded { font-size:17px; }
+
+    /* Product Card Banner */
+    .product-banner {
+      display:flex; align-items:center; gap:12px; padding:10px 20px;
+      background:var(--po-accent-light); border-bottom:1px solid var(--po-accent-mid); flex-shrink:0;
+    }
+    .product-banner img { width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--po-accent-mid); }
+    .product-banner-placeholder {
+      width:40px; height:40px; border-radius:8px;
+      background:var(--po-accent-mid); display:flex; align-items:center; justify-content:center;
+    }
+    .product-banner-placeholder .material-symbols-rounded { font-size:18px; color:var(--po-accent); }
+    .product-banner-name { font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--po-accent-dark); }
+    .product-banner-price { font-family:var(--font-mono); font-size:11px; color:var(--po-accent); margin-top:1px; }
+    .product-banner-label { font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--po-accent); opacity:.7; }
+
+    /* Messages Area */
+    .chat-msgs {
+      flex:1; overflow-y:auto; padding:20px 20px 16px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .chat-msgs::-webkit-scrollbar { width:3px; }
+    .chat-msgs::-webkit-scrollbar-thumb { background:var(--gray-200); border-radius:99px; }
+
+    /* Message Bubbles */
+    .msg-row { display:flex; flex-direction:column; animation:fadeIn .18s ease; }
+    .msg-row.seller { align-items:flex-end; }
+    .msg-row.buyer  { align-items:flex-start; }
+    .msg-row.system { align-items:center; }
+
+    .msg-bubble {
+      max-width:68%; padding:10px 14px; border-radius:14px;
+      font-size:13px; line-height:1.6; font-family:var(--font-display); font-weight:500;
+      white-space:pre-wrap; word-break:break-word;
+    }
+    .msg-row.seller .msg-bubble {
+      background:var(--po-accent); color:#fff;
+      border-bottom-right-radius:4px;
+    }
+    .msg-row.buyer .msg-bubble {
+      background:var(--gray-100); color:var(--text);
+      border-bottom-left-radius:4px;
+    }
+    .msg-row.system .msg-bubble {
+      background:#F0FDF4; color:#065F46; border-radius:10px; max-width:80%;
+      border:1px solid #A7F3D0; font-size:12px; text-align:center;
+    }
+
+    /* Product card message */
+    .msg-product-card {
+      max-width:280px; background:var(--white); border-radius:14px;
+      border:1.5px solid var(--po-accent-mid); overflow:hidden;
+      border-bottom-left-radius:4px;
+    }
+    .msg-product-card img { width:100%; height:120px; object-fit:cover; }
+    .msg-product-card-body { padding:10px 12px; }
+    .msg-product-card-name { font-family:var(--font-display); font-size:13px; font-weight:800; color:var(--text); }
+    .msg-product-card-price { font-family:var(--font-mono); font-size:12px; color:var(--po-accent); margin-top:3px; }
+    .msg-product-card-desc { font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.4; }
+
+    .msg-sender {
+      font-size:10px; color:var(--text-muted); margin-bottom:3px;
+      font-family:var(--font-display); font-weight:700;
+      text-transform:uppercase; letter-spacing:.4px;
+    }
+    .msg-row.seller .msg-sender { text-align:right; color:var(--po-accent); }
+    .msg-time { font-size:10px; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono); }
+    .msg-row.seller .msg-time { text-align:right; }
+
+    .msg-read-tick {
+      font-size:11px; color:var(--po-accent); margin-left:4px;
+    }
+
+    /* Reply box */
+    .reply-box {
+      padding:14px 16px; border-top:1px solid var(--gray-100); flex-shrink:0;
+      display:flex; align-items:flex-end; gap:10px;
+    }
+    .reply-input-wrap { flex:1; position:relative; }
+    .reply-input {
+      width:100%; padding:10px 14px; border-radius:12px;
+      border:1.5px solid var(--gray-200); font-family:var(--font-display);
+      font-size:13px; font-weight:500; color:var(--text); background:var(--white);
+      outline:none; resize:none; line-height:1.5; box-sizing:border-box;
+      max-height:120px; transition:border-color .14s;
+    }
+    .reply-input:focus { border-color:var(--po-accent); background:var(--po-accent-light); }
+    .reply-send-btn {
+      width:42px; height:42px; border-radius:11px; border:none; flex-shrink:0;
+      background:var(--po-accent); color:#fff; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .14s;
+    }
+    .reply-send-btn:hover { background:var(--po-accent-dark); box-shadow:0 4px 14px var(--po-accent-glow); }
+    .reply-send-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .reply-send-btn .material-symbols-rounded { font-size:20px; }
+    .reply-send-btn .sending { animation:spin .6s linear infinite; }
+
+    /* Empty / Placeholder states */
+    .chat-empty-state {
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:12px; padding:40px;
+    }
+    .chat-empty-icon {
+      width:60px; height:60px; border-radius:16px; background:var(--po-accent-light);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .chat-empty-icon .material-symbols-rounded { font-size:28px; color:var(--po-accent); }
+    .chat-empty-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--gray-500); }
+    .chat-empty-sub { font-size:12px; color:var(--text-muted); text-align:center; max-width:220px; }
+
+    /* Unread count chip */
+    .unread-chip {
+      display:inline-flex; align-items:center; gap:5px;
+      background:var(--po-accent-light); color:var(--po-accent-dark);
+      border-radius:99px; padding:4px 12px; font-size:12px; font-weight:700;
+      font-family:var(--font-display);
+    }
+
+    /* Refresh btn */
+    .po-refresh-btn {
+      display:inline-flex; align-items:center; gap:6px; padding:8px 14px;
+      border-radius:9px; background:var(--white); border:1.5px solid var(--gray-200);
+      color:var(--gray-600); font-size:12px; font-weight:700; cursor:pointer;
+      font-family:var(--font-display); transition:all .14s;
+    }
+    .po-refresh-btn:hover { border-color:var(--po-accent); color:var(--po-accent); background:var(--po-accent-light); }
+    .po-refresh-btn .material-symbols-rounded { font-size:16px; }
+    .po-refresh-btn.loading .material-symbols-rounded { animation:spin .8s linear infinite; }
+
+    /* Date divider */
+    .date-divider {
+      display:flex; align-items:center; gap:10px; margin:6px 0;
+    }
+    .date-divider::before, .date-divider::after {
+      content:''; flex:1; height:1px; background:var(--gray-100);
+    }
+    .date-divider span {
+      font-size:10px; color:var(--text-muted); font-family:var(--font-mono);
+      white-space:nowrap; padding:0 4px;
+    }
+
+    @media(max-width:900px) {
+      .chat-layout { grid-template-columns:1fr; height:auto; }
+      .conv-panel { height:300px; }
+      .chat-panel { height:500px; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+
+let currentConvId   = null;
+let currentConvName = '';
+let currentConvData = null;
+let _allConvs       = [];
+let _pollingTimer   = null;
+
+const content = `
+<div class="po-header">
+  <div>
+    <div class="po-title">Messages</div>
+    <div class="po-subtitle">Customer conversations</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <div class="unread-chip" id="unreadChip" style="display:none">
+      <span class="material-symbols-rounded" style="font-size:14px">mark_chat_unread</span>
+      <span id="unreadCount">0</span> unread
+    </div>
+    <button class="po-refresh-btn" id="refreshBtn" onclick="loadConversations()">
+      <span class="material-symbols-rounded">refresh</span> Refresh
+    </button>
+  </div>
+</div>
+
+<div class="chat-layout">
+
+  <!-- Left: Conversation List -->
+  <div class="conv-panel">
+    <div class="conv-panel-header">
+      <div class="conv-panel-title">
+        <span class="material-symbols-rounded">forum</span>
+        Conversations
+      </div>
+      <div class="conv-search-wrap">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" id="convSearch" placeholder="Search conversations…" oninput="filterConversations()"/>
+      </div>
+    </div>
+    <div class="conv-list-scroll" id="convList">
+      ${skeletonConvs()}
+    </div>
+  </div>
+
+  <!-- Right: Chat Panel -->
+  <div class="chat-panel">
+    <div class="chat-header" id="chatHeader">
+      <div class="chat-empty-state" style="padding:0;flex-direction:row;gap:12px;justify-content:flex-start">
+        <div class="chat-empty-icon" style="width:38px;height:38px;border-radius:10px">
+          <span class="material-symbols-rounded" style="font-size:20px">forum</span>
+        </div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text)">Select a conversation</div>
+          <div style="font-size:11px;color:var(--text-muted)">Choose from the list on the left</div>
+        </div>
+      </div>
+    </div>
+    <div id="productBanner" style="display:none"></div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="chat-empty-state">
+        <div class="chat-empty-icon"><span class="material-symbols-rounded">chat_bubble</span></div>
+        <div class="chat-empty-title">No conversation open</div>
+        <div class="chat-empty-sub">Select a conversation from the left to see messages</div>
+      </div>
+    </div>
+    <div class="reply-box" id="replyBox" style="display:none">
+      <div class="reply-input-wrap">
+        <textarea id="replyInput" class="reply-input" rows="1" placeholder="Type a reply…"
+          onkeydown="handleReplyKey(event)" oninput="autoGrow(this)"></textarea>
+      </div>
+      <button class="reply-send-btn" id="sendBtn" onclick="sendReply()">
+        <span class="material-symbols-rounded">send</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+`;
+
+renderLayout('Messages', 'chat.html', content);
+loadConversations();
+loadUnreadCount();
+
+/* ── Skeleton ──────────────────────────────────────────────────── */
+function skeletonConvs() {
+  return Array(5).fill(0).map(() => `
+    <div class="conv-skel">
+      <div class="skel-circle"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <div class="skel-line" style="height:12px;width:60%"></div>
+        <div class="skel-line" style="height:10px;width:85%"></div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── Unread Count ──────────────────────────────────────────────── */
+async function loadUnreadCount() {
+  const res = await API.getSellerUnreadCount();
+  if (res.ok) {
+    const n = res.data?.data?.unreadCount ?? res.data?.unreadCount ?? 0;
+    const chip = document.getElementById('unreadChip');
+    const count = document.getElementById('unreadCount');
+    if (chip && count) {
+      count.textContent = n;
+      chip.style.display = n > 0 ? 'inline-flex' : 'none';
+    }
+  }
+}
+
+/* ── Load Conversations ────────────────────────────────────────── */
+async function loadConversations() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.classList.add('loading');
+
+  const res = await API.getSellerInbox();
+  if (btn) btn.classList.remove('loading');
+
+  const raw = res.data?.data || res.data || [];
+  _allConvs = Array.isArray(raw) ? raw : [];
+  renderConversations(_allConvs);
+  loadUnreadCount();
+}
+
+function filterConversations() {
+  const q = (document.getElementById('convSearch')?.value || '').toLowerCase();
+  const filtered = q
+    ? _allConvs.filter(c =>
+        (c.buyerName || c.customerName || '').toLowerCase().includes(q) ||
+        (c.productName || '').toLowerCase().includes(q)
+      )
+    : _allConvs;
+  renderConversations(filtered);
+}
+
+function renderConversations(convs) {
+  const list = document.getElementById('convList');
+  if (!list) return;
+
+  if (!convs.length) {
+    list.innerHTML = `
+      <div style="padding:40px 20px;text-align:center">
+        <div style="font-size:13px;color:var(--text-muted);font-family:var(--font-display)">No conversations yet</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = convs.map(c => {
+    const id       = c.conversationId || c.id;
+    const name     = c.buyerName || c.customerName || 'Customer';
+    const product  = c.productName || '';
+    const preview  = c.lastMessage ? truncate(c.lastMessage, 55) : 'No messages yet';
+    const unread   = c.unreadCount || 0;
+    const type     = c.chatType || 'BUYER_SELLER';
+    const time     = c.lastMessageAt ? formatTimeShort(c.lastMessageAt) : '';
+    const isActive = currentConvId === id;
+    const avatarClass = type === 'ORDER_SUPPORT' ? 'order' : 'buyer';
+    const initial  = name.charAt(0).toUpperCase();
+
+    return `
+      <div class="conv-item ${isActive ? 'active' : ''}" id="conv-${id}" onclick="openConversation('${id}')">
+        <div class="conv-avatar ${avatarClass}">${initial}</div>
+        <div class="conv-meta">
+          <div class="conv-name">${escHtml(name)}</div>
+          ${product ? `<div class="conv-product">${escHtml(product)}</div>` : ''}
+          <div class="conv-preview">${escHtml(preview)}</div>
+        </div>
+        <div class="conv-right">
+          ${time ? `<div class="conv-time">${time}</div>` : ''}
+          ${unread > 0 ? `<div class="unread-badge">${unread}</div>` : ''}
+          <span class="chat-type-pill ${type}">${type === 'ORDER_SUPPORT' ? 'Order' : 'Enquiry'}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Open Conversation ─────────────────────────────────────────── */
+async function openConversation(id) {
+  if (currentConvId === id) return;
+  currentConvId = id;
+
+  // Highlight active
+  document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(`conv-${id}`);
+  if (el) el.classList.add('active');
+
+  // Find conv data
+  const conv = _allConvs.find(c => (c.conversationId || c.id) === id);
+  currentConvData = conv || null;
+  currentConvName = conv ? (conv.buyerName || conv.customerName || 'Customer') : 'Customer';
+
+  // Update header
+  updateChatHeader(conv);
+
+  // Show/hide product banner
+  updateProductBanner(conv);
+
+  // Show reply box
+  const replyBox = document.getElementById('replyBox');
+  if (replyBox) replyBox.style.display = 'flex';
+
+  // Load messages
+  document.getElementById('chatMsgs').innerHTML = `
+    <div class="chat-empty-state">
+      <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
+    </div>`;
+
+  const res = await API.getChatHistory(id);
+  if (!res.ok) {
+    document.getElementById('chatMsgs').innerHTML = `
+      <div class="chat-empty-state">
+        <div class="chat-empty-icon"><span class="material-symbols-rounded">error</span></div>
+        <div class="chat-empty-title">Failed to load messages</div>
+      </div>`;
+    return;
+  }
+
+  const msgs = res.data?.data?.messages || res.data?.messages || res.data?.data || [];
+  renderMessages(Array.isArray(msgs) ? msgs : []);
+
+  // Remove unread badge from this conv
+  if (el) {
+    const badge = el.querySelector('.unread-badge');
+    if (badge) badge.remove();
+  }
+
+  // Update unread chip
+  loadUnreadCount();
+}
+
+function updateChatHeader(conv) {
+  const header = document.getElementById('chatHeader');
+  if (!header) return;
+  if (!conv) {
+    header.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="chat-empty-icon" style="width:38px;height:38px;border-radius:10px">
+          <span class="material-symbols-rounded" style="font-size:20px">forum</span>
+        </div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:14px;font-weight:700">Select a conversation</div>
+        </div>
+      </div>`;
+    return;
+  }
+  const name  = conv.buyerName || conv.customerName || 'Customer';
+  const email = conv.buyerEmail || conv.customerEmail || '';
+  const type  = conv.chatType || 'BUYER_SELLER';
+  const avatarClass = type === 'ORDER_SUPPORT' ? 'order' : 'buyer';
+
+  header.innerHTML = `
+    <div class="chat-header-avatar ${avatarClass}">${name.charAt(0).toUpperCase()}</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">${escHtml(name)}</div>
+      ${email ? `<div class="chat-header-sub">${escHtml(email)}</div>` : ''}
+    </div>
+    <div class="chat-header-actions">
+      <button class="chat-icon-btn" onclick="loadConversations()" title="Refresh">
+        <span class="material-symbols-rounded">refresh</span>
+      </button>
+    </div>`;
+}
+
+function updateProductBanner(conv) {
+  const banner = document.getElementById('productBanner');
+  if (!banner) return;
+  if (!conv || !conv.productName) {
+    banner.style.display = 'none';
+    return;
+  }
+  banner.style.display = 'flex';
+  const img   = conv.productImageUrl || '';
+  const price = conv.productPrice != null ? '₵' + parseFloat(conv.productPrice).toFixed(2) : '';
+  banner.innerHTML = `
+    <div class="product-banner">
+      <div style="font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--po-accent);opacity:.7;white-space:nowrap">Re:</div>
+      ${img
+        ? `<img src="${img}" alt="${escHtml(conv.productName)}" onerror="this.style.display='none'"/>`
+        : `<div class="product-banner-placeholder"><span class="material-symbols-rounded">inventory_2</span></div>`}
+      <div>
+        <div class="product-banner-name">${escHtml(conv.productName)}</div>
+        ${price ? `<div class="product-banner-price">${price}</div>` : ''}
+      </div>
+      <div style="margin-left:auto">
+        <span class="chat-type-pill ${conv.chatType || 'BUYER_SELLER'}">${conv.chatType === 'ORDER_SUPPORT' ? 'Order Support' : 'Product Enquiry'}</span>
+      </div>
+    </div>`;
+}
+
+/* ── Render Messages ───────────────────────────────────────────── */
+function renderMessages(msgs) {
+  const container = document.getElementById('chatMsgs');
+  if (!container) return;
+
+  if (!msgs.length) {
+    container.innerHTML = `
+      <div class="chat-empty-state">
+        <div class="chat-empty-icon"><span class="material-symbols-rounded">chat_bubble</span></div>
+        <div class="chat-empty-title">No messages yet</div>
+        <div class="chat-empty-sub">Start the conversation by sending a reply below</div>
+      </div>`;
+    return;
+  }
+
+  let lastDate = null;
+  const html = msgs.map(m => {
+    const type    = (m.senderType || '').toUpperCase();
+    const isMe    = type === 'SELLER';
+    const isSys   = type === 'SYSTEM';
+    const rowCls  = isMe ? 'seller' : isSys ? 'system' : 'buyer';
+    const content = m.content || '';
+    const time    = m.createdAt ? formatTime(m.createdAt) : '';
+    const msgDate = m.createdAt ? new Date(m.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : null;
+
+    let divider = '';
+    if (msgDate && msgDate !== lastDate) {
+      divider = `<div class="date-divider"><span>${msgDate}</span></div>`;
+      lastDate = msgDate;
+    }
+
+    let bubble;
+    if (content.startsWith('PRODUCT_CARD::')) {
+      const parts = content.split('::');
+      const pName  = parts[1] || '';
+      const pPrice = parts[2] || '';
+      const pDesc  = parts[3] || '';
+      const pImg   = parts[4] || '';
+      bubble = `
+        <div class="msg-product-card">
+          ${pImg ? `<img src="${pImg}" alt="${escHtml(pName)}" onerror="this.style.display='none'"/>` : ''}
+          <div class="msg-product-card-body">
+            <div class="msg-product-card-name">${escHtml(pName)}</div>
+            <div class="msg-product-card-price">${escHtml(pPrice)}</div>
+            ${pDesc ? `<div class="msg-product-card-desc">${escHtml(pDesc.substring(0,80))}${pDesc.length>80?'…':''}</div>` : ''}
+          </div>
+        </div>`;
+    } else {
+      bubble = `<div class="msg-bubble">${escHtml(content)}</div>`;
+    }
+
+    const senderLabel = isSys ? '' : `<div class="msg-sender">${escHtml(m.senderName || (isMe ? 'You' : 'Customer'))}</div>`;
+    const readTick = isMe && m.isRead ? `<span class="msg-read-tick">✓✓</span>` : '';
+
+    return `${divider}
+      <div class="msg-row ${rowCls}">
+        ${senderLabel}
+        ${bubble}
+        <div class="msg-time">${time}${readTick}</div>
+      </div>`;
+  }).join('');
+
+  container.innerHTML = html;
+  container.scrollTop = container.scrollHeight;
+}
+
+/* ── Send Reply ────────────────────────────────────────────────── */
+function handleReplyKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendReply();
+  }
+}
+
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+async function sendReply() {
+  if (!currentConvId) return;
+  const input = document.getElementById('replyInput');
+  const btn   = document.getElementById('sendBtn');
+  const text  = (input?.value || '').trim();
+  if (!text) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-rounded sending">progress_activity</span>';
+  input.value = '';
+  input.style.height = 'auto';
+
+  const res = await API.sellerSendMessage(currentConvId, text);
+
+  btn.disabled = false;
+  btn.innerHTML = '<span class="material-symbols-rounded">send</span>';
+
+  if (res.ok) {
+    const saved = res.data?.data || res.data;
+    const msgs  = document.getElementById('chatMsgs');
+    if (msgs) {
+      // Remove empty state if present
+      const emptyState = msgs.querySelector('.chat-empty-state');
+      if (emptyState) emptyState.remove();
+
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <div class="msg-row seller" style="animation:fadeIn .18s ease">
+          <div class="msg-sender">You</div>
+          <div class="msg-bubble">${escHtml(text)}</div>
+          <div class="msg-time">${formatTime(new Date().toISOString())}</div>
+        </div>`;
+      msgs.appendChild(div.firstElementChild);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    // Update conversation preview
+    const convEl = document.getElementById(`conv-${currentConvId}`);
+    if (convEl) {
+      const preview = convEl.querySelector('.conv-preview');
+      if (preview) preview.textContent = truncate(text, 55);
+    }
+  } else {
+    showToast(res.data?.message || 'Failed to send message', 'error');
+    input.value = text;
+  }
+}
+
+/* ── Helpers ───────────────────────────────────────────────────── */
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function truncate(s, n) {
+  return s && s.length > n ? s.slice(0, n) + '…' : (s || '');
+}
+function formatTime(str) {
+  if (!str) return '';
+  try { return new Date(str).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }); }
+  catch(e) { return ''; }
+}
+function formatTimeShort(str) {
+  if (!str) return '';
+  try {
+    const d = new Date(str);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 86400000) return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+    if (diff < 604800000) return d.toLocaleDateString('en-GB', { weekday:'short' });
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+  } catch(e) { return ''; }
+}
+</script>
+</body>
+</html>

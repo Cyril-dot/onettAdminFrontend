@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orders — MarketPlace Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    :root {
+      --po-accent: #7C3AED;
+      --po-accent-light: #EDE9FE;
+      --po-accent-mid: #DDD6FE;
+      --po-accent-dark: #5B21B6;
+      --po-accent-glow: rgba(124,58,237,.15);
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    .nav-link.active { background: rgba(124,58,237,.14); }
+    .nav-link.active::before { background: var(--po-accent); }
+
+    /* ── Page Header ── */
+    .po-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .po-header-left .po-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.6px;
+      line-height: 1.15;
+    }
+    .po-header-left .po-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+    .po-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Stats ── */
+    .po-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .po-stat {
+      background: var(--white);
+      border-radius: 14px;
+      border: 1px solid var(--gray-100);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .16s, box-shadow .16s;
+    }
+    .po-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .po-stat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .po-stat.orange::before { background: #F59E0B; }
+    .po-stat.blue::before   { background: #3B82F6; }
+    .po-stat.green::before  { background: #10B981; }
+    .po-stat.red::before    { background: #EF4444; }
+    .po-stat-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .po-stat-icon .material-symbols-rounded { font-size: 20px; }
+    .po-stat.orange .po-stat-icon { background: #FEF3C7; color: #D97706; }
+    .po-stat.blue   .po-stat-icon { background: #DBEAFE; color: #2563EB; }
+    .po-stat.green  .po-stat-icon { background: #D1FAE5; color: #059669; }
+    .po-stat.red    .po-stat-icon { background: #FEE2E2; color: #DC2626; }
+    .po-stat-num {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -.8px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .po-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+
+    /* ── Status Pill Tabs ── */
+    .status-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 99px;
+      border: 1.5px solid var(--gray-200);
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .16s ease;
+      font-family: var(--font-display);
+      white-space: nowrap;
+    }
+    .status-pill:hover { border-color: var(--po-accent); color: var(--po-accent); background: var(--po-accent-light); }
+    .status-pill.active { background: var(--po-accent); border-color: var(--po-accent); color: #fff; }
+    .status-pill .pill-count {
+      background: rgba(255,255,255,.25);
+      border-radius: 99px;
+      padding: 1px 7px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .status-pill:not(.active) .pill-count { background: var(--gray-100); color: var(--text-muted); }
+
+    /* ── Card ── */
+    .po-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    .po-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .po-card-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .po-card-title .material-symbols-rounded { font-size: 18px; color: var(--po-accent); }
+
+    /* ── Search ── */
+    .po-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 7px 12px;
+      min-width: 220px;
+    }
+    .po-search-wrap .material-symbols-rounded { font-size: 17px; color: var(--text-muted); }
+    .po-search-wrap input {
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      font-family: var(--font-display);
+      width: 100%;
+    }
+    .po-search-wrap:focus-within { border-color: var(--po-accent); background: var(--po-accent-light); }
+
+    /* ── Table ── */
+    .po-table-wrap { overflow-x: auto; }
+    .po-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .po-table thead th {
+      text-align: left;
+      padding: 10px 20px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+    }
+    .po-table tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .12s; }
+    .po-table tbody tr:last-child { border-bottom: none; }
+    .po-table tbody tr:hover { background: #FAFAF8; }
+    .po-table tbody td { padding: 14px 20px; vertical-align: middle; }
+
+    .po-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--po-accent);
+      background: var(--po-accent-light);
+      border-radius: 6px;
+      padding: 3px 8px;
+      display: inline-block;
+    }
+
+    /* Status Badges */
+    .po-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      white-space: nowrap;
+    }
+    .po-status .material-symbols-rounded { font-size: 13px; }
+    .po-status.PENDING      { background: #F5F3FF; color: var(--po-accent-dark); }
+    .po-status.PROCESSING   { background: #DBEAFE; color: #1D4ED8; }
+    .po-status.SHIPPED      { background: #FEF3C7; color: #92400E; }
+    .po-status.DELIVERED    { background: #D1FAE5; color: #065F46; }
+    .po-status.CANCELLED    { background: #FEE2E2; color: #B91C1C; }
+    .po-status.REFUNDED     { background: #F5F3FF; color: #6D28D9; }
+
+    /* Amount */
+    .po-amount { font-weight: 800; font-size: 14px; color: var(--text); font-family: var(--font-display); }
+
+    /* Actions */
+    .po-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .14s;
+      font-family: var(--font-display);
+      white-space: nowrap;
+    }
+    .po-action-btn .material-symbols-rounded { font-size: 15px; }
+    .po-action-btn.view { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
+    .po-action-btn.view:hover { background: var(--gray-200); }
+
+    /* Refresh btn */
+    .po-refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 9px;
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      color: var(--gray-600);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-display);
+      transition: all .14s;
+    }
+    .po-refresh-btn:hover { border-color: var(--po-accent); color: var(--po-accent); background: var(--po-accent-light); }
+    .po-refresh-btn .material-symbols-rounded { font-size: 16px; }
+    .po-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Empty state */
+    .po-empty {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 64px 24px; text-align: center;
+    }
+    .po-empty-icon {
+      width: 64px; height: 64px; border-radius: 18px;
+      background: var(--po-accent-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .po-empty-icon .material-symbols-rounded { font-size: 30px; color: var(--po-accent); }
+    .po-empty-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--gray-500); }
+    .po-empty-sub { font-size: 12px; color: var(--text-muted); max-width: 260px; }
+
+    /* Total chip */
+    .po-total-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--po-accent-light); color: var(--po-accent-dark);
+      border-radius: 99px; padding: 4px 12px;
+      font-size: 12px; font-weight: 700; font-family: var(--font-display);
+    }
+
+    /* Modal overrides */
+    .btn-po-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px;
+      background: var(--po-accent); color: #fff;
+      font-size: 13px; font-weight: 700; font-family: var(--font-display);
+      border: none; cursor: pointer; transition: all .15s;
+    }
+    .btn-po-primary:hover { background: var(--po-accent-dark); box-shadow: 0 4px 16px var(--po-accent-glow); }
+    .btn-po-primary .material-symbols-rounded { font-size: 17px; }
+
+    .btn-po-ghost {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px;
+      background: var(--gray-100); color: var(--gray-700);
+      font-size: 13px; font-weight: 700; font-family: var(--font-display);
+      border: 1px solid var(--gray-200); cursor: pointer; transition: all .15s;
+    }
+    .btn-po-ghost:hover { background: var(--gray-200); }
+    .btn-po-ghost .material-symbols-rounded { font-size: 17px; }
+
+    .btn-po-danger {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px;
+      background: #FEE2E2; color: #B91C1C;
+      font-size: 13px; font-weight: 700; font-family: var(--font-display);
+      border: 1px solid #FECACA; cursor: pointer; transition: all .15s;
+    }
+    .btn-po-danger:hover { background: #FECACA; }
+    .btn-po-danger .material-symbols-rounded { font-size: 17px; }
+
+    .po-detail-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--gray-100); gap: 12px;
+    }
+    .po-detail-row:last-child { border-bottom: none; }
+    .po-detail-key {
+      font-size: 11.5px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .6px; white-space: nowrap;
+    }
+    .po-detail-val {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      text-align: right; font-family: var(--font-display);
+    }
+
+    /* Skeleton */
+    .po-skel {
+      height: 14px; border-radius: 6px;
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    .po-skel.sm { width: 60px; height: 10px; }
+    .po-skel.md { width: 120px; }
+    .po-skel.lg { width: 180px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    @media (max-width: 900px) { .po-stats { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) {
+      .po-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .po-stat-num { font-size: 22px; }
+      .po-header-left .po-title { font-size: 20px; }
+      .col-date { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
+          <span class="material-symbols-rounded" style="font-size:18px;color:var(--po-accent)">receipt_long</span>
+        </div>
+        <div class="modal-title" style="font-family:var(--font-display);font-weight:800">Order Details</div>
+      </div>
+      <button class="icon-btn" onclick="closeModal()">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody" style="padding:20px 24px"></div>
+    <div class="modal-footer" style="padding:14px 24px;gap:8px">
+      <button class="btn-po-ghost" onclick="closeModal()">
+        <span class="material-symbols-rounded">close</span> Close
+      </button>
+      <button class="btn-po-danger" id="cancelBtn" style="display:none" onclick="cancelOrder()">
+        <span class="material-symbols-rounded">cancel</span> Cancel Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+let currentOrderId = null;
+
+const STATUS_CONFIG = {
+  '':           { label: 'All',        icon: 'select_all' },
+  'PENDING':    { label: 'Pending',    icon: 'schedule' },
+  'PROCESSING': { label: 'Processing', icon: 'autorenew' },
+  'SHIPPED':    { label: 'Shipped',    icon: 'local_shipping' },
+  'DELIVERED':  { label: 'Delivered',  icon: 'task_alt' },
+  'CANCELLED':  { label: 'Cancelled',  icon: 'cancel' },
+  'REFUNDED':   { label: 'Refunded',   icon: 'currency_exchange' },
+};
+
+const STATUS_ICONS = {
+  PENDING:    { icon: 'schedule',         label: 'Pending' },
+  PROCESSING: { icon: 'autorenew',        label: 'Processing' },
+  SHIPPED:    { icon: 'local_shipping',   label: 'Shipped' },
+  DELIVERED:  { icon: 'task_alt',         label: 'Delivered' },
+  CANCELLED:  { icon: 'cancel',           label: 'Cancelled' },
+  REFUNDED:   { icon: 'currency_exchange',label: 'Refunded' },
+};
+
+let currentStatus = '';
+
+const content = `
+<div class="po-header">
+  <div class="po-header-left">
+    <div class="po-title">Orders</div>
+    <div class="po-subtitle">Manage all orders across the platform</div>
+  </div>
+  <div class="po-header-right">
+    <button class="po-refresh-btn" id="refreshBtn" onclick="loadOrders()">
+      <span class="material-symbols-rounded">refresh</span>
+      Refresh
+    </button>
+  </div>
+</div>
+
+<div class="po-stats">
+  <div class="po-stat orange">
+    <div class="po-stat-icon"><span class="material-symbols-rounded">today</span></div>
+    <div class="po-stat-num" id="todayCount">—</div>
+    <div class="po-stat-label">Today</div>
+  </div>
+  <div class="po-stat blue">
+    <div class="po-stat-icon"><span class="material-symbols-rounded">date_range</span></div>
+    <div class="po-stat-num" id="weekCount">—</div>
+    <div class="po-stat-label">This Week</div>
+  </div>
+  <div class="po-stat green">
+    <div class="po-stat-icon"><span class="material-symbols-rounded">calendar_month</span></div>
+    <div class="po-stat-num" id="monthCount">—</div>
+    <div class="po-stat-label">This Month</div>
+  </div>
+  <div class="po-stat red">
+    <div class="po-stat-icon"><span class="material-symbols-rounded">payments</span></div>
+    <div class="po-stat-num" id="revTotal">—</div>
+    <div class="po-stat-label">Revenue</div>
+  </div>
+</div>
+
+<div class="status-pills" id="statusPills"></div>
+
+<div class="po-card">
+  <div class="po-card-header">
+    <div class="po-card-title">
+      <span class="material-symbols-rounded">receipt_long</span>
+      Order Records
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="po-search-wrap">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" id="searchInput" placeholder="Search order ID…" oninput="filterTable()"/>
+      </div>
+      <div class="po-total-chip">
+        <span class="material-symbols-rounded" style="font-size:13px">tag</span>
+        <span id="poCount">—</span> records
+      </div>
+    </div>
+  </div>
+  <div class="po-table-wrap">
+    <table class="po-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th class="col-date">Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Items</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+        ${skeletonRows()}
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+renderLayout('Orders', 'orders.html', content);
+buildStatusPills();
+loadOrders();
+loadStats();
+
+function skeletonRows() {
+  return Array(5).fill(0).map(() => `
+    <tr>
+      <td><div class="po-skel sm"></div></td>
+      <td class="col-date"><div class="po-skel sm"></div></td>
+      <td><div class="po-skel sm"></div></td>
+      <td><div class="po-skel sm" style="width:90px"></div></td>
+      <td><div class="po-skel sm"></div></td>
+      <td><div class="po-skel sm" style="width:80px"></div></td>
+    </tr>
+  `).join('');
+}
+
+function buildStatusPills() {
+  const container = document.getElementById('statusPills');
+  if (!container) return;
+  container.innerHTML = Object.entries(STATUS_CONFIG).map(([val, cfg]) => `
+    <button class="status-pill ${val === '' ? 'active' : ''}"
+            data-status="${val}"
+            onclick="switchStatus('${val}')">
+      <span class="material-symbols-rounded" style="font-size:13px">${cfg.icon}</span>
+      ${cfg.label}
+      <span class="pill-count" id="pill-count-${val || 'all'}">—</span>
+    </button>
+  `).join('');
+}
+
+async function loadStats() {
+  const [today, week, month, rev] = await Promise.all([
+    API.getOrdersToday(), API.getOrdersThisWeek(), API.getOrdersThisMonth(), API.getSellerRevenue()
+  ]);
+  const toArr = r => { const d = r.data?.data || r.data; return Array.isArray(d) ? d : []; };
+  document.getElementById('todayCount').textContent = toArr(today).length;
+  document.getElementById('weekCount').textContent  = toArr(week).length;
+  document.getElementById('monthCount').textContent = toArr(month).length;
+  if (rev.ok) {
+    const d = rev.data?.data || rev.data;
+    document.getElementById('revTotal').textContent = fmtCur(d?.totalRevenue ?? d?.total);
+  }
+}
+
+async function loadOrders() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.classList.add('loading');
+  const res = await API.getAllOrders(currentStatus || null);
+  if (btn) btn.classList.remove('loading');
+
+  const orders = res.data?.data || res.data || [];
+  window._allOrders = Array.isArray(orders) ? orders : [];
+  updatePillCounts(window._allOrders);
+  renderRows(window._allOrders);
+
+  const el = document.getElementById('poCount');
+  if (el) el.textContent = window._allOrders.length;
+}
+
+function updatePillCounts(orders) {
+  const counts = {};
+  orders.forEach(o => { counts[o.status] = (counts[o.status] || 0) + 1; });
+  const allEl = document.getElementById('pill-count-all');
+  if (allEl) allEl.textContent = orders.length;
+  Object.keys(STATUS_CONFIG).forEach(s => {
+    if (!s) return;
+    const el = document.getElementById(`pill-count-${s}`);
+    if (el) el.textContent = counts[s] || 0;
+  });
+}
+
+function switchStatus(status) {
+  currentStatus = status;
+  document.querySelectorAll('.status-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.status === status);
+  });
+  loadOrders();
+}
+
+function renderRows(orders) {
+  const tbody = document.getElementById('ordersBody');
+  if (!tbody) return;
+  if (!orders.length) {
+    tbody.innerHTML = `<tr><td colspan="6">
+      <div class="po-empty">
+        <div class="po-empty-icon"><span class="material-symbols-rounded">inbox</span></div>
+        <div class="po-empty-title">No orders found</div>
+        <div class="po-empty-sub">${currentStatus ? `No orders with status <strong>${currentStatus}</strong>` : 'No orders at the moment'}</div>
+      </div>
+    </td></tr>`;
+    return;
+  }
+  tbody.innerHTML = orders.map(o => {
+    const id = o.orderId || o.id;
+    const idShort = String(id || '').slice(-8).toUpperCase();
+    const statusCfg = STATUS_ICONS[o.status] || { icon: 'radio_button_unchecked', label: o.status };
+    return `
+    <tr>
+      <td><span class="po-id">#${idShort}</span></td>
+      <td class="col-date" style="font-size:12px;color:var(--text-muted)">${fmtDate(o.createdAt)}</td>
+      <td><span class="po-amount">${fmtCur(o.total || o.totalAmount)}</span></td>
+      <td>
+        <span class="po-status ${o.status}">
+          <span class="material-symbols-rounded">${statusCfg.icon}</span>
+          ${statusCfg.label}
+        </span>
+      </td>
+      <td style="font-size:12px;color:var(--text-muted)">${o.items?.length ?? o.itemCount ?? '—'} item(s)</td>
+      <td>
+        <button class="po-action-btn view" onclick="viewOrder('${id}')">
+          <span class="material-symbols-rounded">open_in_new</span>
+          View
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (!window._allOrders) return;
+  const filtered = window._allOrders.filter(o => String(o.orderId || o.id || '').toLowerCase().includes(q));
+  renderRows(filtered);
+}
+
+async function viewOrder(id) {
+  currentOrderId = id;
+  document.getElementById('orderModal').classList.add('open');
+  document.getElementById('modalBody').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;padding:40px">
+      <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
+    </div>`;
+  document.getElementById('cancelBtn').style.display = 'none';
+
+  const res = await API.getOrderById(id);
+  if (!res.ok) {
+    document.getElementById('modalBody').innerHTML = '<p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">Failed to load order.</p>';
+    return;
+  }
+  const o = res.data?.data || res.data;
+  const canCancel = !['CANCELLED','DELIVERED','REFUNDED'].includes(o.status);
+  if (canCancel) document.getElementById('cancelBtn').style.display = 'inline-flex';
+
+  const statusCfg = STATUS_ICONS[o.status] || { icon: 'radio_button_unchecked', label: o.status };
+  let statusOptions = ['PENDING','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED']
+    .map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s}</option>`).join('');
+
+  document.getElementById('modalBody').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
+      <div style="width:44px;height:44px;border-radius:12px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;">
+        <span class="material-symbols-rounded" style="font-size:22px;color:var(--po-accent)">receipt_long</span>
+      </div>
+      <div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:15px">#${String(o.orderId||o.id||'').slice(-8).toUpperCase()}</div>
+        <div style="font-size:12px;color:var(--text-muted)">${fmtDate(o.createdAt)}</div>
+      </div>
+      <span class="po-status ${o.status}" style="margin-left:auto">
+        <span class="material-symbols-rounded">${statusCfg.icon}</span>
+        ${statusCfg.label}
+      </span>
+    </div>
+
+    <div style="background:var(--gray-50);border-radius:10px;padding:4px 14px;margin-bottom:16px">
+      <div class="po-detail-row">
+        <span class="po-detail-key">Total</span>
+        <span class="po-detail-val" style="color:#065F46">${fmtCur(o.total || o.totalAmount)}</span>
+      </div>
+      ${o.deliveryAddress ? `
+      <div class="po-detail-row">
+        <span class="po-detail-key">Delivery Address</span>
+        <span class="po-detail-val">${escHtml(o.deliveryAddress)}</span>
+      </div>` : ''}
+    </div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px">Update Status</div>
+      <div style="display:flex;gap:8px">
+        <select id="newStatus" style="flex:1;padding:9px 12px;border-radius:10px;border:1.5px solid var(--gray-200);font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text);background:var(--white);outline:none">${statusOptions}</select>
+        <button class="btn-po-primary" onclick="updateStatus()">
+          <span class="material-symbols-rounded">save</span> Update
+        </button>
+      </div>
+    </div>
+
+    ${o.items?.length ? `
+    <div style="border-top:1px solid var(--gray-100);padding-top:16px">
+      <div style="font-family:var(--font-display);font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text)">Order Items</div>
+      ${o.items.map(item => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:13px">${escHtml(item.productName || 'Product')}</div>
+            <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">Qty: ${item.quantity} × ${fmtCur(item.price)}</div>
+          </div>
+          <span style="font-family:var(--font-display);font-weight:800;font-size:13px">${fmtCur((item.quantity||1) * (item.price||0))}</span>
+        </div>
+      `).join('')}
+    </div>` : ''}
+  `;
+}
+
+async function updateStatus() {
+  const newStatus = document.getElementById('newStatus').value;
+  const res = await API.updateOrderStatus(currentOrderId, newStatus);
+  if (res.ok) { showToast('Order status updated!'); closeModal(); loadOrders(); }
+  else showToast(res.data?.message || 'Update failed', 'error');
+}
+
+async function cancelOrder() {
+  if (!confirm('Cancel this order?')) return;
+  const res = await API.cancelOrderByAdmin(currentOrderId);
+  if (res.ok) { showToast('Order cancelled'); closeModal(); loadOrders(); }
+  else showToast(res.data?.message || 'Failed', 'error');
+}
+
+function closeModal() { document.getElementById('orderModal').classList.remove('open'); }
+
+function fmtCur(val) {
+  if (val == null) return '—';
+  return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits: 2 });
+}
+function fmtDate(str) {
+  if (!str) return '—';
+  return new Date(str).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+}
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

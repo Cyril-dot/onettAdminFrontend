@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Requests — MarketPlace Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    :root {
+      --rq-accent:       #0D9488;
+      --rq-accent-light: #CCFBF1;
+      --rq-accent-mid:   #99F6E4;
+      --rq-accent-dark:  #0F766E;
+      --rq-accent-glow:  rgba(13,148,136,.15);
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+
+    /* ── Page Header ── */
+    .rq-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .rq-header-left .rq-title {
+      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      color: var(--text); letter-spacing: -.6px; line-height: 1.15;
+    }
+    .rq-header-left .rq-subtitle {
+      font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 400;
+    }
+    .rq-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Stats ── */
+    .rq-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+    .rq-stat {
+      background: var(--white); border-radius: 14px; border: 1px solid var(--gray-100);
+      padding: 18px 20px; position: relative; overflow: hidden;
+      transition: transform .16s, box-shadow .16s;
+    }
+    .rq-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .rq-stat::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; border-radius: 14px 14px 0 0;
+    }
+    .rq-stat.teal::before   { background: var(--rq-accent); }
+    .rq-stat.orange::before { background: #F59E0B; }
+    .rq-stat.green::before  { background: #10B981; }
+    .rq-stat.red::before    { background: #EF4444; }
+
+    .rq-stat-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+    }
+    .rq-stat-icon .material-symbols-rounded { font-size: 20px; }
+    .rq-stat.teal   .rq-stat-icon { background: var(--rq-accent-light); color: var(--rq-accent); }
+    .rq-stat.orange .rq-stat-icon { background: #FEF3C7; color: #D97706; }
+    .rq-stat.green  .rq-stat-icon { background: #D1FAE5; color: #059669; }
+    .rq-stat.red    .rq-stat-icon { background: #FEE2E2; color: #DC2626; }
+
+    .rq-stat-num {
+      font-family: var(--font-display); font-size: 28px; font-weight: 800;
+      letter-spacing: -.8px; color: var(--text); line-height: 1;
+    }
+    .rq-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+
+    /* ── Status Pill Tabs ── */
+    .status-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 99px; border: 1.5px solid var(--gray-200);
+      background: var(--white); font-size: 12px; font-weight: 700;
+      color: var(--text-muted); cursor: pointer; transition: all .16s ease;
+      font-family: var(--font-display); white-space: nowrap;
+    }
+    .status-pill:hover { border-color: var(--rq-accent); color: var(--rq-accent); background: var(--rq-accent-light); }
+    .status-pill.active { background: var(--rq-accent); border-color: var(--rq-accent); color: #fff; }
+    .status-pill .pill-count {
+      background: rgba(255,255,255,.25); border-radius: 99px;
+      padding: 1px 7px; font-size: 10px; font-weight: 800;
+    }
+    .status-pill:not(.active) .pill-count { background: var(--gray-100); color: var(--text-muted); }
+
+    /* ── Card ── */
+    .rq-card {
+      background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
+    }
+    .rq-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-100); gap: 12px; flex-wrap: wrap;
+    }
+    .rq-card-title {
+      font-family: var(--font-display); font-size: 15px; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 8px;
+    }
+    .rq-card-title .material-symbols-rounded { font-size: 18px; color: var(--rq-accent); }
+
+    /* ── Search ── */
+    .rq-search-wrap {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--gray-50); border: 1.5px solid var(--gray-200);
+      border-radius: 10px; padding: 7px 12px; min-width: 200px;
+    }
+    .rq-search-wrap .material-symbols-rounded { font-size: 17px; color: var(--text-muted); }
+    .rq-search-wrap input {
+      border: none; background: transparent; font-size: 13px; color: var(--text);
+      outline: none; font-family: var(--font-display); width: 100%;
+    }
+    .rq-search-wrap:focus-within { border-color: var(--rq-accent); background: var(--rq-accent-light); }
+
+    /* ── Table ── */
+    .rq-table-wrap { overflow-x: auto; }
+    .rq-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .rq-table thead th {
+      text-align: left; padding: 10px 20px; font-size: 10.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+      background: var(--gray-50); border-bottom: 1px solid var(--gray-200); white-space: nowrap;
+    }
+    .rq-table tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .12s; }
+    .rq-table tbody tr:last-child { border-bottom: none; }
+    .rq-table tbody tr:hover { background: #F0FDFA; }
+    .rq-table tbody td { padding: 14px 20px; vertical-align: middle; }
+
+    .rq-id {
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+      color: var(--rq-accent); background: var(--rq-accent-light);
+      border-radius: 6px; padding: 3px 8px; display: inline-block;
+    }
+
+    /* User info */
+    .rq-user-name  { font-weight: 700; font-size: 13px; color: var(--text); font-family: var(--font-display); }
+    .rq-user-email { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+
+    /* Product name */
+    .rq-prod-name { font-weight: 700; font-size: 13px; color: var(--text); font-family: var(--font-display); }
+    .rq-prod-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+
+    /* Approval status badges */
+    .rq-status {
+      display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+      border-radius: 99px; font-size: 11px; font-weight: 700;
+      font-family: var(--font-display); white-space: nowrap;
+    }
+    .rq-status .material-symbols-rounded { font-size: 13px; }
+    .rq-status.PENDING  { background: #FEF3C7; color: #92400E; }
+    .rq-status.APPROVED { background: #D1FAE5; color: #065F46; }
+    .rq-status.REJECTED { background: #FEE2E2; color: #B91C1C; }
+
+    /* Paid badge */
+    .rq-paid-badge {
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
+      border-radius: 99px; font-size: 10px; font-weight: 700; font-family: var(--font-display);
+    }
+    .rq-paid-badge.paid   { background: #D1FAE5; color: #065F46; }
+    .rq-paid-badge.unpaid { background: #FEE2E2; color: #B91C1C; }
+    .rq-paid-badge .material-symbols-rounded { font-size: 11px; }
+
+    /* Action Buttons */
+    .rq-action-btn {
+      display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px;
+      border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;
+      border: none; transition: all .14s; font-family: var(--font-display); white-space: nowrap;
+    }
+    .rq-action-btn .material-symbols-rounded { font-size: 15px; }
+    .rq-action-btn.view    { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
+    .rq-action-btn.view:hover { background: var(--gray-200); }
+    .rq-action-btn.approve { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+    .rq-action-btn.approve:hover { background: #A7F3D0; }
+    .rq-action-btn.reject  { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
+    .rq-action-btn.reject:hover  { background: #FECACA; }
+
+    /* Refresh btn */
+    .rq-refresh-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+      border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
+      color: var(--gray-600); font-size: 12px; font-weight: 700; cursor: pointer;
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .rq-refresh-btn:hover { border-color: var(--rq-accent); color: var(--rq-accent); background: var(--rq-accent-light); }
+    .rq-refresh-btn .material-symbols-rounded { font-size: 16px; }
+    .rq-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
+
+    /* Total chip */
+    .rq-total-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--rq-accent-light); color: var(--rq-accent-dark);
+      border-radius: 99px; padding: 4px 12px; font-size: 12px; font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    /* ── Modal ── */
+    .rq-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .rq-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .rq-modal {
+      background: var(--white); border-radius: 18px; width: 100%; max-width: 560px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.18); overflow: hidden;
+      transform: translateY(16px) scale(.97); transition: transform .2s, opacity .2s;
+      opacity: 0;
+    }
+    .rq-modal-overlay.open .rq-modal { transform: translateY(0) scale(1); opacity: 1; }
+
+    .rq-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-100);
+    }
+    .rq-modal-header-left { display: flex; align-items: center; gap: 10px; }
+    .rq-modal-icon {
+      width: 36px; height: 36px; border-radius: 9px; background: var(--rq-accent-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rq-modal-icon .material-symbols-rounded { font-size: 18px; color: var(--rq-accent); }
+    .rq-modal-title { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text); }
+    .rq-modal-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    .rq-modal-body {
+      padding: 20px 24px; max-height: 65vh; overflow-y: auto;
+    }
+    .rq-modal-body::-webkit-scrollbar { width: 4px; }
+    .rq-modal-body::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 99px; }
+
+    .rq-modal-footer {
+      padding: 14px 24px; border-top: 1px solid var(--gray-100);
+      display: flex; justify-content: flex-end; gap: 8px; align-items: center;
+    }
+
+    /* Modal inner layout */
+    .rq-detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
+    }
+    .rq-detail-item {
+      background: var(--gray-50); border-radius: 10px; padding: 12px 14px;
+    }
+    .rq-detail-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--text-muted); margin-bottom: 5px;
+    }
+    .rq-detail-value {
+      font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text);
+    }
+    .rq-detail-value.mono { font-family: var(--font-mono); font-size: 12px; }
+
+    /* Product image strip */
+    .rq-img-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .rq-img-strip img {
+      width: 72px; height: 72px; border-radius: 10px; object-fit: cover;
+      border: 1px solid var(--gray-200);
+    }
+
+    /* Description block */
+    .rq-desc-block {
+      background: var(--gray-50); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;
+    }
+
+    /* Payment info strip */
+    .rq-payment-strip {
+      display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+      background: var(--rq-accent-light); border: 1px solid var(--rq-accent-mid);
+      border-radius: 10px; margin-bottom: 16px;
+    }
+    .rq-payment-strip .material-symbols-rounded { font-size: 16px; color: var(--rq-accent); }
+    .rq-payment-strip span { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--rq-accent-dark); }
+
+    /* Approve / Reject buttons in modal */
+    .btn-rq-approve {
+      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
+      border-radius: 10px; background: var(--rq-accent); color: #fff;
+      font-size: 13px; font-weight: 700; font-family: var(--font-display);
+      border: none; cursor: pointer; transition: all .15s;
+    }
+    .btn-rq-approve:hover { background: var(--rq-accent-dark); box-shadow: 0 4px 16px var(--rq-accent-glow); }
+    .btn-rq-approve:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-rq-approve .material-symbols-rounded { font-size: 17px; }
+
+    .btn-rq-reject {
+      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
+      border-radius: 10px; background: #FEE2E2; color: #B91C1C;
+      font-size: 13px; font-weight: 700; font-family: var(--font-display);
+      border: 1px solid #FECACA; cursor: pointer; transition: all .15s;
+    }
+    .btn-rq-reject:hover { background: #FECACA; }
+    .btn-rq-reject .material-symbols-rounded { font-size: 17px; }
+
+    .btn-rq-ghost {
+      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
+      border-radius: 10px; background: var(--gray-100); color: var(--gray-700);
+      font-size: 13px; font-weight: 700; font-family: var(--font-display);
+      border: 1px solid var(--gray-200); cursor: pointer; transition: all .15s;
+    }
+    .btn-rq-ghost:hover { background: var(--gray-200); }
+
+    /* Skeleton */
+    .rq-skel {
+      height: 14px; border-radius: 6px;
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    .rq-skel.sm { width: 60px; height: 10px; }
+    .rq-skel.md { width: 120px; }
+
+    /* Empty state */
+    .rq-empty {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 64px 24px; text-align: center;
+    }
+    .rq-empty-icon {
+      width: 64px; height: 64px; border-radius: 18px; background: var(--rq-accent-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rq-empty-icon .material-symbols-rounded { font-size: 30px; color: var(--rq-accent); }
+    .rq-empty-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--gray-500); }
+    .rq-empty-sub   { font-size: 12px; color: var(--text-muted); max-width: 260px; }
+
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes spin    { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) { .rq-stats { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) {
+      .rq-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .rq-stat-num { font-size: 22px; }
+      .rq-header-left .rq-title { font-size: 20px; }
+      .col-user, .col-date, .col-amount { display: none; }
+      .rq-detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  REQUEST DETAIL MODAL                                         -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="rq-modal-overlay" id="reqModal">
+  <div class="rq-modal">
+    <div class="rq-modal-header">
+      <div class="rq-modal-header-left">
+        <div class="rq-modal-icon">
+          <span class="material-symbols-rounded">pending_actions</span>
+        </div>
+        <div>
+          <div class="rq-modal-title">Request Details</div>
+          <div class="rq-modal-subtitle" id="reqModalSubtitle">Loading…</div>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="closeModal()">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div class="rq-modal-body" id="reqModalBody">
+      <div style="display:flex;align-items:center;justify-content:center;padding:40px">
+        <span class="material-symbols-rounded" style="font-size:28px;color:var(--rq-accent);animation:spin .8s linear infinite">progress_activity</span>
+      </div>
+    </div>
+    <div class="rq-modal-footer" id="reqModalFooter">
+      <button class="btn-rq-ghost" onclick="closeModal()">
+        <span class="material-symbols-rounded">close</span> Close
+      </button>
+      <button class="btn-rq-reject" id="rejectBtn" style="display:none" onclick="updateApproval('REJECTED')">
+        <span class="material-symbols-rounded">cancel</span> Reject
+      </button>
+      <button class="btn-rq-approve" id="approveBtn" style="display:none" onclick="updateApproval('APPROVED')">
+        <span class="material-symbols-rounded">check_circle</span> Approve
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="layout.js"></script>
+<script>
+requireAuth();
+
+let currentReqId      = null;
+let currentReqStatus  = null;
+let currentTab        = 'all';
+window._allRequests   = [];
+
+// ── Tab config ────────────────────────────────────────────────────
+const TAB_CONFIG = [
+  { mode: 'all',      label: 'All Requests', icon: 'select_all'    },
+  { mode: 'PENDING',  label: 'Pending',      icon: 'pending'       },
+  { mode: 'APPROVED', label: 'Approved',     icon: 'check_circle'  },
+  { mode: 'REJECTED', label: 'Rejected',     icon: 'cancel'        },
+  { mode: 'recent',   label: 'Recent',       icon: 'history'       },
+];
+
+// ── Page content ──────────────────────────────────────────────────
+const content = `
+<div class="rq-header">
+  <div class="rq-header-left">
+    <div class="rq-title">Product Requests</div>
+    <div class="rq-subtitle">Review and approve user-submitted products</div>
+  </div>
+  <div class="rq-header-right">
+    <button class="rq-refresh-btn" id="refreshBtn" onclick="loadRequests(currentTab)">
+      <span class="material-symbols-rounded">refresh</span> Refresh
+    </button>
+  </div>
+</div>
+
+<div class="rq-stats">
+  <div class="rq-stat teal">
+    <div class="rq-stat-icon"><span class="material-symbols-rounded">inbox</span></div>
+    <div class="rq-stat-num" id="totalCount">—</div>
+    <div class="rq-stat-label">Total Requests</div>
+  </div>
+  <div class="rq-stat orange">
+    <div class="rq-stat-icon"><span class="material-symbols-rounded">pending</span></div>
+    <div class="rq-stat-num" id="pendCount">—</div>
+    <div class="rq-stat-label">Pending</div>
+  </div>
+  <div class="rq-stat green">
+    <div class="rq-stat-icon"><span class="material-symbols-rounded">check_circle</span></div>
+    <div class="rq-stat-num" id="appCount">—</div>
+    <div class="rq-stat-label">Approved</div>
+  </div>
+  <div class="rq-stat red">
+    <div class="rq-stat-icon"><span class="material-symbols-rounded">cancel</span></div>
+    <div class="rq-stat-num" id="rejCount">—</div>
+    <div class="rq-stat-label">Rejected</div>
+  </div>
+</div>
+
+<div class="status-pills" id="tabPills"></div>
+
+<div class="rq-card">
+  <div class="rq-card-header">
+    <div class="rq-card-title">
+      <span class="material-symbols-rounded">pending_actions</span>
+      Request Records
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="rq-search-wrap">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" id="reqSearch" placeholder="Search requests…" oninput="filterRequests()"/>
+      </div>
+      <div class="rq-total-chip">
+        <span class="material-symbols-rounded" style="font-size:13px">tag</span>
+        <span id="reqCount">—</span> requests
+      </div>
+    </div>
+  </div>
+  <div class="rq-table-wrap">
+    <table class="rq-table">
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Product</th>
+          <th class="col-user">Submitted By</th>
+          <th class="col-date">Submitted</th>
+          <th class="col-amount">Amount</th>
+          <th>Paid</th>
+          <th>Updates</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="reqBody">
+        ${skeletonRows()}
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+renderLayout('Product Requests', 'requests.html', content);
+buildTabPills();
+loadAll();
+
+// ── Skeleton ──────────────────────────────────────────────────────
+function skeletonRows() {
+  return Array(6).fill(0).map(() => `
+    <tr>
+      <td><div class="rq-skel sm"></div></td>
+      <td><div class="rq-skel md"></div><div class="rq-skel sm" style="margin-top:6px"></div></td>
+      <td class="col-user"><div class="rq-skel md"></div></td>
+      <td class="col-date"><div class="rq-skel sm"></div></td>
+      <td class="col-amount"><div class="rq-skel sm"></div></td>
+      <td><div class="rq-skel sm" style="width:50px"></div></td>
+      <td><div class="rq-skel sm" style="width:30px"></div></td>
+      <td><div class="rq-skel sm" style="width:80px"></div></td>
+      <td><div class="rq-skel sm" style="width:100px"></div></td>
+    </tr>
+  `).join('');
+}
+
+// ── Tab pills ─────────────────────────────────────────────────────
+function buildTabPills() {
+  const container = document.getElementById('tabPills');
+  if (!container) return;
+  container.innerHTML = TAB_CONFIG.map(cfg => `
+    <button class="status-pill ${cfg.mode === 'all' ? 'active' : ''}"
+            data-mode="${cfg.mode}"
+            onclick="switchTab('${cfg.mode}')">
+      <span class="material-symbols-rounded" style="font-size:13px">${cfg.icon}</span>
+      ${cfg.label}
+      <span class="pill-count" id="pill-count-${cfg.mode}">—</span>
+    </button>
+  `).join('');
+}
+
+function switchTab(mode) {
+  currentTab = mode;
+  document.querySelectorAll('.status-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.mode === mode);
+  });
+  loadRequests(mode);
+}
+
+function updatePillCount(mode, count) {
+  const el = document.getElementById(`pill-count-${mode}`);
+  if (el) el.textContent = count;
+}
+
+// ── Load all (requests + counts in parallel) ──────────────────────
+async function loadAll() {
+  await Promise.all([loadRequests('all'), loadCounts()]);
+}
+
+// ── Load counts via status endpoints ─────────────────────────────
+// Endpoint: GET /api/v1/user-products/seller/by-status?status=X
+async function loadCounts() {
+  const [pend, app, rej, all] = await Promise.all([
+    API.getProductRequestsByStatus('PENDING',  0, 1),
+    API.getProductRequestsByStatus('APPROVED', 0, 1),
+    API.getProductRequestsByStatus('REJECTED', 0, 1),
+    API.getAllProductRequests(),
+  ]);
+
+  // Resolve total elements from paginated or list responses
+  const pageCount = r => {
+    const d = r.data?.data || r.data;
+    if (d?.totalElements != null) return d.totalElements;
+    if (d?.content)               return d.content.length;
+    if (Array.isArray(d))         return d.length;
+    return '—';
+  };
+
+  const allItems = extractItems(all);
+  document.getElementById('totalCount').textContent = allItems.length || '—';
+  document.getElementById('pendCount').textContent  = pageCount(pend);
+  document.getElementById('appCount').textContent   = pageCount(app);
+  document.getElementById('rejCount').textContent   = pageCount(rej);
+
+  // Pill counts from all list
+  updatePillCount('all',      allItems.length);
+  updatePillCount('PENDING',  allItems.filter(r => approvalStatus(r) === 'PENDING').length);
+  updatePillCount('APPROVED', allItems.filter(r => approvalStatus(r) === 'APPROVED').length);
+  updatePillCount('REJECTED', allItems.filter(r => approvalStatus(r) === 'REJECTED').length);
+}
+
+// ── Load requests by tab mode ─────────────────────────────────────
+// Endpoints:
+//   all    → GET /api/v1/user-products/seller/all
+//   recent → GET /api/v1/user-products/seller/recent
+//   status → GET /api/v1/user-products/seller/by-status?status=X
+async function loadRequests(mode = 'all') {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.classList.add('loading');
+
+  let res;
+  if (mode === 'recent') {
+    res = await API.getRecentProductRequests(0, 20);
+  } else if (['PENDING', 'APPROVED', 'REJECTED'].includes(mode)) {
+    res = await API.getProductRequestsByStatus(mode, 0, 50);
+  } else {
+    res = await API.getAllProductRequests();
+  }
+
+  if (btn) btn.classList.remove('loading');
+
+  window._allRequests = extractItems(res);
+  renderRequests(window._allRequests);
+
+  const el = document.getElementById('reqCount');
+  if (el) el.textContent = window._allRequests.length;
+
+  updatePillCount(mode, window._allRequests.length);
+}
+
+// ── Extract items from various response shapes ────────────────────
+function extractItems(res) {
+  const d = res.data?.data || res.data;
+  if (!d) return [];
+  if (Array.isArray(d))         return d;
+  if (d.content && Array.isArray(d.content)) return d.content;
+  return [];
+}
+
+// ── Resolve approval status from nested response shape ────────────
+// The seller/all endpoint returns RequestProductResponse which has
+// a nested payload: { productResponse: { approvalStatus }, payload: { approvalStatus } }
+function approvalStatus(r) {
+  return r.productResponse?.approvalStatus
+      || r.payload?.approvalStatus
+      || r.approvalStatus
+      || r.status
+      || '';
+}
+
+function productName(r) {
+  return r.productResponse?.name || r.name || r.productName || '—';
+}
+
+function userName(r) {
+  return r.name || r.userName || r.email || r.userEmail || '—';
+}
+
+function userEmail(r) {
+  return r.email || r.userEmail || r.payload?.userEmail || '';
+}
+
+function requestId(r) {
+  return r.payload?.id || r.id || r.requestId || '';
+}
+
+function productId(r) {
+  return r.productResponse?.id || '';
+}
+
+function createdAt(r) {
+  return r.payload?.createdAt || r.createdAt || '';
+}
+
+function isPaid(r) {
+  return r.payload?.paid === true || r.paid === true;
+}
+
+function amount(r) {
+  return r.payload?.amount || r.amount || null;
+}
+
+function updateCount(r) {
+  return r.productResponse?.updateCount ?? r.updateCount ?? '—';
+}
+
+// ── Search filter ─────────────────────────────────────────────────
+function filterRequests() {
+  const q = (document.getElementById('reqSearch')?.value || '').toLowerCase();
+  let list = window._allRequests || [];
+  if (q) {
+    list = list.filter(r =>
+      productName(r).toLowerCase().includes(q) ||
+      userName(r).toLowerCase().includes(q) ||
+      userEmail(r).toLowerCase().includes(q) ||
+      requestId(r).toString().toLowerCase().includes(q)
+    );
+  }
+  renderRequests(list);
+  const el = document.getElementById('reqCount');
+  if (el) el.textContent = list.length;
+}
+
+// ── Render table ──────────────────────────────────────────────────
+function renderRequests(items) {
+  const tbody = document.getElementById('reqBody');
+  if (!tbody) return;
+
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="9">
+      <div class="rq-empty">
+        <div class="rq-empty-icon"><span class="material-symbols-rounded">pending_actions</span></div>
+        <div class="rq-empty-title">No requests found</div>
+        <div class="rq-empty-sub">Try switching tabs or refreshing the list</div>
+      </div>
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = items.map(r => {
+    const rid    = requestId(r);
+    const status = approvalStatus(r);
+    const paid   = isPaid(r);
+    const pid    = productId(r);
+    const isPend = status === 'PENDING';
+
+    return `<tr>
+      <td>
+        <span class="rq-id">${String(rid).slice(-8).toUpperCase() || '—'}</span>
+      </td>
+      <td>
+        <div class="rq-prod-name">${escHtml(productName(r))}</div>
+        ${pid ? `<div class="rq-prod-meta">${escHtml(pid.toString().slice(-8))}</div>` : ''}
+      </td>
+      <td class="col-user">
+        <div class="rq-user-name">${escHtml(userName(r))}</div>
+        <div class="rq-user-email">${escHtml(userEmail(r))}</div>
+      </td>
+      <td class="col-date" style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">
+        ${formatDate(createdAt(r))}
+      </td>
+      <td class="col-amount" style="font-family:var(--font-mono);font-size:13px;font-weight:600">
+        ${amount(r) != null ? formatCurrency(amount(r)) : '—'}
+      </td>
+      <td>
+        <span class="rq-paid-badge ${paid ? 'paid' : 'unpaid'}">
+          <span class="material-symbols-rounded">${paid ? 'check' : 'close'}</span>
+          ${paid ? 'Paid' : 'Unpaid'}
+        </span>
+      </td>
+      <td style="font-family:var(--font-mono);font-size:13px;font-weight:600;text-align:center">
+        ${updateCount(r)}
+      </td>
+      <td>
+        <span class="rq-status ${status}">
+          <span class="material-symbols-rounded">${statusIcon(status)}</span>
+          ${status || '—'}
+        </span>
+      </td>
+      <td>
+        <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+          <button class="rq-action-btn view" onclick="viewRequest('${rid}', '${status}')">
+            <span class="material-symbols-rounded">open_in_new</span> Review
+          </button>
+          ${isPend ? `
+          <button class="rq-action-btn approve" onclick="quickApprove('${pid}', '${rid}')">
+            <span class="material-symbols-rounded">check</span>
+          </button>
+          <button class="rq-action-btn reject" onclick="quickReject('${pid}', '${rid}')">
+            <span class="material-symbols-rounded">close</span>
+          </button>` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function statusIcon(s) {
+  if (s === 'PENDING')  return 'pending';
+  if (s === 'APPROVED') return 'check_circle';
+  if (s === 'REJECTED') return 'cancel';
+  return 'radio_button_unchecked';
+}
+
+// ── Quick approve/reject from table (uses product ID) ─────────────
+// Endpoint: PATCH /api/v1/user-products/seller/requests/{productId}/status
+async function quickApprove(productId, requestId) {
+  if (!productId) { showToast('No product found for this request', 'error'); return; }
+  const res = await API.updateProductApproval(productId, 'APPROVED');
+  if (res.ok) { showToast('Request approved!', 'success'); loadAll(); }
+  else showToast(res.data?.message || 'Failed to approve', 'error');
+}
+
+async function quickReject(productId, requestId) {
+  if (!productId) { showToast('No product found for this request', 'error'); return; }
+  const res = await API.updateProductApproval(productId, 'REJECTED');
+  if (res.ok) { showToast('Request rejected', 'error'); loadAll(); }
+  else showToast(res.data?.message || 'Failed to reject', 'error');
+}
+
+// ── View full request detail modal ────────────────────────────────
+// Endpoint: GET /api/v1/user-products/seller/requests/{requestId}
+async function viewRequest(id, status) {
+  currentReqId     = id;
+  currentReqStatus = status;
+
+  document.getElementById('reqModal').classList.add('open');
+  document.getElementById('reqModalSubtitle').textContent = `ID: ${String(id).slice(-8).toUpperCase()}`;
+  document.getElementById('reqModalBody').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;padding:40px">
+      <span class="material-symbols-rounded" style="font-size:28px;color:var(--rq-accent);animation:spin .8s linear infinite">progress_activity</span>
+    </div>`;
+
+  // Show/hide action buttons
+  const isPending = status === 'PENDING';
+  document.getElementById('approveBtn').style.display = isPending ? 'inline-flex' : 'none';
+  document.getElementById('rejectBtn').style.display  = isPending ? 'inline-flex' : 'none';
+
+  const res = await API.getProductRequestById(id);
+  if (!res.ok) {
+    document.getElementById('reqModalBody').innerHTML =
+      '<p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">Failed to load request details.</p>';
+    return;
+  }
+
+  // Response shape from GET /seller/requests/{id} → RequestProductResponse
+  // { userId, name, email, productResponse: UserProductResponse, payload: ProductRequestPayload }
+  const r       = res.data?.data || res.data;
+  const prod    = r.productResponse || {};
+  const payload = r.payload || {};
+  const imgs    = prod.images || [];
+  const imgUrls = imgs.map(i => (typeof i === 'string' ? i : i.imageUrl)).filter(Boolean);
+  const status2 = prod.approvalStatus || payload.approvalStatus || '';
+
+  // Update buttons based on actual fetched status
+  const isPend2 = status2 === 'PENDING';
+  document.getElementById('approveBtn').style.display = isPend2 ? 'inline-flex' : 'none';
+  document.getElementById('rejectBtn').style.display  = isPend2 ? 'inline-flex' : 'none';
+
+  // Store the product ID for approve/reject action
+  currentReqId = prod.id || payload.id || id;
+
+  document.getElementById('reqModalBody').innerHTML = `
+    ${imgUrls.length ? `
+    <div class="rq-img-strip">
+      ${imgUrls.map(url => `<img src="${url}" alt="product image" onerror="this.style.display='none'"/>`).join('')}
+    </div>` : ''}
+
+    ${payload.paid ? `
+    <div class="rq-payment-strip">
+      <span class="material-symbols-rounded">payments</span>
+      <span>Payment verified — ${formatCurrency(payload.amount)}</span>
+      ${payload.paystackReference ? `<span style="font-family:var(--font-mono);font-size:11px;color:var(--rq-accent-dark);margin-left:auto">ref: ${payload.paystackReference}</span>` : ''}
+    </div>` : `
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;margin-bottom:16px">
+      <span class="material-symbols-rounded" style="font-size:16px;color:#D97706">warning</span>
+      <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:#92400E">Payment not yet verified</span>
+    </div>`}
+
+    <div class="rq-detail-grid">
+      <div class="rq-detail-item" style="grid-column:span 2">
+        <div class="rq-detail-label">Product Name</div>
+        <div class="rq-detail-value">${escHtml(prod.name || '—')}</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Status</div>
+        <div class="rq-detail-value">
+          <span class="rq-status ${status2}">
+            <span class="material-symbols-rounded">${statusIcon(status2)}</span>
+            ${status2 || '—'}
+          </span>
+        </div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Brand</div>
+        <div class="rq-detail-value">${escHtml(prod.brand || '—')}</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Submitted By</div>
+        <div class="rq-detail-value">${escHtml(r.name || '—')}</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Email</div>
+        <div class="rq-detail-value mono">${escHtml(r.email || '—')}</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Amount Paid</div>
+        <div class="rq-detail-value">${payload.amount != null ? formatCurrency(payload.amount) : '—'}</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Update Count</div>
+        <div class="rq-detail-value">${prod.updateCount ?? '—'} / 3</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Submitted</div>
+        <div class="rq-detail-value mono" style="font-size:12px">${formatDate(payload.createdAt || prod.createdAt)}</div>
+      </div>
+      <div class="rq-detail-item">
+        <div class="rq-detail-label">Last Updated</div>
+        <div class="rq-detail-value mono" style="font-size:12px">${formatDate(payload.updatedAt)}</div>
+      </div>
+    </div>
+
+    ${prod.productDescription ? `
+    <div class="rq-desc-block">
+      <div class="rq-detail-label">Description</div>
+      <div style="font-size:13px;color:var(--text);line-height:1.6;margin-top:6px">${escHtml(prod.productDescription)}</div>
+    </div>` : ''}
+  `;
+}
+
+// ── Approve / Reject from modal ───────────────────────────────────
+// Endpoint: PATCH /api/v1/user-products/seller/requests/{productId}/status
+// Note: currentReqId is set to productResponse.id (UserProduct ID) in viewRequest
+async function updateApproval(status) {
+  document.getElementById('approveBtn').disabled = true;
+  document.getElementById('rejectBtn').disabled  = true;
+
+  const res = await API.updateProductApproval(currentReqId, status);
+
+  document.getElementById('approveBtn').disabled = false;
+  document.getElementById('rejectBtn').disabled  = false;
+
+  if (res.ok) {
+    showToast(
+      status === 'APPROVED' ? 'Request approved!' : 'Request rejected',
+      status === 'APPROVED' ? 'success' : 'error'
+    );
+    closeModal();
+    loadAll();
+  } else {
+    showToast(res.data?.message || 'Action failed', 'error');
+  }
+}
+
+function closeModal() {
+  document.getElementById('reqModal').classList.remove('open');
+  currentReqId     = null;
+  currentReqStatus = null;
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
