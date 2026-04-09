@@ -1439,16 +1439,16 @@ async function doAddProduct() {
   }
 
   const requestPayload = {
-    name, categoryId,
-    price: parseFloat(price),
-    stock: parseInt(stock),
-    stockStatus,
-    isDiscounted: isDiscOn,
-    ...(brand       && { brand }),
-    ...(description && { productDescription: description }),
-    ...(isDiscOn && discPct && { discountPercentage: parseFloat(discPct) }),
-    ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
-  };
+  name, categoryId,
+  price: parseFloat(price),
+  stock: parseInt(stock),
+  stockStatus,
+  discounted: isDiscOn,                                                    // ← was isDiscounted
+  discountPercentage: isDiscOn && discPct ? parseFloat(discPct) : null,   // ← always send this
+  ...(brand       && { brand }),
+  ...(description && { productDescription: description }),
+  ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
+};
 
   const formData = new FormData();
   formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: 'application/json' }));
@@ -1590,22 +1590,22 @@ async function doUpdateProduct() {
     showToast('Available in days is required for this stock status', 'error'); return;
   }
 
+ 
   const requestPayload = {
-    ...(name         && { name }),
-    ...(brand        && { brand }),
-    ...(description  && { productDescription: description }),
-    ...(price        && { price: parseFloat(price) }),
-    ...(stock !== '' && stock != null && { stock: parseInt(stock) }),
-    ...(categoryId   && { categoryId }),
-    ...(stockStatus  && { stockStatus }),
-    ...(productStat  && { productStatus: productStat }),
-    isDiscounted: isDiscOn,
-    ...(isDiscOn && discPct && { discountPercentage: parseFloat(discPct) }),
-    ...(!isDiscOn && { discountPercentage: null }),
-    ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
-    isDeleteVideo: deleteVideo,
-    ...(epDeleteImageIds.length > 0 && { imageIdsToDelete: epDeleteImageIds }),
-  };
+  ...(name        && { name }),
+  ...(brand       && { brand }),
+  ...(description && { productDescription: description }),
+  ...(price       && { price: parseFloat(price) }),
+  ...(stock !== '' && stock != null && { stock: parseInt(stock) }),
+  ...(categoryId  && { categoryId }),
+  ...(stockStatus && { stockStatus }),
+  ...(productStat && { productStatus: productStat }),
+  discounted: isDiscOn,                                            // ← fixed
+  discountPercentage: isDiscOn && discPct ? parseFloat(discPct) : null, // ← fixed
+  ...(needDays && availDays && { availableInDays: parseInt(availDays) }),
+  isDeleteVideo: deleteVideo,
+  ...(epDeleteImageIds.length > 0 && { imageIdsToDelete: epDeleteImageIds }),
+};
 
   const formData = new FormData();
   formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: 'application/json' }));
