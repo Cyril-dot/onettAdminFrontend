@@ -57,8 +57,14 @@ function renderLayout(pageTitle, activeNav, contentHtml) {
           </button>
         </div>
       </aside>
+
+      <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
       <div class="main-wrap">
         <header class="topbar">
+          <button class="topbar-hamburger" id="sidebarToggle" onclick="toggleSidebar()">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
           <div class="topbar-title">${pageTitle}</div>
           <div class="topbar-actions">
             <button class="icon-btn" onclick="window.location.href='notifications.html'" title="Notifications">
@@ -108,3 +114,30 @@ function renderLayout(pageTitle, activeNav, contentHtml) {
     }
   })();
 }
+
+// ═══════════════════════════════════════════════════════════
+//  Sidebar toggle (mobile)
+// ═══════════════════════════════════════════════════════════
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('visible');
+}
+
+// Close sidebar when a nav link is clicked on mobile
+document.addEventListener('click', function (e) {
+  const link = e.target.closest('.nav-link');
+  if (link && window.innerWidth <= 768) closeSidebar();
+});
+
+// Close sidebar on Escape key
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeSidebar();
+});
