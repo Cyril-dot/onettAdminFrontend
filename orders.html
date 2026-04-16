@@ -70,16 +70,16 @@
 
     .po-status { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; font-family:var(--font-display); white-space:nowrap; }
     .po-status .material-symbols-rounded { font-size:13px; }
-    .po-status.PENDING      { background:#F5F3FF; color:var(--po-accent-dark); }
-    .po-status.PROCESSING   { background:#DBEAFE; color:#1D4ED8; }
-    .po-status.SHIPPED      { background:#FEF3C7; color:#92400E; }
-    .po-status.DELIVERED    { background:#D1FAE5; color:#065F46; }
-    .po-status.CANCELLED    { background:#FEE2E2; color:#B91C1C; }
-    .po-status.REFUNDED     { background:#F5F3FF; color:#6D28D9; }
-    .po-status.CONFIRMED    { background:#D1FAE5; color:#065F46; }
+    .po-status.PENDING          { background:#F5F3FF; color:var(--po-accent-dark); }
+    .po-status.PROCESSING       { background:#DBEAFE; color:#1D4ED8; }
+    .po-status.SHIPPED          { background:#FEF3C7; color:#92400E; }
+    .po-status.DELIVERED        { background:#D1FAE5; color:#065F46; }
+    .po-status.CANCELLED        { background:#FEE2E2; color:#B91C1C; }
+    .po-status.REFUNDED         { background:#F5F3FF; color:#6D28D9; }
+    .po-status.CONFIRMED        { background:#D1FAE5; color:#065F46; }
     .po-status.AWAITING_PAYMENT { background:#FEF3C7; color:#D97706; }
-    .po-status.DEPOSIT_PAID { background:#D1FAE5; color:#065F46; }
-    .po-status.PAYMENT_FAILED { background:#FEE2E2; color:#B91C1C; }
+    .po-status.DEPOSIT_PAID     { background:#D1FAE5; color:#065F46; }
+    .po-status.PAYMENT_FAILED   { background:#FEE2E2; color:#B91C1C; }
 
     .po-amount { font-weight:800; font-size:14px; color:var(--text); font-family:var(--font-display); }
 
@@ -168,29 +168,29 @@ requireAuth();
 let currentOrderId = null;
 
 const STATUS_CONFIG = {
-  '':                { label: 'All',             icon: 'select_all' },
-  'PENDING':         { label: 'Pending',         icon: 'schedule' },
-  'PROCESSING':      { label: 'Processing',      icon: 'autorenew' },
-  'SHIPPED':         { label: 'Shipped',         icon: 'local_shipping' },
-  'DELIVERED':       { label: 'Delivered',       icon: 'task_alt' },
-  'CANCELLED':       { label: 'Cancelled',       icon: 'cancel' },
-  'REFUNDED':        { label: 'Refunded',        icon: 'currency_exchange' },
-  'CONFIRMED':       { label: 'Confirmed',       icon: 'check_circle' },
-  'AWAITING_PAYMENT':{ label: 'Awaiting Pay.',   icon: 'hourglass_top' },
-  'DEPOSIT_PAID':    { label: 'Deposit Paid',    icon: 'savings' },
+  '':                  { label: 'All',           icon: 'select_all' },
+  'PENDING':           { label: 'Pending',        icon: 'schedule' },
+  'PROCESSING':        { label: 'Processing',     icon: 'autorenew' },
+  'SHIPPED':           { label: 'Shipped',        icon: 'local_shipping' },
+  'DELIVERED':         { label: 'Delivered',      icon: 'task_alt' },
+  'CANCELLED':         { label: 'Cancelled',      icon: 'cancel' },
+  'REFUNDED':          { label: 'Refunded',       icon: 'currency_exchange' },
+  'CONFIRMED':         { label: 'Confirmed',      icon: 'check_circle' },
+  'AWAITING_PAYMENT':  { label: 'Awaiting Pay.',  icon: 'hourglass_top' },
+  'DEPOSIT_PAID':      { label: 'Deposit Paid',   icon: 'savings' },
 };
 
 const STATUS_ICONS = {
-  PENDING:          { icon: 'schedule',           label: 'Pending' },
-  PROCESSING:       { icon: 'autorenew',          label: 'Processing' },
-  SHIPPED:          { icon: 'local_shipping',     label: 'Shipped' },
-  DELIVERED:        { icon: 'task_alt',           label: 'Delivered' },
-  CANCELLED:        { icon: 'cancel',             label: 'Cancelled' },
-  REFUNDED:         { icon: 'currency_exchange',  label: 'Refunded' },
-  CONFIRMED:        { icon: 'check_circle',       label: 'Confirmed' },
-  AWAITING_PAYMENT: { icon: 'hourglass_top',      label: 'Awaiting Pay.' },
-  DEPOSIT_PAID:     { icon: 'savings',            label: 'Deposit Paid' },
-  PAYMENT_FAILED:   { icon: 'error',              label: 'Pay. Failed' },
+  PENDING:          { icon: 'schedule',          label: 'Pending' },
+  PROCESSING:       { icon: 'autorenew',         label: 'Processing' },
+  SHIPPED:          { icon: 'local_shipping',    label: 'Shipped' },
+  DELIVERED:        { icon: 'task_alt',          label: 'Delivered' },
+  CANCELLED:        { icon: 'cancel',            label: 'Cancelled' },
+  REFUNDED:         { icon: 'currency_exchange', label: 'Refunded' },
+  CONFIRMED:        { icon: 'check_circle',      label: 'Confirmed' },
+  AWAITING_PAYMENT: { icon: 'hourglass_top',     label: 'Awaiting Pay.' },
+  DEPOSIT_PAID:     { icon: 'savings',           label: 'Deposit Paid' },
+  PAYMENT_FAILED:   { icon: 'error',             label: 'Pay. Failed' },
 };
 
 let currentStatus = '';
@@ -274,8 +274,11 @@ const content = `
 renderLayout('Orders', 'orders.html', content);
 buildStatusPills();
 loadOrders();
-loadStats();
+loadStats(); // ← runs independently, won't block or break loadOrders()
 
+// ─────────────────────────────────────────────
+// SKELETON
+// ─────────────────────────────────────────────
 function skeletonRows() {
   return Array(5).fill(0).map(() => `
     <tr>
@@ -289,6 +292,9 @@ function skeletonRows() {
   `).join('');
 }
 
+// ─────────────────────────────────────────────
+// STATUS PILLS
+// ─────────────────────────────────────────────
 function buildStatusPills() {
   const container = document.getElementById('statusPills');
   if (!container) return;
@@ -303,24 +309,64 @@ function buildStatusPills() {
   `).join('');
 }
 
+// ─────────────────────────────────────────────
+// STATS — FIXED: each call is isolated so one
+// failing endpoint never crashes the others
+// ─────────────────────────────────────────────
 async function loadStats() {
-  const [today, week, month, rev] = await Promise.all([
-    API.getOrdersToday(), API.getOrdersThisWeek(), API.getOrdersThisMonth(), API.getSellerRevenue()
-  ]);
-  const toArr = r => { const d = r.data?.data || r.data; return Array.isArray(d) ? d : []; };
-  document.getElementById('todayCount').textContent = toArr(today).length;
-  document.getElementById('weekCount').textContent  = toArr(week).length;
-  document.getElementById('monthCount').textContent = toArr(month).length;
-  if (rev.ok) {
-    const d = rev.data?.data || rev.data;
-    document.getElementById('revTotal').textContent = fmtCur(d?.totalRevenue ?? d?.total);
+  // Safely call an endpoint that returns a list and extract its count
+  async function safeCount(apiFn) {
+    try {
+      const r = await apiFn();
+      if (!r.ok) return '—';
+      const d = r.data?.data || r.data;
+      return Array.isArray(d) ? d.length : '—';
+    } catch {
+      return '—';
+    }
   }
+
+  // Safely call the revenue endpoint which returns an object
+  async function safeRevenue() {
+    try {
+      const r = await API.getSellerRevenue();
+      if (!r.ok) return null;
+      return r.data?.data || r.data || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Fire all four in parallel — each isolated, none can break another
+  const [today, week, month, revData] = await Promise.all([
+    safeCount(API.getOrdersToday),
+    safeCount(API.getOrdersThisWeek),
+    safeCount(API.getOrdersThisMonth),
+    safeRevenue(),
+  ]);
+
+  const todayEl = document.getElementById('todayCount');
+  const weekEl  = document.getElementById('weekCount');
+  const monthEl = document.getElementById('monthCount');
+  const revEl   = document.getElementById('revTotal');
+
+  if (todayEl) todayEl.textContent = today;
+  if (weekEl)  weekEl.textContent  = week;
+  if (monthEl) monthEl.textContent = month;
+  if (revEl)   revEl.textContent   = revData
+    ? fmtCur(revData.totalRevenue ?? revData.total)
+    : '—';
 }
 
+// ─────────────────────────────────────────────
+// ORDERS LIST
+// ─────────────────────────────────────────────
 async function loadOrders() {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
+
   const res = await API.getAllOrders(currentStatus || null);
+
   if (btn) btn.classList.remove('loading');
 
   const orders = res.data?.data || res.data || [];
@@ -335,8 +381,10 @@ async function loadOrders() {
 function updatePillCounts(orders) {
   const counts = {};
   orders.forEach(o => { counts[o.status] = (counts[o.status] || 0) + 1; });
+
   const allEl = document.getElementById('pill-count-all');
   if (allEl) allEl.textContent = orders.length;
+
   Object.keys(STATUS_CONFIG).forEach(s => {
     if (!s) return;
     const el = document.getElementById(`pill-count-${s}`);
@@ -355,19 +403,23 @@ function switchStatus(status) {
 function renderRows(orders) {
   const tbody = document.getElementById('ordersBody');
   if (!tbody) return;
+
   if (!orders.length) {
     tbody.innerHTML = `<tr><td colspan="6">
       <div class="po-empty">
         <div class="po-empty-icon"><span class="material-symbols-rounded">inbox</span></div>
         <div class="po-empty-title">No orders found</div>
-        <div class="po-empty-sub">${currentStatus ? `No orders with status <strong>${currentStatus}</strong>` : 'No orders at the moment'}</div>
+        <div class="po-empty-sub">${currentStatus
+          ? `No orders with status <strong>${currentStatus}</strong>`
+          : 'No orders at the moment'}</div>
       </div>
     </td></tr>`;
     return;
   }
+
   tbody.innerHTML = orders.map(o => {
-    const id = o.orderId || o.id;
-    const idShort = String(id || '').slice(-8).toUpperCase();
+    const id       = o.orderId || o.id;
+    const idShort  = String(id || '').slice(-8).toUpperCase();
     const statusCfg = STATUS_ICONS[o.status] || { icon: 'radio_button_unchecked', label: o.status };
     return `
     <tr>
@@ -392,35 +444,48 @@ function renderRows(orders) {
 }
 
 function filterTable() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
   if (!window._allOrders) return;
-  const filtered = window._allOrders.filter(o => String(o.orderId || o.id || '').toLowerCase().includes(q));
+  const filtered = window._allOrders.filter(o =>
+    String(o.orderId || o.id || '').toLowerCase().includes(q)
+  );
   renderRows(filtered);
 }
 
+// ─────────────────────────────────────────────
+// ORDER DETAIL MODAL
+// Uses GET /api/v1/orders/admin/{orderId}
+// ─────────────────────────────────────────────
 async function viewOrder(id) {
   currentOrderId = id;
   document.getElementById('orderModal').classList.add('open');
+  document.getElementById('cancelBtn').style.display = 'none';
   document.getElementById('modalBody').innerHTML = `
     <div style="display:flex;align-items:center;justify-content:center;padding:40px">
       <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
-  document.getElementById('cancelBtn').style.display = 'none';
 
   const res = await API.getOrderById(id);
+
   if (!res.ok) {
-    document.getElementById('modalBody').innerHTML = '<p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">Failed to load order.</p>';
+    document.getElementById('modalBody').innerHTML = `
+      <p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">
+        Failed to load order details.
+      </p>`;
     return;
   }
+
   const o = res.data?.data || res.data;
   const canCancel = !['CANCELLED','DELIVERED','REFUNDED'].includes(o.status);
   if (canCancel) document.getElementById('cancelBtn').style.display = 'inline-flex';
 
   const statusCfg = STATUS_ICONS[o.status] || { icon: 'radio_button_unchecked', label: o.status };
-  let statusOptions = ['PENDING','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED','CONFIRMED']
-    .map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s}</option>`).join('');
+  const statusOptions = ['PENDING','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED','CONFIRMED']
+    .map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s}</option>`)
+    .join('');
 
   document.getElementById('modalBody').innerHTML = `
+    <!-- Header row -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
       <div style="width:44px;height:44px;border-radius:12px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;">
         <span class="material-symbols-rounded" style="font-size:22px;color:var(--po-accent)">receipt_long</span>
@@ -435,6 +500,7 @@ async function viewOrder(id) {
       </span>
     </div>
 
+    <!-- Key details -->
     <div style="background:var(--gray-50);border-radius:10px;padding:4px 14px;margin-bottom:16px">
       <div class="po-detail-row">
         <span class="po-detail-key">Total</span>
@@ -452,16 +518,20 @@ async function viewOrder(id) {
       </div>` : ''}
     </div>
 
+    <!-- Update status -->
     <div style="margin-bottom:16px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px">Update Status</div>
       <div style="display:flex;gap:8px">
-        <select id="newStatus" style="flex:1;padding:9px 12px;border-radius:10px;border:1.5px solid var(--gray-200);font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text);background:var(--white);outline:none">${statusOptions}</select>
+        <select id="newStatus" style="flex:1;padding:9px 12px;border-radius:10px;border:1.5px solid var(--gray-200);font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text);background:var(--white);outline:none">
+          ${statusOptions}
+        </select>
         <button class="btn-po-primary" onclick="updateStatus()">
           <span class="material-symbols-rounded">save</span> Update
         </button>
       </div>
     </div>
 
+    <!-- Order items -->
     ${o.items?.length ? `
     <div style="border-top:1px solid var(--gray-100);padding-top:16px">
       <div style="font-family:var(--font-display);font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text)">Order Items</div>
@@ -479,21 +549,37 @@ async function viewOrder(id) {
 }
 
 async function updateStatus() {
-  const newStatus = document.getElementById('newStatus').value;
+  const newStatus = document.getElementById('newStatus')?.value;
+  if (!newStatus) return;
   const res = await API.updateOrderStatus(currentOrderId, newStatus);
-  if (res.ok) { showToast('Order status updated!'); closeModal(); loadOrders(); }
-  else showToast(res.data?.message || 'Update failed', 'error');
+  if (res.ok) {
+    showToast('Order status updated!');
+    closeModal();
+    loadOrders();
+  } else {
+    showToast(res.data?.message || 'Update failed', 'error');
+  }
 }
 
 async function cancelOrder() {
   if (!confirm('Cancel this order?')) return;
   const res = await API.cancelOrderByAdmin(currentOrderId);
-  if (res.ok) { showToast('Order cancelled'); closeModal(); loadOrders(); }
-  else showToast(res.data?.message || 'Failed', 'error');
+  if (res.ok) {
+    showToast('Order cancelled');
+    closeModal();
+    loadOrders();
+  } else {
+    showToast(res.data?.message || 'Failed', 'error');
+  }
 }
 
-function closeModal() { document.getElementById('orderModal').classList.remove('open'); }
+function closeModal() {
+  document.getElementById('orderModal').classList.remove('open');
+}
 
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
 function fmtCur(val) {
   if (val == null) return '—';
   return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits: 2 });
@@ -503,7 +589,10 @@ function fmtDate(str) {
   return new Date(str).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
 }
 function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
 }
 </script>
 </body>
