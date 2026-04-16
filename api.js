@@ -175,9 +175,9 @@ const API = (() => {
   const searchProducts        = (params)      => get(`/api/v1/seller/products/search?${new URLSearchParams(params)}`);
   const globalSearch          = (kw)          => get(`/api/v1/seller/products/global-search?keyword=${encodeURIComponent(kw)}`);
 
-  const updateStock       = (id, stock)               => patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
-  const updateProductStatus = (id, status)            => patch(`/api/v1/seller/products/${id}/status?status=${status}`);
-  const updateStockStatus = (id, stockStatus, availableInDays) =>
+  const updateStock         = (id, stock)                          => patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
+  const updateProductStatus = (id, status)                         => patch(`/api/v1/seller/products/${id}/status?status=${status}`);
+  const updateStockStatus   = (id, stockStatus, availableInDays)   =>
     patch(`/api/v1/seller/products/${id}/stock-status?stockStatus=${stockStatus}${availableInDays != null ? `&availableInDays=${availableInDays}` : ''}`);
 
   const deleteProduct = (id) => del(`/api/v1/seller/products/${id}`);
@@ -301,35 +301,48 @@ const API = (() => {
   };
 })();
 
-// ── Toast notification utility ────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+//  TOAST NOTIFICATION UTILITY
+// ═══════════════════════════════════════════════════════════════════
 function showToast(message, type = 'success') {
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
-    <span class="material-symbols-rounded">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+    <span class="material-symbols-rounded">${
+      type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'
+    }</span>
     <span>${message}</span>
   `;
   document.body.appendChild(toast);
   setTimeout(() => toast.classList.add('show'), 10);
-  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3500);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
 }
 
-// ── Auth guard ────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+//  AUTH GUARD
+// ═══════════════════════════════════════════════════════════════════
 function requireAuth() {
   if (!API.getToken() && !window.location.href.includes('login.html')) {
     window.location.href = 'login.html';
   }
 }
 
-// ── Format helpers ────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+//  FORMAT HELPERS
+// ═══════════════════════════════════════════════════════════════════
 function formatCurrency(val) {
   if (val == null) return '—';
   return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits: 2 });
 }
+
 function formatDate(str) {
   if (!str) return '—';
   return new Date(str).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
 }
+
 function statusBadge(status) {
   const map = {
     PENDING:          'badge-warning',
