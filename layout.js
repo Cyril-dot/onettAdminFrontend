@@ -4,15 +4,16 @@
 
 function renderLayout(pageTitle, activeNav, contentHtml) {
   const navItems = [
-    { href: 'index.html',       icon: 'dashboard',        label: 'Dashboard',        section: 'main' },
-    { href: 'orders.html',      icon: 'receipt_long',     label: 'Orders',           section: 'main' },
-    { href: 'products.html',    icon: 'inventory_2',      label: 'Products',         section: 'main' },
-    { href: 'categories.html',  icon: 'category',         label: 'Categories',       section: 'main' },
-    { href: 'requests.html',    icon: 'pending_actions',  label: 'Product Requests', section: 'main' },
-    { href: 'preorders.html',   icon: 'schedule',         label: 'Pre-Orders',       section: 'main' },
-    { href: 'ai.html',          icon: 'auto_awesome',     label: 'AI Tools',         section: 'tools' },
-    { href: 'chat.html',        icon: 'forum',            label: 'Messages',         section: 'tools' },
-    { href: 'profile.html',     icon: 'manage_accounts',  label: 'My Profile',       section: 'account' },
+    { href: 'index.html',         icon: 'dashboard',        label: 'Dashboard',        section: 'main'    },
+    { href: 'orders.html',        icon: 'receipt_long',     label: 'Orders',           section: 'main'    },
+    { href: 'products.html',      icon: 'inventory_2',      label: 'Products',         section: 'main'    },
+    { href: 'categories.html',    icon: 'category',         label: 'Categories',       section: 'main'    },
+    { href: 'requests.html',      icon: 'pending_actions',  label: 'Product Requests', section: 'main'    },
+    { href: 'preorders.html',     icon: 'schedule',         label: 'Pre-Orders',       section: 'main'    },
+    { href: 'ai.html',            icon: 'auto_awesome',     label: 'AI Tools',         section: 'tools'   },
+    { href: 'chat.html',          icon: 'forum',            label: 'Messages',         section: 'tools'   },
+    { href: 'notifications.html', icon: 'notifications',    label: 'Notifications',    section: 'tools'   },
+    { href: 'profile.html',       icon: 'manage_accounts',  label: 'My Profile',       section: 'account' },
   ];
 
   const sections = { main: 'Main', tools: 'Tools', account: 'Account' };

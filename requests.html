@@ -17,323 +17,151 @@
       --font-mono:    'DM Mono', monospace;
     }
 
-    /* ── Page Header ── */
-    .rq-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
-    }
-    .rq-header-left .rq-title {
-      font-family: var(--font-display); font-size: 26px; font-weight: 800;
-      color: var(--text); letter-spacing: -.6px; line-height: 1.15;
-    }
-    .rq-header-left .rq-subtitle {
-      font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 400;
-    }
-    .rq-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .rq-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+    .rq-header-left .rq-title { font-family:var(--font-display); font-size:26px; font-weight:800; color:var(--text); letter-spacing:-.6px; line-height:1.15; }
+    .rq-header-left .rq-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; font-weight:400; }
+    .rq-header-right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 
-    /* ── Stats ── */
-    .rq-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
-    .rq-stat {
-      background: var(--white); border-radius: 14px; border: 1px solid var(--gray-100);
-      padding: 18px 20px; position: relative; overflow: hidden;
-      transition: transform .16s, box-shadow .16s;
-    }
-    .rq-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-    .rq-stat::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0;
-      height: 3px; border-radius: 14px 14px 0 0;
-    }
-    .rq-stat.teal::before   { background: var(--rq-accent); }
-    .rq-stat.orange::before { background: #F59E0B; }
-    .rq-stat.green::before  { background: #10B981; }
-    .rq-stat.red::before    { background: #EF4444; }
+    .rq-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+    .rq-stat { background:var(--white); border-radius:14px; border:1px solid var(--gray-100); padding:18px 20px; position:relative; overflow:hidden; transition:transform .16s,box-shadow .16s; }
+    .rq-stat:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
+    .rq-stat::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
+    .rq-stat.teal::before   { background:var(--rq-accent); }
+    .rq-stat.orange::before { background:#F59E0B; }
+    .rq-stat.green::before  { background:#10B981; }
+    .rq-stat.red::before    { background:#EF4444; }
+    .rq-stat-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+    .rq-stat-icon .material-symbols-rounded { font-size:20px; }
+    .rq-stat.teal   .rq-stat-icon { background:var(--rq-accent-light); color:var(--rq-accent); }
+    .rq-stat.orange .rq-stat-icon { background:#FEF3C7; color:#D97706; }
+    .rq-stat.green  .rq-stat-icon { background:#D1FAE5; color:#059669; }
+    .rq-stat.red    .rq-stat-icon { background:#FEE2E2; color:#DC2626; }
+    .rq-stat-num { font-family:var(--font-display); font-size:28px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
+    .rq-stat-label { font-size:12px; color:var(--text-muted); font-weight:500; margin-top:4px; }
 
-    .rq-stat-icon {
-      width: 38px; height: 38px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-    }
-    .rq-stat-icon .material-symbols-rounded { font-size: 20px; }
-    .rq-stat.teal   .rq-stat-icon { background: var(--rq-accent-light); color: var(--rq-accent); }
-    .rq-stat.orange .rq-stat-icon { background: #FEF3C7; color: #D97706; }
-    .rq-stat.green  .rq-stat-icon { background: #D1FAE5; color: #059669; }
-    .rq-stat.red    .rq-stat-icon { background: #FEE2E2; color: #DC2626; }
+    .status-pills { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:24px; }
+    .status-pill { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:99px; border:1.5px solid var(--gray-200); background:var(--white); font-size:12px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:all .16s ease; font-family:var(--font-display); white-space:nowrap; }
+    .status-pill:hover { border-color:var(--rq-accent); color:var(--rq-accent); background:var(--rq-accent-light); }
+    .status-pill.active { background:var(--rq-accent); border-color:var(--rq-accent); color:#fff; }
+    .status-pill .pill-count { background:rgba(255,255,255,.25); border-radius:99px; padding:1px 7px; font-size:10px; font-weight:800; }
+    .status-pill:not(.active) .pill-count { background:var(--gray-100); color:var(--text-muted); }
 
-    .rq-stat-num {
-      font-family: var(--font-display); font-size: 28px; font-weight: 800;
-      letter-spacing: -.8px; color: var(--text); line-height: 1;
-    }
-    .rq-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+    .rq-card { background:var(--white); border-radius:16px; border:1px solid var(--gray-100); box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; }
+    .rq-card-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid var(--gray-100); gap:12px; flex-wrap:wrap; }
+    .rq-card-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
+    .rq-card-title .material-symbols-rounded { font-size:18px; color:var(--rq-accent); }
 
-    /* ── Status Pill Tabs ── */
-    .status-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 99px; border: 1.5px solid var(--gray-200);
-      background: var(--white); font-size: 12px; font-weight: 700;
-      color: var(--text-muted); cursor: pointer; transition: all .16s ease;
-      font-family: var(--font-display); white-space: nowrap;
-    }
-    .status-pill:hover { border-color: var(--rq-accent); color: var(--rq-accent); background: var(--rq-accent-light); }
-    .status-pill.active { background: var(--rq-accent); border-color: var(--rq-accent); color: #fff; }
-    .status-pill .pill-count {
-      background: rgba(255,255,255,.25); border-radius: 99px;
-      padding: 1px 7px; font-size: 10px; font-weight: 800;
-    }
-    .status-pill:not(.active) .pill-count { background: var(--gray-100); color: var(--text-muted); }
+    .rq-search-wrap { display:flex; align-items:center; gap:8px; background:var(--gray-50); border:1.5px solid var(--gray-200); border-radius:10px; padding:7px 12px; min-width:200px; }
+    .rq-search-wrap .material-symbols-rounded { font-size:17px; color:var(--text-muted); }
+    .rq-search-wrap input { border:none; background:transparent; font-size:13px; color:var(--text); outline:none; font-family:var(--font-display); width:100%; }
+    .rq-search-wrap:focus-within { border-color:var(--rq-accent); background:var(--rq-accent-light); }
 
-    /* ── Card ── */
-    .rq-card {
-      background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
-      box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
-    }
-    .rq-card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-100); gap: 12px; flex-wrap: wrap;
-    }
-    .rq-card-title {
-      font-family: var(--font-display); font-size: 15px; font-weight: 700;
-      color: var(--text); display: flex; align-items: center; gap: 8px;
-    }
-    .rq-card-title .material-symbols-rounded { font-size: 18px; color: var(--rq-accent); }
+    .rq-table-wrap { overflow-x:auto; }
+    .rq-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .rq-table thead th { text-align:left; padding:10px 20px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); background:var(--gray-50); border-bottom:1px solid var(--gray-200); white-space:nowrap; }
+    .rq-table tbody tr { border-bottom:1px solid var(--gray-100); transition:background .12s; }
+    .rq-table tbody tr:last-child { border-bottom:none; }
+    .rq-table tbody tr:hover { background:#F0FDFA; }
+    .rq-table tbody td { padding:14px 20px; vertical-align:middle; }
 
-    /* ── Search ── */
-    .rq-search-wrap {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--gray-50); border: 1.5px solid var(--gray-200);
-      border-radius: 10px; padding: 7px 12px; min-width: 200px;
-    }
-    .rq-search-wrap .material-symbols-rounded { font-size: 17px; color: var(--text-muted); }
-    .rq-search-wrap input {
-      border: none; background: transparent; font-size: 13px; color: var(--text);
-      outline: none; font-family: var(--font-display); width: 100%;
-    }
-    .rq-search-wrap:focus-within { border-color: var(--rq-accent); background: var(--rq-accent-light); }
+    .rq-id { font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--rq-accent); background:var(--rq-accent-light); border-radius:6px; padding:3px 8px; display:inline-block; }
+    .rq-user-name  { font-weight:700; font-size:13px; color:var(--text); font-family:var(--font-display); }
+    .rq-user-email { font-size:11px; color:var(--text-muted); margin-top:2px; font-family:var(--font-mono); }
+    .rq-prod-name { font-weight:700; font-size:13px; color:var(--text); font-family:var(--font-display); }
+    .rq-prod-meta { font-size:11px; color:var(--text-muted); margin-top:2px; font-family:var(--font-mono); }
 
-    /* ── Table ── */
-    .rq-table-wrap { overflow-x: auto; }
-    .rq-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .rq-table thead th {
-      text-align: left; padding: 10px 20px; font-size: 10.5px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
-      background: var(--gray-50); border-bottom: 1px solid var(--gray-200); white-space: nowrap;
-    }
-    .rq-table tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .12s; }
-    .rq-table tbody tr:last-child { border-bottom: none; }
-    .rq-table tbody tr:hover { background: #F0FDFA; }
-    .rq-table tbody td { padding: 14px 20px; vertical-align: middle; }
+    .rq-status { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; font-family:var(--font-display); white-space:nowrap; }
+    .rq-status .material-symbols-rounded { font-size:13px; }
+    .rq-status.PENDING  { background:#FEF3C7; color:#92400E; }
+    .rq-status.APPROVED { background:#D1FAE5; color:#065F46; }
+    .rq-status.REJECTED { background:#FEE2E2; color:#B91C1C; }
 
-    .rq-id {
-      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-      color: var(--rq-accent); background: var(--rq-accent-light);
-      border-radius: 6px; padding: 3px 8px; display: inline-block;
-    }
+    .rq-paid-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:99px; font-size:10px; font-weight:700; font-family:var(--font-display); }
+    .rq-paid-badge.paid   { background:#D1FAE5; color:#065F46; }
+    .rq-paid-badge.unpaid { background:#FEE2E2; color:#B91C1C; }
+    .rq-paid-badge .material-symbols-rounded { font-size:11px; }
 
-    /* User info */
-    .rq-user-name  { font-weight: 700; font-size: 13px; color: var(--text); font-family: var(--font-display); }
-    .rq-user-email { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+    .rq-action-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all .14s; font-family:var(--font-display); white-space:nowrap; }
+    .rq-action-btn .material-symbols-rounded { font-size:15px; }
+    .rq-action-btn.view    { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
+    .rq-action-btn.view:hover { background:var(--gray-200); }
+    .rq-action-btn.approve { background:#D1FAE5; color:#065F46; border:1px solid #A7F3D0; }
+    .rq-action-btn.approve:hover { background:#A7F3D0; }
+    .rq-action-btn.reject  { background:#FEE2E2; color:#B91C1C; border:1px solid #FECACA; }
+    .rq-action-btn.reject:hover  { background:#FECACA; }
 
-    /* Product name */
-    .rq-prod-name { font-weight: 700; font-size: 13px; color: var(--text); font-family: var(--font-display); }
-    .rq-prod-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+    .rq-refresh-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:9px; background:var(--white); border:1.5px solid var(--gray-200); color:var(--gray-600); font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font-display); transition:all .14s; }
+    .rq-refresh-btn:hover { border-color:var(--rq-accent); color:var(--rq-accent); background:var(--rq-accent-light); }
+    .rq-refresh-btn .material-symbols-rounded { font-size:16px; }
+    .rq-refresh-btn.loading .material-symbols-rounded { animation:spin .8s linear infinite; }
 
-    /* Approval status badges */
-    .rq-status {
-      display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
-      border-radius: 99px; font-size: 11px; font-weight: 700;
-      font-family: var(--font-display); white-space: nowrap;
-    }
-    .rq-status .material-symbols-rounded { font-size: 13px; }
-    .rq-status.PENDING  { background: #FEF3C7; color: #92400E; }
-    .rq-status.APPROVED { background: #D1FAE5; color: #065F46; }
-    .rq-status.REJECTED { background: #FEE2E2; color: #B91C1C; }
+    .rq-total-chip { display:inline-flex; align-items:center; gap:6px; background:var(--rq-accent-light); color:var(--rq-accent-dark); border-radius:99px; padding:4px 12px; font-size:12px; font-weight:700; font-family:var(--font-display); }
 
-    /* Paid badge */
-    .rq-paid-badge {
-      display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
-      border-radius: 99px; font-size: 10px; font-weight: 700; font-family: var(--font-display);
-    }
-    .rq-paid-badge.paid   { background: #D1FAE5; color: #065F46; }
-    .rq-paid-badge.unpaid { background: #FEE2E2; color: #B91C1C; }
-    .rq-paid-badge .material-symbols-rounded { font-size: 11px; }
+    .rq-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(4px); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .2s; }
+    .rq-modal-overlay.open { opacity:1; pointer-events:all; }
+    .rq-modal { background:var(--white); border-radius:18px; width:100%; max-width:560px; box-shadow:0 24px 64px rgba(0,0,0,.18); overflow:hidden; transform:translateY(16px) scale(.97); transition:transform .2s,opacity .2s; opacity:0; }
+    .rq-modal-overlay.open .rq-modal { transform:translateY(0) scale(1); opacity:1; }
+    .rq-modal-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid var(--gray-100); }
+    .rq-modal-header-left { display:flex; align-items:center; gap:10px; }
+    .rq-modal-icon { width:36px; height:36px; border-radius:9px; background:var(--rq-accent-light); display:flex; align-items:center; justify-content:center; }
+    .rq-modal-icon .material-symbols-rounded { font-size:18px; color:var(--rq-accent); }
+    .rq-modal-title { font-family:var(--font-display); font-size:16px; font-weight:800; color:var(--text); }
+    .rq-modal-subtitle { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .rq-modal-body { padding:20px 24px; max-height:65vh; overflow-y:auto; }
+    .rq-modal-body::-webkit-scrollbar { width:4px; }
+    .rq-modal-body::-webkit-scrollbar-thumb { background:var(--gray-200); border-radius:99px; }
+    .rq-modal-footer { padding:14px 24px; border-top:1px solid var(--gray-100); display:flex; justify-content:flex-end; gap:8px; align-items:center; }
 
-    /* Action Buttons */
-    .rq-action-btn {
-      display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px;
-      border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;
-      border: none; transition: all .14s; font-family: var(--font-display); white-space: nowrap;
-    }
-    .rq-action-btn .material-symbols-rounded { font-size: 15px; }
-    .rq-action-btn.view    { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
-    .rq-action-btn.view:hover { background: var(--gray-200); }
-    .rq-action-btn.approve { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
-    .rq-action-btn.approve:hover { background: #A7F3D0; }
-    .rq-action-btn.reject  { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
-    .rq-action-btn.reject:hover  { background: #FECACA; }
+    .rq-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+    .rq-detail-item { background:var(--gray-50); border-radius:10px; padding:12px 14px; }
+    .rq-detail-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--text-muted); margin-bottom:5px; }
+    .rq-detail-value { font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--text); }
+    .rq-detail-value.mono { font-family:var(--font-mono); font-size:12px; }
 
-    /* Refresh btn */
-    .rq-refresh-btn {
-      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
-      border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
-      color: var(--gray-600); font-size: 12px; font-weight: 700; cursor: pointer;
-      font-family: var(--font-display); transition: all .14s;
-    }
-    .rq-refresh-btn:hover { border-color: var(--rq-accent); color: var(--rq-accent); background: var(--rq-accent-light); }
-    .rq-refresh-btn .material-symbols-rounded { font-size: 16px; }
-    .rq-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
+    .rq-img-strip { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .rq-img-strip img { width:72px; height:72px; border-radius:10px; object-fit:cover; border:1px solid var(--gray-200); }
+    .rq-desc-block { background:var(--gray-50); border-radius:10px; padding:12px 14px; margin-bottom:16px; }
+    .rq-payment-strip { display:flex; align-items:center; gap:8px; padding:10px 14px; background:var(--rq-accent-light); border:1px solid var(--rq-accent-mid); border-radius:10px; margin-bottom:16px; }
+    .rq-payment-strip .material-symbols-rounded { font-size:16px; color:var(--rq-accent); }
+    .rq-payment-strip span { font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--rq-accent-dark); }
 
-    /* Total chip */
-    .rq-total-chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--rq-accent-light); color: var(--rq-accent-dark);
-      border-radius: 99px; padding: 4px 12px; font-size: 12px; font-weight: 700;
-      font-family: var(--font-display);
-    }
+    .btn-rq-approve { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:var(--rq-accent); color:#fff; font-size:13px; font-weight:700; font-family:var(--font-display); border:none; cursor:pointer; transition:all .15s; }
+    .btn-rq-approve:hover { background:var(--rq-accent-dark); box-shadow:0 4px 16px var(--rq-accent-glow); }
+    .btn-rq-approve:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-rq-approve .material-symbols-rounded { font-size:17px; }
+    .btn-rq-reject { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:#FEE2E2; color:#B91C1C; font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid #FECACA; cursor:pointer; transition:all .15s; }
+    .btn-rq-reject:hover { background:#FECACA; }
+    .btn-rq-reject:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-rq-reject .material-symbols-rounded { font-size:17px; }
+    .btn-rq-ghost { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:var(--gray-100); color:var(--gray-700); font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid var(--gray-200); cursor:pointer; transition:all .15s; }
+    .btn-rq-ghost:hover { background:var(--gray-200); }
 
-    /* ── Modal ── */
-    .rq-modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
-      z-index: 1000; display: flex; align-items: center; justify-content: center;
-      padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s;
-    }
-    .rq-modal-overlay.open { opacity: 1; pointer-events: all; }
-    .rq-modal {
-      background: var(--white); border-radius: 18px; width: 100%; max-width: 560px;
-      box-shadow: 0 24px 64px rgba(0,0,0,.18); overflow: hidden;
-      transform: translateY(16px) scale(.97); transition: transform .2s, opacity .2s;
-      opacity: 0;
-    }
-    .rq-modal-overlay.open .rq-modal { transform: translateY(0) scale(1); opacity: 1; }
+    .rq-skel { height:14px; border-radius:6px; background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+    .rq-skel.sm { width:60px; height:10px; }
+    .rq-skel.md { width:120px; }
 
-    .rq-modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-100);
-    }
-    .rq-modal-header-left { display: flex; align-items: center; gap: 10px; }
-    .rq-modal-icon {
-      width: 36px; height: 36px; border-radius: 9px; background: var(--rq-accent-light);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .rq-modal-icon .material-symbols-rounded { font-size: 18px; color: var(--rq-accent); }
-    .rq-modal-title { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text); }
-    .rq-modal-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .rq-empty { display:flex; flex-direction:column; align-items:center; gap:12px; padding:64px 24px; text-align:center; }
+    .rq-empty-icon { width:64px; height:64px; border-radius:18px; background:var(--rq-accent-light); display:flex; align-items:center; justify-content:center; }
+    .rq-empty-icon .material-symbols-rounded { font-size:30px; color:var(--rq-accent); }
+    .rq-empty-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--gray-500); }
+    .rq-empty-sub   { font-size:12px; color:var(--text-muted); max-width:260px; }
 
-    .rq-modal-body {
-      padding: 20px 24px; max-height: 65vh; overflow-y: auto;
-    }
-    .rq-modal-body::-webkit-scrollbar { width: 4px; }
-    .rq-modal-body::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 99px; }
+    @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+    @keyframes spin    { to { transform:rotate(360deg); } }
 
-    .rq-modal-footer {
-      padding: 14px 24px; border-top: 1px solid var(--gray-100);
-      display: flex; justify-content: flex-end; gap: 8px; align-items: center;
-    }
-
-    /* Modal inner layout */
-    .rq-detail-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
-    }
-    .rq-detail-item {
-      background: var(--gray-50); border-radius: 10px; padding: 12px 14px;
-    }
-    .rq-detail-label {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .6px; color: var(--text-muted); margin-bottom: 5px;
-    }
-    .rq-detail-value {
-      font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text);
-    }
-    .rq-detail-value.mono { font-family: var(--font-mono); font-size: 12px; }
-
-    /* Product image strip */
-    .rq-img-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .rq-img-strip img {
-      width: 72px; height: 72px; border-radius: 10px; object-fit: cover;
-      border: 1px solid var(--gray-200);
-    }
-
-    /* Description block */
-    .rq-desc-block {
-      background: var(--gray-50); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;
-    }
-
-    /* Payment info strip */
-    .rq-payment-strip {
-      display: flex; align-items: center; gap: 8px; padding: 10px 14px;
-      background: var(--rq-accent-light); border: 1px solid var(--rq-accent-mid);
-      border-radius: 10px; margin-bottom: 16px;
-    }
-    .rq-payment-strip .material-symbols-rounded { font-size: 16px; color: var(--rq-accent); }
-    .rq-payment-strip span { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--rq-accent-dark); }
-
-    /* Approve / Reject buttons in modal */
-    .btn-rq-approve {
-      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
-      border-radius: 10px; background: var(--rq-accent); color: #fff;
-      font-size: 13px; font-weight: 700; font-family: var(--font-display);
-      border: none; cursor: pointer; transition: all .15s;
-    }
-    .btn-rq-approve:hover { background: var(--rq-accent-dark); box-shadow: 0 4px 16px var(--rq-accent-glow); }
-    .btn-rq-approve:disabled { opacity: .6; cursor: not-allowed; }
-    .btn-rq-approve .material-symbols-rounded { font-size: 17px; }
-
-    .btn-rq-reject {
-      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
-      border-radius: 10px; background: #FEE2E2; color: #B91C1C;
-      font-size: 13px; font-weight: 700; font-family: var(--font-display);
-      border: 1px solid #FECACA; cursor: pointer; transition: all .15s;
-    }
-    .btn-rq-reject:hover { background: #FECACA; }
-    .btn-rq-reject .material-symbols-rounded { font-size: 17px; }
-
-    .btn-rq-ghost {
-      display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
-      border-radius: 10px; background: var(--gray-100); color: var(--gray-700);
-      font-size: 13px; font-weight: 700; font-family: var(--font-display);
-      border: 1px solid var(--gray-200); cursor: pointer; transition: all .15s;
-    }
-    .btn-rq-ghost:hover { background: var(--gray-200); }
-
-    /* Skeleton */
-    .rq-skel {
-      height: 14px; border-radius: 6px;
-      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
-      background-size: 200% 100%; animation: shimmer 1.4s infinite;
-    }
-    .rq-skel.sm { width: 60px; height: 10px; }
-    .rq-skel.md { width: 120px; }
-
-    /* Empty state */
-    .rq-empty {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 12px; padding: 64px 24px; text-align: center;
-    }
-    .rq-empty-icon {
-      width: 64px; height: 64px; border-radius: 18px; background: var(--rq-accent-light);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .rq-empty-icon .material-symbols-rounded { font-size: 30px; color: var(--rq-accent); }
-    .rq-empty-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--gray-500); }
-    .rq-empty-sub   { font-size: 12px; color: var(--text-muted); max-width: 260px; }
-
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    @keyframes spin    { to { transform: rotate(360deg); } }
-
-    @media (max-width: 900px) { .rq-stats { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 640px) {
-      .rq-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .rq-stat-num { font-size: 22px; }
-      .rq-header-left .rq-title { font-size: 20px; }
-      .col-user, .col-date, .col-amount { display: none; }
-      .rq-detail-grid { grid-template-columns: 1fr; }
+    @media (max-width:900px) { .rq-stats { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:640px) {
+      .rq-stats { grid-template-columns:1fr 1fr; gap:10px; }
+      .rq-stat-num { font-size:22px; }
+      .rq-header-left .rq-title { font-size:20px; }
+      .col-user, .col-date, .col-amount { display:none; }
+      .rq-detail-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
 <body>
 <div id="app"></div>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!--  REQUEST DETAIL MODAL                                         -->
-<!-- ══════════════════════════════════════════════════════════════ -->
 <div class="rq-modal-overlay" id="reqModal">
   <div class="rq-modal">
     <div class="rq-modal-header">
@@ -379,7 +207,6 @@ let currentReqStatus  = null;
 let currentTab        = 'all';
 window._allRequests   = [];
 
-// ── Tab config ────────────────────────────────────────────────────
 const TAB_CONFIG = [
   { mode: 'all',      label: 'All Requests', icon: 'select_all'    },
   { mode: 'PENDING',  label: 'Pending',      icon: 'pending'       },
@@ -388,7 +215,6 @@ const TAB_CONFIG = [
   { mode: 'recent',   label: 'Recent',       icon: 'history'       },
 ];
 
-// ── Page content ──────────────────────────────────────────────────
 const content = `
 <div class="rq-header">
   <div class="rq-header-left">
@@ -471,12 +297,11 @@ renderLayout('Product Requests', 'requests.html', content);
 buildTabPills();
 loadAll();
 
-// ── Skeleton ──────────────────────────────────────────────────────
 function skeletonRows() {
   return Array(6).fill(0).map(() => `
     <tr>
       <td><div class="rq-skel sm"></div></td>
-      <td><div class="rq-skel md"></div><div class="rq-skel sm" style="margin-top:6px"></div></td>
+      <td><div class="rq-skel md"></div></td>
       <td class="col-user"><div class="rq-skel md"></div></td>
       <td class="col-date"><div class="rq-skel sm"></div></td>
       <td class="col-amount"><div class="rq-skel sm"></div></td>
@@ -488,7 +313,6 @@ function skeletonRows() {
   `).join('');
 }
 
-// ── Tab pills ─────────────────────────────────────────────────────
 function buildTabPills() {
   const container = document.getElementById('tabPills');
   if (!container) return;
@@ -516,13 +340,10 @@ function updatePillCount(mode, count) {
   if (el) el.textContent = count;
 }
 
-// ── Load all (requests + counts in parallel) ──────────────────────
 async function loadAll() {
   await Promise.all([loadRequests('all'), loadCounts()]);
 }
 
-// ── Load counts via status endpoints ─────────────────────────────
-// Endpoint: GET /api/v1/user-products/seller/by-status?status=X
 async function loadCounts() {
   const [pend, app, rej, all] = await Promise.all([
     API.getProductRequestsByStatus('PENDING',  0, 1),
@@ -531,7 +352,6 @@ async function loadCounts() {
     API.getAllProductRequests(),
   ]);
 
-  // Resolve total elements from paginated or list responses
   const pageCount = r => {
     const d = r.data?.data || r.data;
     if (d?.totalElements != null) return d.totalElements;
@@ -546,18 +366,12 @@ async function loadCounts() {
   document.getElementById('appCount').textContent   = pageCount(app);
   document.getElementById('rejCount').textContent   = pageCount(rej);
 
-  // Pill counts from all list
   updatePillCount('all',      allItems.length);
   updatePillCount('PENDING',  allItems.filter(r => approvalStatus(r) === 'PENDING').length);
   updatePillCount('APPROVED', allItems.filter(r => approvalStatus(r) === 'APPROVED').length);
   updatePillCount('REJECTED', allItems.filter(r => approvalStatus(r) === 'REJECTED').length);
 }
 
-// ── Load requests by tab mode ─────────────────────────────────────
-// Endpoints:
-//   all    → GET /api/v1/user-products/seller/all
-//   recent → GET /api/v1/user-products/seller/recent
-//   status → GET /api/v1/user-products/seller/by-status?status=X
 async function loadRequests(mode = 'all') {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
@@ -582,7 +396,6 @@ async function loadRequests(mode = 'all') {
   updatePillCount(mode, window._allRequests.length);
 }
 
-// ── Extract items from various response shapes ────────────────────
 function extractItems(res) {
   const d = res.data?.data || res.data;
   if (!d) return [];
@@ -591,9 +404,6 @@ function extractItems(res) {
   return [];
 }
 
-// ── Resolve approval status from nested response shape ────────────
-// The seller/all endpoint returns RequestProductResponse which has
-// a nested payload: { productResponse: { approvalStatus }, payload: { approvalStatus } }
 function approvalStatus(r) {
   return r.productResponse?.approvalStatus
       || r.payload?.approvalStatus
@@ -601,44 +411,16 @@ function approvalStatus(r) {
       || r.status
       || '';
 }
+function productName(r) { return r.productResponse?.name || r.name || r.productName || '—'; }
+function userName(r)    { return r.name || r.userName || r.email || r.userEmail || '—'; }
+function userEmail(r)   { return r.email || r.userEmail || r.payload?.userEmail || ''; }
+function requestId(r)   { return r.payload?.id || r.id || r.requestId || ''; }
+function productId(r)   { return r.productResponse?.id || ''; }
+function createdAt(r)   { return r.payload?.createdAt || r.createdAt || ''; }
+function isPaid(r)      { return r.payload?.paid === true || r.paid === true; }
+function amount(r)      { return r.payload?.amount || r.amount || null; }
+function updateCount(r) { return r.productResponse?.updateCount ?? r.updateCount ?? '—'; }
 
-function productName(r) {
-  return r.productResponse?.name || r.name || r.productName || '—';
-}
-
-function userName(r) {
-  return r.name || r.userName || r.email || r.userEmail || '—';
-}
-
-function userEmail(r) {
-  return r.email || r.userEmail || r.payload?.userEmail || '';
-}
-
-function requestId(r) {
-  return r.payload?.id || r.id || r.requestId || '';
-}
-
-function productId(r) {
-  return r.productResponse?.id || '';
-}
-
-function createdAt(r) {
-  return r.payload?.createdAt || r.createdAt || '';
-}
-
-function isPaid(r) {
-  return r.payload?.paid === true || r.paid === true;
-}
-
-function amount(r) {
-  return r.payload?.amount || r.amount || null;
-}
-
-function updateCount(r) {
-  return r.productResponse?.updateCount ?? r.updateCount ?? '—';
-}
-
-// ── Search filter ─────────────────────────────────────────────────
 function filterRequests() {
   const q = (document.getElementById('reqSearch')?.value || '').toLowerCase();
   let list = window._allRequests || [];
@@ -655,7 +437,6 @@ function filterRequests() {
   if (el) el.textContent = list.length;
 }
 
-// ── Render table ──────────────────────────────────────────────────
 function renderRequests(items) {
   const tbody = document.getElementById('reqBody');
   if (!tbody) return;
@@ -679,9 +460,7 @@ function renderRequests(items) {
     const isPend = status === 'PENDING';
 
     return `<tr>
-      <td>
-        <span class="rq-id">${String(rid).slice(-8).toUpperCase() || '—'}</span>
-      </td>
+      <td><span class="rq-id">${String(rid).slice(-8).toUpperCase() || '—'}</span></td>
       <td>
         <div class="rq-prod-name">${escHtml(productName(r))}</div>
         ${pid ? `<div class="rq-prod-meta">${escHtml(pid.toString().slice(-8))}</div>` : ''}
@@ -690,9 +469,7 @@ function renderRequests(items) {
         <div class="rq-user-name">${escHtml(userName(r))}</div>
         <div class="rq-user-email">${escHtml(userEmail(r))}</div>
       </td>
-      <td class="col-date" style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">
-        ${formatDate(createdAt(r))}
-      </td>
+      <td class="col-date" style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">${formatDate(createdAt(r))}</td>
       <td class="col-amount" style="font-family:var(--font-mono);font-size:13px;font-weight:600">
         ${amount(r) != null ? formatCurrency(amount(r)) : '—'}
       </td>
@@ -702,9 +479,7 @@ function renderRequests(items) {
           ${paid ? 'Paid' : 'Unpaid'}
         </span>
       </td>
-      <td style="font-family:var(--font-mono);font-size:13px;font-weight:600;text-align:center">
-        ${updateCount(r)}
-      </td>
+      <td style="font-family:var(--font-mono);font-size:13px;font-weight:600;text-align:center">${updateCount(r)}</td>
       <td>
         <span class="rq-status ${status}">
           <span class="material-symbols-rounded">${statusIcon(status)}</span>
@@ -716,11 +491,11 @@ function renderRequests(items) {
           <button class="rq-action-btn view" onclick="viewRequest('${rid}', '${status}')">
             <span class="material-symbols-rounded">open_in_new</span> Review
           </button>
-          ${isPend ? `
-          <button class="rq-action-btn approve" onclick="quickApprove('${pid}', '${rid}')">
+          ${isPend && pid ? `
+          <button class="rq-action-btn approve" onclick="quickApprove('${pid}')">
             <span class="material-symbols-rounded">check</span>
           </button>
-          <button class="rq-action-btn reject" onclick="quickReject('${pid}', '${rid}')">
+          <button class="rq-action-btn reject" onclick="quickReject('${pid}')">
             <span class="material-symbols-rounded">close</span>
           </button>` : ''}
         </div>
@@ -736,24 +511,24 @@ function statusIcon(s) {
   return 'radio_button_unchecked';
 }
 
-// ── Quick approve/reject from table (uses product ID) ─────────────
-// Endpoint: PATCH /api/v1/user-products/seller/requests/{productId}/status
-async function quickApprove(productId, requestId) {
-  if (!productId) { showToast('No product found for this request', 'error'); return; }
-  const res = await API.updateProductApproval(productId, 'APPROVED');
+// Quick approve/reject — uses product ID
+// PATCH /api/v1/user-products/seller/requests/{productId}/status
+async function quickApprove(pid) {
+  if (!pid) { showToast('No product ID found for this request', 'error'); return; }
+  const res = await API.updateProductApproval(pid, 'APPROVED');
   if (res.ok) { showToast('Request approved!', 'success'); loadAll(); }
   else showToast(res.data?.message || 'Failed to approve', 'error');
 }
 
-async function quickReject(productId, requestId) {
-  if (!productId) { showToast('No product found for this request', 'error'); return; }
-  const res = await API.updateProductApproval(productId, 'REJECTED');
+async function quickReject(pid) {
+  if (!pid) { showToast('No product ID found for this request', 'error'); return; }
+  const res = await API.updateProductApproval(pid, 'REJECTED');
   if (res.ok) { showToast('Request rejected', 'error'); loadAll(); }
   else showToast(res.data?.message || 'Failed to reject', 'error');
 }
 
-// ── View full request detail modal ────────────────────────────────
-// Endpoint: GET /api/v1/user-products/seller/requests/{requestId}
+// View full request detail
+// GET /api/v1/user-products/seller/requests/{requestId}
 async function viewRequest(id, status) {
   currentReqId     = id;
   currentReqStatus = status;
@@ -765,7 +540,6 @@ async function viewRequest(id, status) {
       <span class="material-symbols-rounded" style="font-size:28px;color:var(--rq-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
 
-  // Show/hide action buttons
   const isPending = status === 'PENDING';
   document.getElementById('approveBtn').style.display = isPending ? 'inline-flex' : 'none';
   document.getElementById('rejectBtn').style.display  = isPending ? 'inline-flex' : 'none';
@@ -777,8 +551,6 @@ async function viewRequest(id, status) {
     return;
   }
 
-  // Response shape from GET /seller/requests/{id} → RequestProductResponse
-  // { userId, name, email, productResponse: UserProductResponse, payload: ProductRequestPayload }
   const r       = res.data?.data || res.data;
   const prod    = r.productResponse || {};
   const payload = r.payload || {};
@@ -786,12 +558,11 @@ async function viewRequest(id, status) {
   const imgUrls = imgs.map(i => (typeof i === 'string' ? i : i.imageUrl)).filter(Boolean);
   const status2 = prod.approvalStatus || payload.approvalStatus || '';
 
-  // Update buttons based on actual fetched status
   const isPend2 = status2 === 'PENDING';
   document.getElementById('approveBtn').style.display = isPend2 ? 'inline-flex' : 'none';
   document.getElementById('rejectBtn').style.display  = isPend2 ? 'inline-flex' : 'none';
 
-  // Store the product ID for approve/reject action
+  // Store product ID for approve/reject
   currentReqId = prod.id || payload.id || id;
 
   document.getElementById('reqModalBody').innerHTML = `
@@ -863,9 +634,8 @@ async function viewRequest(id, status) {
   `;
 }
 
-// ── Approve / Reject from modal ───────────────────────────────────
-// Endpoint: PATCH /api/v1/user-products/seller/requests/{productId}/status
-// Note: currentReqId is set to productResponse.id (UserProduct ID) in viewRequest
+// Approve / Reject from modal
+// PATCH /api/v1/user-products/seller/requests/{productId}/status
 async function updateApproval(status) {
   document.getElementById('approveBtn').disabled = true;
   document.getElementById('rejectBtn').disabled  = true;
@@ -893,7 +663,6 @@ function closeModal() {
   currentReqStatus = null;
 }
 
-// ── Helpers ────────────────────────────────────────────────────────
 function escHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }

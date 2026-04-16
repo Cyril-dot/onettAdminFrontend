@@ -16,17 +16,13 @@ const API = (() => {
   // ── Core Fetch ────────────────────────────────────────────────
   async function request(method, path, body = null, isFormData = false) {
     const headers = { 'ngrok-skip-browser-warning': 'true' };
-
-    // Do NOT set Content-Type for FormData — the browser sets it with the
-    // correct multipart boundary automatically.
     if (!isFormData) headers['Content-Type'] = 'application/json';
-
     const token = getToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     const opts = { method, headers };
     if (body && !isFormData) opts.body = JSON.stringify(body);
-    if (body &&  isFormData) opts.body = body; // FormData passed as-is
+    if (body &&  isFormData) opts.body = body;
 
     try {
       const res = await fetch(`${BASE}${path}`, opts);
@@ -89,77 +85,87 @@ const API = (() => {
   const getSellerRevenue   = ()            => get('/api/v1/orders/seller/revenue');
 
   // ══════════════════════════════════════════════════════════════
-  //  CATEGORIES (Seller) — multipart/form-data
+  //  PAYMENTS — ORDER PAYMENTS
+  //  Base: /api/v1/payments/orders
   // ══════════════════════════════════════════════════════════════
 
-  /** createCategory(formData)  — request part + optional iconFile part */
+  /** getAllOrderPayments() — GET /api/v1/payments/orders/admin/all */
+  const getAllOrderPayments = () => get('/api/v1/payments/orders/admin/all');
+
+  /** getOrderPaymentsByStatus(status) — GET /api/v1/payments/orders/admin?status=PENDING */
+  const getOrderPaymentsByStatus = (status) => get(`/api/v1/payments/orders/admin?status=${status}`);
+
+  /** getOrderPaymentByOrderId(orderId) — GET /api/v1/payments/orders/admin/order/{orderId} */
+  const getOrderPaymentByOrderId = (orderId) => get(`/api/v1/payments/orders/admin/order/${orderId}`);
+
+  /** getOrderPaymentById(paymentId) — GET /api/v1/payments/orders/admin/{paymentId} */
+  const getOrderPaymentById = (paymentId) => get(`/api/v1/payments/orders/admin/${paymentId}`);
+
+  /**
+   * confirmOrderPayment(orderId, adminNote?)
+   * POST /api/v1/payments/orders/admin/{orderId}/confirm?adminNote=...
+   */
+  const confirmOrderPayment = (orderId, adminNote) =>
+    post(`/api/v1/payments/orders/admin/${orderId}/confirm${adminNote ? `?adminNote=${encodeURIComponent(adminNote)}` : ''}`);
+
+  /**
+   * rejectOrderPayment(orderId, adminNote?)
+   * POST /api/v1/payments/orders/admin/{orderId}/reject?adminNote=...
+   */
+  const rejectOrderPayment = (orderId, adminNote) =>
+    post(`/api/v1/payments/orders/admin/${orderId}/reject${adminNote ? `?adminNote=${encodeURIComponent(adminNote)}` : ''}`);
+
+  // ══════════════════════════════════════════════════════════════
+  //  PAYMENTS — PRODUCT LISTING PAYMENTS
+  //  Base: /api/v1/payments/product-listing
+  // ══════════════════════════════════════════════════════════════
+
+  /** getAllListingPayments(page, size) — GET /api/v1/payments/product-listing/admin/all */
+  const getAllListingPayments = (page = 0, size = 20) =>
+    get(`/api/v1/payments/product-listing/admin/all?page=${page}&size=${size}`);
+
+  /** getListingPaymentsByStatus(status, page, size) — GET /api/v1/payments/product-listing/admin?status=PENDING */
+  const getListingPaymentsByStatus = (status, page = 0, size = 20) =>
+    get(`/api/v1/payments/product-listing/admin?status=${status}&page=${page}&size=${size}`);
+
+  /** getListingPaymentById(productRequestId) — GET /api/v1/payments/product-listing/admin/{id} */
+  const getListingPaymentById = (productRequestId) =>
+    get(`/api/v1/payments/product-listing/admin/${productRequestId}`);
+
+  /** getListingPaymentCounts() — GET /api/v1/payments/product-listing/admin/counts */
+  const getListingPaymentCounts = () => get('/api/v1/payments/product-listing/admin/counts');
+
+  /**
+   * confirmListingPayment(productRequestId)
+   * POST /api/v1/payments/product-listing/admin/{productRequestId}/confirm
+   */
+  const confirmListingPayment = (productRequestId) =>
+    post(`/api/v1/payments/product-listing/admin/${productRequestId}/confirm`);
+
+  /**
+   * rejectListingPayment(productRequestId, reason?)
+   * POST /api/v1/payments/product-listing/admin/{productRequestId}/reject?reason=...
+   */
+  const rejectListingPayment = (productRequestId, reason) =>
+    post(`/api/v1/payments/product-listing/admin/${productRequestId}/reject${reason ? `?reason=${encodeURIComponent(reason)}` : ''}`);
+
+  // ══════════════════════════════════════════════════════════════
+  //  CATEGORIES (Seller) — multipart/form-data
+  // ══════════════════════════════════════════════════════════════
   const createCategory      = (formData)             => request('POST', '/api/v1/seller/categories', formData, true);
-
-  /** updateCategory(categoryId, formData) */
   const updateCategory      = (categoryId, formData) => request('PUT', `/api/v1/seller/categories/${categoryId}`, formData, true);
-
-  /** deleteCategory(categoryId) */
   const deleteCategory      = (categoryId)           => del(`/api/v1/seller/categories/${categoryId}`);
-
-  /** getSellerCategories() */
   const getSellerCategories = ()                     => get('/api/v1/seller/categories');
 
   // ══════════════════════════════════════════════════════════════
   //  PRODUCTS (Seller)
   // ══════════════════════════════════════════════════════════════
+  const addProduct         = (formData)              => request('POST', '/api/v1/seller/products', formData, true);
+  const updateProduct      = (productId, formData)   => request('PUT', `/api/v1/seller/products/${productId}`, formData, true);
+  const replaceAllImages   = (productId, formData)   => request('PUT', `/api/v1/seller/products/${productId}/images/replace`, formData, true);
+  const uploadProductVideo = (productId, formData)   => request('POST', `/api/v1/seller/products/${productId}/video`, formData, true);
+  const deleteProductVideo = (productId)             => del(`/api/v1/seller/products/${productId}/video`);
 
-  /**
-   * addProduct(formData)
-   * FormData must contain:
-   *   - 'request'   → JSON Blob  { name, categoryId, price, stock, stockStatus, … }
-   *   - 'images'    → File[]     (optional, each file appended separately)
-   *   - 'videoFile' → File       (optional)
-   *
-   * Maps to: POST /api/v1/seller/products  (multipart/form-data)
-   */
-  const addProduct = (formData) =>
-    request('POST', '/api/v1/seller/products', formData, true);
-
-  /**
-   * updateProduct(productId, formData)
-   * FormData must contain:
-   *   - 'request'          → JSON Blob  (all fields optional except those being changed)
-   *   - 'newImages'        → File[]     (optional)
-   *   - 'videoFile'        → File       (optional, replaces existing)
-   *
-   * Maps to: PUT /api/v1/seller/products/{productId}  (multipart/form-data)
-   */
-  const updateProduct = (productId, formData) =>
-    request('PUT', `/api/v1/seller/products/${productId}`, formData, true);
-
-  /**
-   * replaceAllImages(productId, formData)
-   * FormData must contain:
-   *   - 'images' → File[]
-   *
-   * Maps to: PUT /api/v1/seller/products/{productId}/images/replace
-   */
-  const replaceAllImages = (productId, formData) =>
-    request('PUT', `/api/v1/seller/products/${productId}/images/replace`, formData, true);
-
-  /**
-   * uploadProductVideo(productId, formData)
-   * FormData must contain:
-   *   - 'videoFile' → File
-   *
-   * Maps to: POST /api/v1/seller/products/{productId}/video
-   */
-  const uploadProductVideo = (productId, formData) =>
-    request('POST', `/api/v1/seller/products/${productId}/video`, formData, true);
-
-  /**
-   * deleteProductVideo(productId)
-   * Maps to: DELETE /api/v1/seller/products/{productId}/video
-   */
-  const deleteProductVideo = (productId) =>
-    del(`/api/v1/seller/products/${productId}/video`);
-
-  // ── Read-only product endpoints ───────────────────────────────
   const getMyProducts         = ()            => get('/api/v1/seller/products');
   const getProductsByStatus   = (status)      => get(`/api/v1/seller/products/by-status?status=${status}`);
   const getProductDetails     = (id)          => get(`/api/v1/seller/products/${id}`);
@@ -169,32 +175,11 @@ const API = (() => {
   const searchProducts        = (params)      => get(`/api/v1/seller/products/search?${new URLSearchParams(params)}`);
   const globalSearch          = (kw)          => get(`/api/v1/seller/products/global-search?keyword=${encodeURIComponent(kw)}`);
 
-  // ── Patch endpoints ───────────────────────────────────────────
-  /**
-   * updateStock(productId, stock)
-   * Maps to: PATCH /api/v1/seller/products/{productId}/stock?stock={stock}
-   */
-  const updateStock = (id, stock) =>
-    patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
-
-  /**
-   * updateProductStatus(productId, status)
-   * status: 'ACTIVE' | 'INACTIVE' | 'DRAFT'
-   * Maps to: PATCH /api/v1/seller/products/{productId}/status?status={status}
-   */
-  const updateProductStatus = (id, status) =>
-    patch(`/api/v1/seller/products/${id}/status?status=${status}`);
-
-  /**
-   * updateStockStatus(productId, stockStatus, availableInDays?)
-   * stockStatus: 'IN_STOCK' | 'OUT_OF_STOCK' | 'LOW_STOCK' | 'COMING_SOON' | 'PRE_ORDER'
-   * availableInDays: required when stockStatus is COMING_SOON or PRE_ORDER
-   * Maps to: PATCH /api/v1/seller/products/{productId}/stock-status?stockStatus={s}&availableInDays={days}
-   */
+  const updateStock       = (id, stock)               => patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
+  const updateProductStatus = (id, status)            => patch(`/api/v1/seller/products/${id}/status?status=${status}`);
   const updateStockStatus = (id, stockStatus, availableInDays) =>
     patch(`/api/v1/seller/products/${id}/stock-status?stockStatus=${stockStatus}${availableInDays != null ? `&availableInDays=${availableInDays}` : ''}`);
 
-  // ── Delete ────────────────────────────────────────────────────
   const deleteProduct = (id) => del(`/api/v1/seller/products/${id}`);
 
   // ══════════════════════════════════════════════════════════════
@@ -230,12 +215,41 @@ const API = (() => {
   const improveVisibility = (productId)                              => get(`/api/v1/ai/seller/improve-visibility/${productId}`);
 
   // ══════════════════════════════════════════════════════════════
-  //  NOTIFICATIONS
+  //  NOTIFICATIONS — SELLER / ADMIN
+  //  Base: /api/v1/notifications/seller
   // ══════════════════════════════════════════════════════════════
-  const getNotifications  = (unreadOnly=false) => get(`/api/v1/notifications?unreadOnly=${unreadOnly}`);
-  const getUnreadCount    = ()                  => get('/api/v1/notifications/unread-count');
-  const markNotifRead     = (id)                => patch(`/api/v1/notifications/${id}/read`);
-  const markAllNotifsRead = ()                  => patch('/api/v1/notifications/read-all');
+
+  /**
+   * getNotifications(unreadOnly?)
+   * GET /api/v1/notifications/seller?unreadOnly=false
+   */
+  const getNotifications = (unreadOnly = false) =>
+    get(`/api/v1/notifications/seller?unreadOnly=${unreadOnly}`);
+
+  /**
+   * getUnreadCount()
+   * GET /api/v1/notifications/seller/unread-count
+   */
+  const getUnreadCount = () => get('/api/v1/notifications/seller/unread-count');
+
+  /**
+   * markNotifRead(notificationId)
+   * PATCH /api/v1/notifications/seller/{notificationId}/read
+   */
+  const markNotifRead = (id) => patch(`/api/v1/notifications/seller/${id}/read`);
+
+  /**
+   * markAllNotifsRead()
+   * PATCH /api/v1/notifications/seller/read-all
+   */
+  const markAllNotifsRead = () => patch('/api/v1/notifications/seller/read-all');
+
+  /**
+   * registerSellerFcmToken(fcmToken)
+   * POST /api/v1/notifications/seller/fcm-token
+   */
+  const registerSellerFcmToken = (fcmToken) =>
+    post('/api/v1/notifications/seller/fcm-token', { fcmToken });
 
   // ══════════════════════════════════════════════════════════════
   //  CHAT / CONVERSATIONS
@@ -257,6 +271,12 @@ const API = (() => {
     getAllOrders, getOrderById, updateOrderStatus, cancelOrderByAdmin,
     getOrderSummary, getOrdersToday, getOrdersThisWeek, getOrdersThisMonth,
     getDailyCounts, getSellerOrders, getSellerRevenue,
+    // order payments
+    getAllOrderPayments, getOrderPaymentsByStatus, getOrderPaymentByOrderId,
+    getOrderPaymentById, confirmOrderPayment, rejectOrderPayment,
+    // listing payments
+    getAllListingPayments, getListingPaymentsByStatus, getListingPaymentById,
+    getListingPaymentCounts, confirmListingPayment, rejectListingPayment,
     // categories
     createCategory, updateCategory, deleteCategory, getSellerCategories,
     // products — write
@@ -274,8 +294,8 @@ const API = (() => {
     getAllActivePreOrders, getPreOrdersByProduct, getPreOrdersByStatus, confirmSecondPayment,
     // ai
     analyzeTrends, generateListing, suggestPrice, analyzeInventory, improveVisibility,
-    // notifications
-    getNotifications, getUnreadCount, markNotifRead, markAllNotifsRead,
+    // notifications (seller/admin)
+    getNotifications, getUnreadCount, markNotifRead, markAllNotifsRead, registerSellerFcmToken,
     // chat
     getSellerConversations, getSellerInbox, getSellerUnreadCount, getChatHistory,
   };
@@ -286,7 +306,7 @@ function showToast(message, type = 'success') {
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
-    <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+    <span class="material-symbols-rounded">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
     <span>${message}</span>
   `;
   document.body.appendChild(toast);

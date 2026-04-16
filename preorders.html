@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pre-Orders — MarketPlace Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
@@ -17,528 +16,123 @@
       --font-display: 'Bricolage Grotesque', sans-serif;
       --font-mono: 'DM Mono', monospace;
     }
-
-    /* ── Override sidebar active for this page ── */
     .nav-link.active { background: rgba(124,58,237,.14); }
     .nav-link.active::before { background: var(--po-accent); }
 
-    /* ── Page Shell ── */
-    .po-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-    .po-header-left .po-title {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -.6px;
-      line-height: 1.15;
-    }
-    .po-header-left .po-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 400;
-    }
-    .po-header-right {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .po-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+    .po-header-left .po-title { font-family:var(--font-display); font-size:26px; font-weight:800; color:var(--text); letter-spacing:-.6px; line-height:1.15; }
+    .po-header-left .po-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; font-weight:400; }
+    .po-header-right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 
-    /* ── Status Pill Tabs ── */
-    .status-pills {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      border-radius: 99px;
-      border: 1.5px solid var(--gray-200);
-      background: var(--white);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all .16s ease;
-      font-family: var(--font-display);
-      white-space: nowrap;
-    }
-    .status-pill:hover {
-      border-color: var(--po-accent);
-      color: var(--po-accent);
-      background: var(--po-accent-light);
-    }
-    .status-pill.active {
-      background: var(--po-accent);
-      border-color: var(--po-accent);
-      color: #fff;
-    }
-    .status-pill .pill-count {
-      background: rgba(255,255,255,.25);
-      border-radius: 99px;
-      padding: 1px 7px;
-      font-size: 10px;
-      font-weight: 800;
-      min-width: 18px;
-      text-align: center;
-    }
-    .status-pill:not(.active) .pill-count {
-      background: var(--gray-100);
-      color: var(--text-muted);
-    }
+    .status-pills { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:24px; }
+    .status-pill { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:99px; border:1.5px solid var(--gray-200); background:var(--white); font-size:12px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:all .16s ease; font-family:var(--font-display); white-space:nowrap; }
+    .status-pill:hover { border-color:var(--po-accent); color:var(--po-accent); background:var(--po-accent-light); }
+    .status-pill.active { background:var(--po-accent); border-color:var(--po-accent); color:#fff; }
+    .status-pill .pill-count { background:rgba(255,255,255,.25); border-radius:99px; padding:1px 7px; font-size:10px; font-weight:800; min-width:18px; text-align:center; }
+    .status-pill:not(.active) .pill-count { background:var(--gray-100); color:var(--text-muted); }
 
-    /* ── Summary Cards ── */
-    .po-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-    .po-stat {
-      background: var(--white);
-      border-radius: 14px;
-      border: 1px solid var(--gray-100);
-      padding: 18px 20px;
-      position: relative;
-      overflow: hidden;
-      transition: transform .16s, box-shadow .16s;
-    }
-    .po-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-    .po-stat::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      border-radius: 14px 14px 0 0;
-    }
-    .po-stat.purple::before { background: var(--po-accent); }
-    .po-stat.amber::before  { background: #F59E0B; }
-    .po-stat.blue::before   { background: #3B82F6; }
-    .po-stat.green::before  { background: #10B981; }
-    .po-stat-icon {
-      width: 38px; height: 38px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
-    }
-    .po-stat-icon .material-symbols-rounded { font-size: 20px; }
-    .po-stat.purple .po-stat-icon { background: var(--po-accent-light); color: var(--po-accent); }
-    .po-stat.amber  .po-stat-icon { background: #FEF3C7; color: #D97706; }
-    .po-stat.blue   .po-stat-icon { background: #DBEAFE; color: #2563EB; }
-    .po-stat.green  .po-stat-icon { background: #D1FAE5; color: #059669; }
-    .po-stat-num {
-      font-family: var(--font-display);
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -.8px;
-      color: var(--text);
-      line-height: 1;
-    }
-    .po-stat-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-top: 4px;
-    }
+    .po-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+    .po-stat { background:var(--white); border-radius:14px; border:1px solid var(--gray-100); padding:18px 20px; position:relative; overflow:hidden; transition:transform .16s,box-shadow .16s; }
+    .po-stat:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
+    .po-stat::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
+    .po-stat.purple::before { background:var(--po-accent); }
+    .po-stat.amber::before  { background:#F59E0B; }
+    .po-stat.blue::before   { background:#3B82F6; }
+    .po-stat.green::before  { background:#10B981; }
+    .po-stat-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+    .po-stat-icon .material-symbols-rounded { font-size:20px; }
+    .po-stat.purple .po-stat-icon { background:var(--po-accent-light); color:var(--po-accent); }
+    .po-stat.amber  .po-stat-icon { background:#FEF3C7; color:#D97706; }
+    .po-stat.blue   .po-stat-icon { background:#DBEAFE; color:#2563EB; }
+    .po-stat.green  .po-stat-icon { background:#D1FAE5; color:#059669; }
+    .po-stat-num { font-family:var(--font-display); font-size:28px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
+    .po-stat-label { font-size:12px; color:var(--text-muted); font-weight:500; margin-top:4px; }
 
-    /* ── Main Table Card ── */
-    .po-card {
-      background: var(--white);
-      border-radius: 16px;
-      border: 1px solid var(--gray-100);
-      box-shadow: 0 1px 4px rgba(0,0,0,.06);
-      overflow: hidden;
-    }
-    .po-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--gray-100);
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .po-card-title {
-      font-family: var(--font-display);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .po-card-title .material-symbols-rounded { font-size: 18px; color: var(--po-accent); }
-    .po-total-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--po-accent-light);
-      color: var(--po-accent-dark);
-      border-radius: 99px;
-      padding: 4px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: var(--font-display);
-    }
+    .po-card { background:var(--white); border-radius:16px; border:1px solid var(--gray-100); box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; }
+    .po-card-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid var(--gray-100); gap:12px; flex-wrap:wrap; }
+    .po-card-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
+    .po-card-title .material-symbols-rounded { font-size:18px; color:var(--po-accent); }
+    .po-total-chip { display:inline-flex; align-items:center; gap:6px; background:var(--po-accent-light); color:var(--po-accent-dark); border-radius:99px; padding:4px 12px; font-size:12px; font-weight:700; font-family:var(--font-display); }
 
-    /* ── Table Styles ── */
-    .po-table-wrap { overflow-x: auto; }
-    .po-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    .po-table thead th {
-      text-align: left;
-      padding: 10px 20px;
-      font-size: 10.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      background: var(--gray-50);
-      border-bottom: 1px solid var(--gray-200);
-      white-space: nowrap;
-    }
-    .po-table tbody tr {
-      border-bottom: 1px solid var(--gray-100);
-      transition: background .12s;
-    }
-    .po-table tbody tr:last-child { border-bottom: none; }
-    .po-table tbody tr:hover { background: #FAFAF8; }
-    .po-table tbody td {
-      padding: 14px 20px;
-      vertical-align: middle;
-    }
+    .po-table-wrap { overflow-x:auto; }
+    .po-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .po-table thead th { text-align:left; padding:10px 20px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); background:var(--gray-50); border-bottom:1px solid var(--gray-200); white-space:nowrap; }
+    .po-table tbody tr { border-bottom:1px solid var(--gray-100); transition:background .12s; }
+    .po-table tbody tr:last-child { border-bottom:none; }
+    .po-table tbody tr:hover { background:#FAFAF8; }
+    .po-table tbody td { padding:14px 20px; vertical-align:middle; }
 
-    /* ── Pre-order ID cell ── */
-    .po-id {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--po-accent);
-      background: var(--po-accent-light);
-      border-radius: 6px;
-      padding: 3px 8px;
-      display: inline-block;
-    }
+    .po-id { font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--po-accent); background:var(--po-accent-light); border-radius:6px; padding:3px 8px; display:inline-block; }
+    .po-product-name { font-weight:700; font-size:13px; color:var(--text); font-family:var(--font-display); }
+    .po-product-meta { font-size:11px; color:var(--text-muted); margin-top:2px; font-family:var(--font-mono); }
 
-    /* ── Product cell ── */
-    .po-product-name {
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--text);
-      font-family: var(--font-display);
-    }
-    .po-product-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-      font-family: var(--font-mono);
-    }
+    .po-customer { display:flex; align-items:center; gap:9px; }
+    .po-avatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--po-accent) 0%,#A78BFA 100%); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; flex-shrink:0; font-family:var(--font-display); }
+    .po-customer-name { font-weight:600; font-size:13px; color:var(--text); line-height:1.2; }
+    .po-customer-email { font-size:11px; color:var(--text-muted); }
 
-    /* ── Customer cell ── */
-    .po-customer {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-    .po-avatar {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--po-accent) 0%, #A78BFA 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: #fff;
-      flex-shrink: 0;
-      font-family: var(--font-display);
-    }
-    .po-customer-name {
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .po-customer-email {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .po-amount-total { font-weight:800; font-size:14px; color:var(--text); font-family:var(--font-display); }
+    .po-amount-breakdown { display:flex; gap:8px; margin-top:3px; }
+    .po-amount-chip { font-size:10px; font-weight:600; border-radius:4px; padding:2px 6px; }
+    .po-amount-chip.deposit   { background:#D1FAE5; color:#065F46; }
+    .po-amount-chip.remaining { background:#FEF3C7; color:#92400E; }
 
-    /* ── Amount cell ── */
-    .po-amount-total {
-      font-weight: 800;
-      font-size: 14px;
-      color: var(--text);
-      font-family: var(--font-display);
-    }
-    .po-amount-breakdown {
-      display: flex;
-      gap: 8px;
-      margin-top: 3px;
-    }
-    .po-amount-chip {
-      font-size: 10px;
-      font-weight: 600;
-      border-radius: 4px;
-      padding: 2px 6px;
-    }
-    .po-amount-chip.deposit {
-      background: #D1FAE5;
-      color: #065F46;
-    }
-    .po-amount-chip.remaining {
-      background: #FEF3C7;
-      color: #92400E;
-    }
+    .po-status { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; font-family:var(--font-display); white-space:nowrap; }
+    .po-status .material-symbols-rounded { font-size:13px; }
+    .po-status.DEPOSIT_PAID       { background:#D1FAE5; color:#065F46; }
+    .po-status.NOTIFIED           { background:#DBEAFE; color:#1D4ED8; }
+    .po-status.DELIVERY_REQUESTED { background:#FEF3C7; color:#92400E; }
+    .po-status.COMPLETED          { background:#D1FAE5; color:#047857; }
+    .po-status.CANCELLED          { background:#FEE2E2; color:#B91C1C; }
+    .po-status.PENDING            { background:#F5F3FF; color:var(--po-accent-dark); }
 
-    /* ── Status Badges ── */
-    .po-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-display);
-      white-space: nowrap;
-    }
-    .po-status .material-symbols-rounded { font-size: 13px; }
-    .po-status.DEPOSIT_PAID      { background: #D1FAE5; color: #065F46; }
-    .po-status.NOTIFIED          { background: #DBEAFE; color: #1D4ED8; }
-    .po-status.DELIVERY_REQUESTED { background: #FEF3C7; color: #92400E; }
-    .po-status.COMPLETED         { background: #D1FAE5; color: #047857; }
-    .po-status.CANCELLED         { background: #FEE2E2; color: #B91C1C; }
-    .po-status.PENDING           { background: #F5F3FF; color: var(--po-accent-dark); }
-    .po-status.AWAITING_PAYMENT  { background: #FEF3C7; color: #D97706; }
-    .po-status.CONFIRMED         { background: #D1FAE5; color: #065F46; }
+    .po-action-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all .14s; font-family:var(--font-display); white-space:nowrap; }
+    .po-action-btn .material-symbols-rounded { font-size:15px; }
+    .po-action-btn.confirm { background:var(--po-accent); color:#fff; }
+    .po-action-btn.confirm:hover { background:var(--po-accent-dark); box-shadow:0 4px 14px var(--po-accent-glow); transform:translateY(-1px); }
+    .po-action-btn.view { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
+    .po-action-btn.view:hover { background:var(--gray-200); }
+    .po-no-action { font-size:12px; color:var(--gray-300); display:flex; align-items:center; gap:4px; }
+    .po-no-action .material-symbols-rounded { font-size:15px; }
 
-    /* ── Actions ── */
-    .po-action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 13px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: all .14s;
-      font-family: var(--font-display);
-      white-space: nowrap;
-    }
-    .po-action-btn .material-symbols-rounded { font-size: 15px; }
-    .po-action-btn.confirm {
-      background: var(--po-accent);
-      color: #fff;
-    }
-    .po-action-btn.confirm:hover {
-      background: var(--po-accent-dark);
-      box-shadow: 0 4px 14px var(--po-accent-glow);
-      transform: translateY(-1px);
-    }
-    .po-action-btn.view {
-      background: var(--gray-100);
-      color: var(--gray-700);
-      border: 1px solid var(--gray-200);
-    }
-    .po-action-btn.view:hover { background: var(--gray-200); }
-    .po-no-action {
-      font-size: 12px;
-      color: var(--gray-300);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .po-no-action .material-symbols-rounded { font-size: 15px; }
+    .po-empty { display:flex; flex-direction:column; align-items:center; gap:12px; padding:64px 24px; text-align:center; }
+    .po-empty-icon { width:64px; height:64px; border-radius:18px; background:var(--po-accent-light); display:flex; align-items:center; justify-content:center; }
+    .po-empty-icon .material-symbols-rounded { font-size:30px; color:var(--po-accent); }
+    .po-empty-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--gray-500); }
+    .po-empty-sub { font-size:12px; color:var(--text-muted); max-width:260px; }
 
-    /* ── Empty / Loading State ── */
-    .po-empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 64px 24px;
-      text-align: center;
-    }
-    .po-empty-icon {
-      width: 64px; height: 64px;
-      border-radius: 18px;
-      background: var(--po-accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .po-empty-icon .material-symbols-rounded { font-size: 30px; color: var(--po-accent); }
-    .po-empty-title {
-      font-family: var(--font-display);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--gray-500);
-    }
-    .po-empty-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      max-width: 260px;
-    }
+    .po-detail-row { display:flex; align-items:flex-start; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:12px; }
+    .po-detail-row:last-child { border-bottom:none; }
+    .po-detail-key { font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; }
+    .po-detail-val { font-size:13px; font-weight:700; color:var(--text); text-align:right; font-family:var(--font-display); }
 
-    /* ── Modal Overrides ── */
-    .po-modal-icon {
-      width: 52px; height: 52px;
-      border-radius: 14px;
-      background: var(--po-accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-    }
-    .po-modal-icon .material-symbols-rounded { font-size: 26px; color: var(--po-accent); }
-    .po-modal-title {
-      font-family: var(--font-display);
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -.3px;
-      margin-bottom: 6px;
-    }
-    .po-modal-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
+    .btn-po-primary { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:var(--po-accent); color:#fff; font-size:13px; font-weight:700; font-family:var(--font-display); border:none; cursor:pointer; transition:all .15s; }
+    .btn-po-primary:hover { background:var(--po-accent-dark); box-shadow:0 4px 16px var(--po-accent-glow); }
+    .btn-po-primary .material-symbols-rounded { font-size:17px; }
+    .btn-po-ghost { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:var(--gray-100); color:var(--gray-700); font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid var(--gray-200); cursor:pointer; transition:all .15s; }
+    .btn-po-ghost:hover { background:var(--gray-200); }
+    .btn-po-ghost .material-symbols-rounded { font-size:17px; }
 
-    /* ── Order detail inside modal ── */
-    .po-detail-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--gray-100);
-      gap: 12px;
-    }
-    .po-detail-row:last-child { border-bottom: none; }
-    .po-detail-key {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      white-space: nowrap;
-    }
-    .po-detail-val {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      text-align: right;
-      font-family: var(--font-display);
-    }
+    .po-refresh-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:9px; background:var(--white); border:1.5px solid var(--gray-200); color:var(--gray-600); font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font-display); transition:all .14s; }
+    .po-refresh-btn:hover { border-color:var(--po-accent); color:var(--po-accent); background:var(--po-accent-light); }
+    .po-refresh-btn .material-symbols-rounded { font-size:16px; }
+    .po-refresh-btn.loading .material-symbols-rounded { animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    .btn-po-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 18px;
-      border-radius: 10px;
-      background: var(--po-accent);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      font-family: var(--font-display);
-      border: none;
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .btn-po-primary:hover { background: var(--po-accent-dark); box-shadow: 0 4px 16px var(--po-accent-glow); }
-    .btn-po-primary .material-symbols-rounded { font-size: 17px; }
+    .po-skeleton-row td { padding:14px 20px; }
+    .po-skel { height:14px; border-radius:6px; background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+    .po-skel.sm { width:60px; height:10px; }
+    .po-skel.md { width:120px; }
+    .po-skel.lg { width:180px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    .btn-po-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 18px;
-      border-radius: 10px;
-      background: var(--gray-100);
-      color: var(--gray-700);
-      font-size: 13px;
-      font-weight: 700;
-      font-family: var(--font-display);
-      border: 1px solid var(--gray-200);
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .btn-po-ghost:hover { background: var(--gray-200); }
-    .btn-po-ghost .material-symbols-rounded { font-size: 17px; }
-
-    /* ── Refresh button ── */
-    .po-refresh-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 9px;
-      background: var(--white);
-      border: 1.5px solid var(--gray-200);
-      color: var(--gray-600);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: var(--font-display);
-      transition: all .14s;
-    }
-    .po-refresh-btn:hover { border-color: var(--po-accent); color: var(--po-accent); background: var(--po-accent-light); }
-    .po-refresh-btn .material-symbols-rounded { font-size: 16px; }
-    .po-refresh-btn.loading .material-symbols-rounded { animation: spin .8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Skeleton loader ── */
-    .po-skeleton-row td { padding: 14px 20px; }
-    .po-skel {
-      height: 14px;
-      border-radius: 6px;
-      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
-    }
-    .po-skel.sm { width: 60px; height: 10px; }
-    .po-skel.md { width: 120px; }
-    .po-skel.lg { width: 180px; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-    /* ── Mobile Responsive ── */
-    @media (max-width: 900px) {
-      .po-stats { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .po-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .po-stat-num { font-size: 22px; }
-      .po-header-left .po-title { font-size: 20px; }
-      .po-card-header { padding: 14px 16px 12px; }
-      .po-table thead th,
-      .po-table tbody td { padding: 11px 12px; }
-      /* Hide less critical columns on mobile */
-      .po-col-date  { display: none; }
-      .po-col-breakdown { display: none; }
-    }
-    @media (max-width: 480px) {
-      .po-stats { grid-template-columns: 1fr 1fr; }
-      .po-col-product-meta { display: none; }
+    @media (max-width:900px) { .po-stats { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:640px) {
+      .po-stats { grid-template-columns:1fr 1fr; gap:10px; }
+      .po-stat-num { font-size:22px; }
+      .po-header-left .po-title { font-size:20px; }
+      .po-col-date { display:none; }
+      .po-col-breakdown { display:none; }
     }
   </style>
 </head>
@@ -584,7 +178,7 @@
   </div>
 </div>
 
-<!-- Order Detail Drawer Modal -->
+<!-- Order Detail Modal -->
 <div class="modal-overlay" id="detailModal">
   <div class="modal" style="max-width:520px">
     <div class="modal-header" style="padding:20px 24px 16px">
@@ -631,11 +225,9 @@ const STATUS_ICONS = {
   DEPOSIT_PAID:       { icon: 'savings',           label: 'Deposit Paid' },
   NOTIFIED:           { icon: 'notifications',     label: 'Notified' },
   DELIVERY_REQUESTED: { icon: 'local_shipping',    label: 'Delivery Req.' },
-  COMPLETED:          { icon: 'task_alt',           label: 'Completed' },
+  COMPLETED:          { icon: 'task_alt',          label: 'Completed' },
   CANCELLED:          { icon: 'cancel',            label: 'Cancelled' },
   PENDING:            { icon: 'schedule',          label: 'Pending' },
-  AWAITING_PAYMENT:   { icon: 'hourglass_top',     label: 'Awaiting Pay.' },
-  CONFIRMED:          { icon: 'check_circle',      label: 'Confirmed' },
 };
 
 const content = `
@@ -745,6 +337,7 @@ async function loadPreOrders() {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
 
+  // GET /api/pre-orders/seller/all  OR  /api/pre-orders/seller/status/{status}
   let res;
   if (currentStatus) {
     res = await API.getPreOrdersByStatus(currentStatus);
@@ -771,25 +364,19 @@ function updateStats(items) {
   const pending   = items.filter(r => ['DEPOSIT_PAID','NOTIFIED'].includes(r.status)).length;
   const delivery  = items.filter(r => r.status === 'DELIVERY_REQUESTED').length;
   const completed = items.filter(r => r.status === 'COMPLETED').length;
-
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set('stat-total',     total);
-  set('stat-pending',   pending);
-  set('stat-delivery',  delivery);
-  set('stat-completed', completed);
+  set('stat-total',    total);
+  set('stat-pending',  pending);
+  set('stat-delivery', delivery);
+  set('stat-completed',completed);
 }
 
 function updatePillCounts(items) {
   const counts = {};
   items.forEach(r => { counts[r.status] = (counts[r.status] || 0) + 1; });
-
   const allCount = document.getElementById('pill-count-all');
   if (allCount) allCount.textContent = items.length;
-
-  const map = {
-    'DEPOSIT_PAID': 'deposit', 'NOTIFIED': 'notified',
-    'DELIVERY_REQUESTED': 'delivery', 'COMPLETED': 'completed', 'CANCELLED': 'cancelled'
-  };
+  const map = { 'DEPOSIT_PAID':'deposit','NOTIFIED':'notified','DELIVERY_REQUESTED':'delivery','COMPLETED':'completed','CANCELLED':'cancelled' };
   Object.entries(map).forEach(([status, key]) => {
     const el = document.getElementById(`pill-count-${key}`);
     if (el) el.textContent = counts[status] || 0;
@@ -812,13 +399,9 @@ function renderPO(items) {
     tbody.innerHTML = `
       <tr><td colspan="7">
         <div class="po-empty">
-          <div class="po-empty-icon">
-            <span class="material-symbols-rounded">schedule</span>
-          </div>
+          <div class="po-empty-icon"><span class="material-symbols-rounded">schedule</span></div>
           <div class="po-empty-title">No pre-orders found</div>
-          <div class="po-empty-sub">
-            ${currentStatus ? `No pre-orders with status <strong>${currentStatus}</strong>` : 'No active pre-orders at the moment'}
-          </div>
+          <div class="po-empty-sub">${currentStatus ? `No pre-orders with status <strong>${currentStatus}</strong>` : 'No active pre-orders at the moment'}</div>
         </div>
       </td></tr>`;
     return;
@@ -828,7 +411,6 @@ function renderPO(items) {
     const id = po.id || po.preOrderRecordId || po.preOrderId;
     const idShort = String(id || '').slice(-8).toUpperCase();
     const canConfirm = po.status === 'DELIVERY_REQUESTED';
-
     const statusCfg = STATUS_ICONS[po.status] || { icon: 'radio_button_unchecked', label: po.status };
     const initials = getInitials(po.customerName || po.userName || '?');
     const productId = po.productId || po.product?.id || '';
@@ -836,9 +418,7 @@ function renderPO(items) {
 
     return `
     <tr>
-      <td>
-        <span class="po-id">#${idShort}</span>
-      </td>
+      <td><span class="po-id">#${idShort}</span></td>
       <td>
         <div class="po-product-name">${escHtml(po.productName || po.product?.name || '—')}</div>
         <div class="po-product-meta po-col-breakdown">${productIdShort ? 'ID: ' + productIdShort : ''}</div>
@@ -865,9 +445,7 @@ function renderPO(items) {
           ${statusCfg.label}
         </span>
       </td>
-      <td class="po-col-date" style="font-size:12px;color:var(--text-muted)">
-        ${fmtDate(po.createdAt)}
-      </td>
+      <td class="po-col-date" style="font-size:12px;color:var(--text-muted)">${fmtDate(po.createdAt)}</td>
       <td>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
           <button class="po-action-btn view" onclick="viewDetail('${id}')">
@@ -875,39 +453,30 @@ function renderPO(items) {
             View
           </button>
           ${canConfirm ? `
-            <button class="po-action-btn confirm" onclick="openConfirmModal('${id}', event)">
+            <button class="po-action-btn confirm" onclick="openConfirmModal('${id}',event)">
               <span class="material-symbols-rounded">payments</span>
               Confirm
             </button>
-          ` : `
-            <span class="po-no-action">
-              <span class="material-symbols-rounded">remove</span>
-            </span>
-          `}
+          ` : `<span class="po-no-action"><span class="material-symbols-rounded">remove</span></span>`}
         </div>
       </td>
     </tr>`;
   }).join('');
 }
 
-/* ── View Detail Modal ── */
 function viewDetail(id) {
   const po = allRecords.find(r => (r.id || r.preOrderRecordId || r.preOrderId) == id);
   if (!po) return;
   currentDetailRecord = po;
-
   const statusCfg = STATUS_ICONS[po.status] || { icon: 'radio_button_unchecked', label: po.status };
   const canConfirm = po.status === 'DELIVERY_REQUESTED';
-
   const detailBtn = document.getElementById('detailConfirmBtn');
   if (detailBtn) detailBtn.style.display = canConfirm ? 'inline-flex' : 'none';
 
   const body = document.getElementById('detailModalBody');
   body.innerHTML = `
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
-      <div class="po-avatar" style="width:44px;height:44px;font-size:15px;border-radius:12px">
-        ${getInitials(po.customerName || '?')}
-      </div>
+      <div class="po-avatar" style="width:44px;height:44px;font-size:15px;border-radius:12px">${getInitials(po.customerName || '?')}</div>
       <div>
         <div style="font-family:var(--font-display);font-weight:800;font-size:15px">${escHtml(po.customerName || '—')}</div>
         <div style="font-size:12px;color:var(--text-muted)">${escHtml(po.customerEmail || '')}</div>
@@ -917,19 +486,16 @@ function viewDetail(id) {
         ${statusCfg.label}
       </span>
     </div>
-
     <div style="background:var(--gray-50);border-radius:10px;padding:4px 14px;margin-bottom:16px">
       ${detailRow('Pre-Order ID', `<span style="font-family:var(--font-mono);color:var(--po-accent)">#${String(po.id||'').slice(-8).toUpperCase()}</span>`)}
       ${detailRow('Product', escHtml(po.productName || po.product?.name || '—'))}
       ${detailRow('Order Date', fmtDate(po.createdAt))}
     </div>
-
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
       ${amountBox('Total', po.totalAmount, 'var(--text)', 'var(--gray-100)')}
       ${amountBox('Deposit', po.depositAmount, '#065F46', '#D1FAE5')}
       ${amountBox('Remaining', po.remainingAmount, '#92400E', '#FEF3C7')}
     </div>
-
     ${po.notifiedAt ? detailCardRow('Notified At', fmtDate(po.notifiedAt)) : ''}
     ${po.deliveryRequestedAt ? detailCardRow('Delivery Requested', fmtDate(po.deliveryRequestedAt)) : ''}
     ${po.secondPaymentConfirmedAt ? detailCardRow('Payment Confirmed', fmtDate(po.secondPaymentConfirmedAt)) : ''}
@@ -938,31 +504,19 @@ function viewDetail(id) {
       <div style="background:var(--gray-50);border-radius:8px;padding:10px 14px;margin-top:8px">
         <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:4px">Admin Note</div>
         <div style="font-size:13px;color:var(--text)">${escHtml(po.adminNote)}</div>
-      </div>
-    ` : ''}
+      </div>` : ''}
   `;
-
   document.getElementById('detailModal').classList.add('open');
 }
 
 function detailRow(key, val) {
   return `<div class="po-detail-row"><span class="po-detail-key">${key}</span><span class="po-detail-val">${val}</span></div>`;
 }
-
 function detailCardRow(key, val) {
-  return `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-100)">
-      <span style="font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">${key}</span>
-      <span style="font-size:13px;font-weight:700;color:var(--text)">${val}</span>
-    </div>`;
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-100)"><span style="font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">${key}</span><span style="font-size:13px;font-weight:700;color:var(--text)">${val}</span></div>`;
 }
-
 function amountBox(label, amount, color, bg) {
-  return `
-    <div style="background:${bg};border-radius:10px;padding:12px 14px;text-align:center">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:${color};opacity:.7;margin-bottom:4px">${label}</div>
-      <div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:${color}">${fmtCur(amount)}</div>
-    </div>`;
+  return `<div style="background:${bg};border-radius:10px;padding:12px 14px;text-align:center"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:${color};opacity:.7;margin-bottom:4px">${label}</div><div style="font-family:var(--font-display);font-size:15px;font-weight:800;color:${color}">${fmtCur(amount)}</div></div>`;
 }
 
 function openConfirmFromDetail() {
@@ -972,12 +526,10 @@ function openConfirmFromDetail() {
   openConfirmModal(id, null);
 }
 
-/* ── Confirm Payment Modal ── */
 function openConfirmModal(id, event) {
   if (event) event.stopPropagation();
   currentPoId = id;
   document.getElementById('adminNoteInput').value = '';
-
   const po = allRecords.find(r => (r.id || r.preOrderRecordId || r.preOrderId) == id);
   const section = document.getElementById('poDetailSection');
   if (po && section) {
@@ -990,14 +542,13 @@ function openConfirmModal(id, event) {
   } else if (section) {
     section.innerHTML = '';
   }
-
   document.getElementById('poModal').classList.add('open');
 }
 
+// POST /api/pre-orders/seller/{id}/confirm-payment
 async function doConfirmPayment() {
   const note = document.getElementById('adminNoteInput').value.trim();
   const btn = document.getElementById('confirmPaymentBtn');
-
   btn.disabled = true;
   btn.innerHTML = `<span class="material-symbols-rounded" style="animation:spin .7s linear infinite">progress_activity</span> Confirming…`;
 
@@ -1018,14 +569,13 @@ async function doConfirmPayment() {
 function closePoModal()     { document.getElementById('poModal').classList.remove('open'); }
 function closeDetailModal() { document.getElementById('detailModal').classList.remove('open'); }
 
-/* ── Helpers ── */
 function fmtCur(val) {
   if (val == null) return '—';
   return '₵' + parseFloat(val).toLocaleString('en-GH', { minimumFractionDigits: 2 });
 }
 function fmtDate(str) {
   if (!str) return '—';
-  return new Date(str).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+  return new Date(str).toLocaleString('en-GB', { dateStyle:'medium', timeStyle:'short' });
 }
 function getInitials(name) {
   const parts = String(name).trim().split(' ');
