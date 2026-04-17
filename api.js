@@ -217,13 +217,26 @@ const API = (() => {
   //  Routed through /api/v1/admin/chat/* to avoid UserPrincipal
   //  injection errors that occur on the shared /api/v1/chat/* routes.
   //
-  //  GET  /api/v1/admin/chat/conversations              — list
-  //  GET  /api/v1/admin/chat/inbox                      — rich inbox
-  //  GET  /api/v1/admin/chat/unread-count               — badge count
-  //  GET  /api/v1/admin/chat/conversations/{id}/history — thread
-  //  POST /api/v1/admin/chat/conversations/{id}/reply   — send reply
+  //  POST  /api/v1/admin/chat/orders/{orderId}/start    — start order chat  ← NEW
+  //  GET   /api/v1/admin/chat/conversations             — list
+  //  GET   /api/v1/admin/chat/inbox                     — rich inbox
+  //  GET   /api/v1/admin/chat/unread-count              — badge count
+  //  GET   /api/v1/admin/chat/conversations/{id}/history — thread
+  //  POST  /api/v1/admin/chat/conversations/{id}/reply  — send reply
   //  PATCH /api/v1/admin/chat/conversations/{id}/read   — mark read
   // ══════════════════════════════════════════════════════════════
+
+  /**
+   * startOrderConversation(orderId)
+   * POST /api/v1/admin/chat/orders/{orderId}/start
+   *
+   * Seller initiates a conversation with the buyer for a specific order.
+   * Idempotent — returns existing conversation if one already exists.
+   * Response data contains { id / conversationId } to navigate to chat.
+   * Requires AdminPrincipal (seller JWT).
+   */
+  const startOrderConversation = (orderId) =>
+    post(`/api/v1/admin/chat/orders/${orderId}/start`);
 
   const getSellerConversations = (unreadOnly = false) =>
     get(`/api/v1/admin/chat/conversations?unreadOnly=${unreadOnly}`);
@@ -295,6 +308,7 @@ const API = (() => {
     // notifications (seller/admin)
     getNotifications, getUnreadCount, markNotifRead, markAllNotifsRead, registerSellerFcmToken,
     // chat (all routed through /api/v1/admin/chat/*)
+    startOrderConversation,                                           // ← NEW
     getSellerConversations, getSellerInbox, getSellerUnreadCount,
     getChatHistory, sellerSendMessage, markChatAsRead,
   };

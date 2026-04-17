@@ -69,7 +69,6 @@
     .po-id { font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--po-accent); background:var(--po-accent-light); border-radius:6px; padding:3px 8px; display:inline-block; }
     .po-amount { font-weight:800; font-size:14px; color:var(--text); font-family:var(--font-display); }
 
-    /* Only statuses that exist in the backend OrderStatus enum */
     .po-status { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; font-family:var(--font-display); white-space:nowrap; }
     .po-status .material-symbols-rounded { font-size:13px; }
     .po-status.AWAITING_PAYMENT { background:#FFFBEB; color:#D97706; }
@@ -102,6 +101,13 @@
     .btn-po-danger { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:#FEE2E2; color:#B91C1C; font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid #FECACA; cursor:pointer; transition:all .15s; }
     .btn-po-danger:hover { background:#FECACA; }
     .btn-po-danger .material-symbols-rounded { font-size:17px; }
+
+    /* ── Message Customer button ── */
+    .btn-po-chat { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:#EFF6FF; color:#1D4ED8; font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid #BFDBFE; cursor:pointer; transition:all .15s; }
+    .btn-po-chat:hover { background:#DBEAFE; box-shadow:0 4px 14px rgba(29,78,216,.15); }
+    .btn-po-chat:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-po-chat .material-symbols-rounded { font-size:17px; }
+    .btn-po-chat.loading .material-symbols-rounded { animation:spin .7s linear infinite; }
 
     .po-detail-row { display:flex; align-items:flex-start; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:12px; }
     .po-detail-row:last-child { border-bottom:none; }
@@ -163,9 +169,13 @@
       </button>
     </div>
     <div class="modal-body" id="modalBody" style="padding:20px 24px;max-height:70vh;overflow-y:auto"></div>
-    <div class="modal-footer" style="padding:14px 24px;gap:8px">
+    <div class="modal-footer" style="padding:14px 24px;gap:8px;flex-wrap:wrap">
       <button class="btn-po-ghost" onclick="closeModal()">
         <span class="material-symbols-rounded">close</span> Close
+      </button>
+      <!-- Message Customer — starts / opens an order conversation then navigates to chat.html -->
+      <button class="btn-po-chat" id="messageBtn" style="display:none" onclick="messageCustomer()">
+        <span class="material-symbols-rounded">chat</span> Message Customer
       </button>
       <button class="btn-po-danger" id="cancelBtn" style="display:none" onclick="cancelOrder()">
         <span class="material-symbols-rounded">cancel</span> Cancel Order
@@ -195,7 +205,6 @@ const STATUS_CONFIG = {
   'CANCELLED':         { label: 'Cancelled',      icon: 'cancel' },
 };
 
-// Same map used for badge rendering
 const STATUS_ICONS = {
   AWAITING_PAYMENT: { icon: 'hourglass_top',     label: 'Awaiting Pay.' },
   PAYMENT_FAILED:   { icon: 'error',             label: 'Pay. Failed' },
@@ -207,9 +216,12 @@ const STATUS_ICONS = {
   CANCELLED:        { icon: 'cancel',            label: 'Cancelled' },
 };
 
-// Status options available to admin for update — only valid transitions
-// (Cannot set to AWAITING_PAYMENT, PAYMENT_FAILED, DEPOSIT_PAID via admin)
+// Status options available to admin for update
 const UPDATABLE_STATUSES = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+
+// Statuses where it makes sense to message the customer
+// (exclude AWAITING_PAYMENT and PAYMENT_FAILED — no point messaging before payment)
+const MESSAGEABLE_STATUSES = ['DEPOSIT_PAID', 'PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED'];
 
 let currentStatus = '';
 
@@ -295,10 +307,8 @@ const content = `
 
 renderLayout('Orders', 'orders.html', content);
 buildStatusPills();
-
-// Load orders first (visible content), then stats in background
 loadOrders();
-loadStats(); // non-blocking
+loadStats();
 
 // ─────────────────────────────────────────────
 // SKELETON
@@ -335,10 +345,9 @@ function buildStatusPills() {
 }
 
 // ─────────────────────────────────────────────
-// STATS — loaded after orders to avoid blocking
+// STATS
 // ─────────────────────────────────────────────
 async function loadStats() {
-  // Reuse already-loaded orders data when possible
   async function safeCount(apiFn) {
     try {
       const r = await apiFn();
@@ -358,7 +367,6 @@ async function loadStats() {
 
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
-  // Run all in parallel
   const [today, week, month, revData] = await Promise.all([
     safeCount(API.getOrdersToday),
     safeCount(API.getOrdersThisWeek),
@@ -379,7 +387,7 @@ async function loadStats() {
 }
 
 // ─────────────────────────────────────────────
-// ORDERS LIST — cached to avoid re-fetches
+// ORDERS LIST
 // ─────────────────────────────────────────────
 async function loadOrders() {
   const btn = document.getElementById('refreshBtn');
@@ -493,13 +501,13 @@ function filterTable() {
 async function viewOrder(id) {
   currentOrderId = id;
   document.getElementById('orderModal').classList.add('open');
-  document.getElementById('cancelBtn').style.display = 'none';
+  document.getElementById('cancelBtn').style.display  = 'none';
+  document.getElementById('messageBtn').style.display = 'none';
   document.getElementById('modalBody').innerHTML = `
     <div style="display:flex;align-items:center;justify-content:center;padding:40px">
       <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
 
-  // Use cached data first for instant render, then fetch full details
   const cached = (window._allOrders || []).find(o => (o.orderId || o.id) === id);
   if (cached) renderOrderModal(cached, true);
 
@@ -519,14 +527,16 @@ async function viewOrder(id) {
 }
 
 function renderOrderModal(o, isPartial) {
-  const statusKey = o.orderStatus || o.status || '';
-  const canCancel = !['CANCELLED', 'DELIVERED'].includes(statusKey);
-  const cancelBtn = document.getElementById('cancelBtn');
-  if (cancelBtn) cancelBtn.style.display = canCancel ? 'inline-flex' : 'none';
+  const statusKey   = o.orderStatus || o.status || '';
+  const canCancel   = !['CANCELLED', 'DELIVERED'].includes(statusKey);
+  const canMessage  = MESSAGEABLE_STATUSES.includes(statusKey);
+
+  const cancelBtn  = document.getElementById('cancelBtn');
+  const messageBtn = document.getElementById('messageBtn');
+  if (cancelBtn)  cancelBtn.style.display  = canCancel  ? 'inline-flex' : 'none';
+  if (messageBtn) messageBtn.style.display = canMessage ? 'inline-flex' : 'none';
 
   const statusCfg = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
-
-  // Only show statuses that exist in the backend enum and are valid admin updates
   const statusOptions = UPDATABLE_STATUSES
     .map(s => `<option value="${s}" ${s === statusKey ? 'selected' : ''}>${s.replace(/_/g,' ')}</option>`)
     .join('');
@@ -632,8 +642,10 @@ function renderOrderModal(o, isPartial) {
     <div style="border:1px solid var(--gray-100);border-radius:10px;overflow:hidden">
       ${orderItems.map((item, idx) => {
         const subTotal = item.subTotal ?? (item.quantity && item.unitPrice ? item.quantity * parseFloat(item.unitPrice) : null);
+        const imgUrl   = item.primaryImageUrl || '';
         return `
-        <div class="po-item-row" id="item-row-${idx}" style="padding:12px 14px">
+        <div class="po-item-row" id="item-row-${idx}" style="padding:12px 14px;gap:10px">
+          ${imgUrl ? `<img src="${escHtml(imgUrl)}" alt="" style="width:38px;height:38px;border-radius:8px;object-fit:cover;border:1px solid var(--gray-200);flex-shrink:0" onerror="this.style.display='none'"/>` : ''}
           <div style="flex:1;min-width:0">
             <div style="font-family:var(--font-display);font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(item.productName || 'Product')}</div>
             <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-top:3px">
@@ -703,6 +715,50 @@ async function cancelOrder() {
     loadOrders();
   } else {
     showToast(res.data?.message || 'Failed to cancel order', 'error');
+  }
+}
+
+// ─────────────────────────────────────────────
+// MESSAGE CUSTOMER — NEW
+//
+// Calls POST /api/v1/admin/chat/orders/{orderId}/start
+// which is idempotent: creates or finds the conversation.
+// Then stores the conversationId in sessionStorage and
+// navigates to chat.html, which auto-selects the conversation.
+// ─────────────────────────────────────────────
+async function messageCustomer() {
+  const btn = document.getElementById('messageBtn');
+  if (!btn || !currentOrderId) return;
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.innerHTML = '<span class="material-symbols-rounded">progress_activity</span> Opening…';
+
+  try {
+    const res = await API.startOrderConversation(currentOrderId);
+
+    if (!res.ok) {
+      const msg = res.data?.message || res.data?.data?.message || 'Could not start conversation';
+      showToast(msg, 'error');
+      return;
+    }
+
+    const conv   = res.data?.data ?? res.data;
+    const convId = conv?.id || conv?.conversationId;
+
+    if (convId) {
+      // Store so chat.html can auto-open this conversation on load
+      sessionStorage.setItem('openConversationId', convId);
+    }
+
+    showToast('Opening chat…', 'info');
+    // Small delay so the toast is visible before navigation
+    setTimeout(() => { window.location.href = 'chat.html'; }, 600);
+
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.innerHTML = '<span class="material-symbols-rounded">chat</span> Message Customer';
   }
 }
 

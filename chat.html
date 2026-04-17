@@ -105,12 +105,28 @@
     .msg-row.seller .msg-bubble { background:var(--po-accent); color:#fff; border-bottom-right-radius:4px; }
     .msg-row.buyer  .msg-bubble { background:var(--gray-100); color:var(--text); border-bottom-left-radius:4px; }
     .msg-row.system .msg-bubble { background:#F0FDF4; color:#065F46; border-radius:10px; max-width:80%; border:1px solid #A7F3D0; font-size:12px; text-align:center; }
+
+    /* ── Product Card bubble ── */
     .msg-product-card { max-width:280px; background:var(--white); border-radius:14px; border:1.5px solid var(--po-accent-mid); overflow:hidden; border-bottom-left-radius:4px; }
     .msg-product-card img { width:100%; height:120px; object-fit:cover; }
     .msg-product-card-body { padding:10px 12px; }
     .msg-product-card-name  { font-family:var(--font-display); font-size:13px; font-weight:800; color:var(--text); }
     .msg-product-card-price { font-family:var(--font-mono); font-size:12px; color:var(--po-accent); margin-top:3px; }
     .msg-product-card-desc  { font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.4; }
+
+    /* ── Order Card bubble (NEW) ── */
+    .msg-order-card { max-width:300px; background:var(--white); border-radius:14px; border:1.5px solid #BFDBFE; overflow:hidden; border-bottom-left-radius:4px; box-shadow:0 2px 8px rgba(29,78,216,.08); }
+    .msg-order-card-header { background:#1D4ED8; padding:10px 14px; display:flex; align-items:center; gap:8px; }
+    .msg-order-card-header .material-symbols-rounded { font-size:16px; color:#fff; }
+    .msg-order-card-order-id { font-family:var(--font-mono); font-size:12px; font-weight:700; color:#fff; letter-spacing:.5px; }
+    .msg-order-card img { width:100%; height:110px; object-fit:cover; }
+    .msg-order-card-body { padding:10px 12px; }
+    .msg-order-card-product { font-family:var(--font-display); font-size:13px; font-weight:800; color:var(--text); }
+    .msg-order-card-items   { font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.4; }
+    .msg-order-card-footer  { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-top:1px solid #DBEAFE; background:#EFF6FF; }
+    .msg-order-card-price   { font-family:var(--font-mono); font-size:13px; font-weight:700; color:#1D4ED8; }
+    .msg-order-card-status  { font-family:var(--font-display); font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px; background:#DBEAFE; color:#1D4ED8; text-transform:uppercase; letter-spacing:.4px; }
+
     .msg-sender { font-size:10px; color:var(--text-muted); margin-bottom:3px; font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
     .msg-row.seller .msg-sender { text-align:right; color:var(--po-accent); }
     .msg-time { font-size:10px; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono); }
@@ -232,7 +248,16 @@ const content = `
 `;
 
 renderLayout('Messages', 'chat.html', content);
-loadConversations();
+
+// Load conversations, then check if we should auto-open one (from orders.html navigation)
+loadConversations().then(() => {
+  const autoOpenId = sessionStorage.getItem('openConversationId');
+  if (autoOpenId) {
+    sessionStorage.removeItem('openConversationId');
+    // Try to open directly; if not in list yet (just created), open anyway
+    openConversation(autoOpenId);
+  }
+});
 loadUnreadCount();
 
 /* ── Skeleton ──────────────────────────────────────────────────── */
@@ -302,7 +327,11 @@ function renderConversations(convs) {
     const id      = c.conversationId || c.id;
     const name    = c.buyerName || c.customerName || 'Customer';
     const product = c.productName || '';
-    const preview = c.lastMessage ? truncate(c.lastMessage, 55) : 'No messages yet';
+    const preview = c.lastMessage
+      ? (c.lastMessage.startsWith('ORDER_CARD::')
+          ? '📦 Order summary'
+          : truncate(c.lastMessage, 55))
+      : 'No messages yet';
     const unread  = c.unreadCount || 0;
     const type    = c.chatType || 'BUYER_SELLER';
     const time    = c.lastMessageAt ? formatTimeShort(c.lastMessageAt) : '';
@@ -364,7 +393,6 @@ async function openConversation(id) {
   const msgs = res.data?.data?.messages || res.data?.messages || res.data?.data || [];
   renderMessages(Array.isArray(msgs) ? msgs : []);
 
-  // Clear unread badge
   if (el) {
     const badge = el.querySelector('.unread-badge');
     if (badge) badge.remove();
@@ -457,7 +485,38 @@ function renderMessages(msgs) {
     }
 
     let bubble;
-    if (content.startsWith('PRODUCT_CARD::')) {
+
+    // ── ORDER_CARD rendering (NEW) ───────────────────────────────
+    // Format: ORDER_CARD::<orderId>::<productName>::<imgUrl>::<unitPrice>::<totalPaid>::<status>::<itemsSummary>
+    if (content.startsWith('ORDER_CARD::')) {
+      const parts       = content.split('::');
+      const oId         = parts[1] || '';
+      const oProduct    = parts[2] || '';
+      const oImg        = parts[3] || '';
+      const oUnitPrice  = parts[4] || '';
+      const oTotal      = parts[5] || '';
+      const oStatus     = parts[6] || '';
+      const oItems      = parts[7] || '';
+
+      bubble = `
+        <div class="msg-order-card">
+          <div class="msg-order-card-header">
+            <span class="material-symbols-rounded">receipt_long</span>
+            <span class="msg-order-card-order-id">ORDER #${escHtml(oId)}</span>
+          </div>
+          ${oImg ? `<img src="${escHtml(oImg)}" alt="${escHtml(oProduct)}" onerror="this.style.display='none'"/>` : ''}
+          <div class="msg-order-card-body">
+            <div class="msg-order-card-product">${escHtml(oProduct)}</div>
+            ${oItems ? `<div class="msg-order-card-items">${escHtml(oItems)}</div>` : ''}
+          </div>
+          <div class="msg-order-card-footer">
+            <span class="msg-order-card-price">₵${escHtml(oTotal)}</span>
+            <span class="msg-order-card-status">${escHtml(oStatus.replace(/_/g,' '))}</span>
+          </div>
+        </div>`;
+
+    // ── PRODUCT_CARD rendering ───────────────────────────────────
+    } else if (content.startsWith('PRODUCT_CARD::')) {
       const parts = content.split('::');
       const pName  = parts[1] || '';
       const pPrice = parts[2] || '';
@@ -472,12 +531,14 @@ function renderMessages(msgs) {
             ${pDesc ? `<div class="msg-product-card-desc">${escHtml(pDesc.substring(0,80))}${pDesc.length>80?'…':''}</div>` : ''}
           </div>
         </div>`;
+
+    // ── Regular text bubble ──────────────────────────────────────
     } else {
       bubble = `<div class="msg-bubble">${escHtml(content)}</div>`;
     }
 
     const senderLabel = isSys ? '' : `<div class="msg-sender">${escHtml(m.senderName || (isMe ? 'You' : 'Customer'))}</div>`;
-    const readTick = isMe && m.isRead ? `<span class="msg-read-tick">✓✓</span>` : '';
+    const readTick    = isMe && m.isRead ? `<span class="msg-read-tick">✓✓</span>` : '';
 
     return `${divider}
       <div class="msg-row ${rowCls}">
@@ -513,7 +574,6 @@ async function sendReply() {
   input.value = '';
   input.style.height = 'auto';
 
-  // Uses the seller send message endpoint
   const res = await API.sellerSendMessage(currentConvId, text);
 
   btn.disabled = false;
@@ -536,7 +596,6 @@ async function sendReply() {
       msgs.scrollTop = msgs.scrollHeight;
     }
 
-    // Update preview in list
     const convEl = document.getElementById(`conv-${currentConvId}`);
     if (convEl) {
       const preview = convEl.querySelector('.conv-preview');
