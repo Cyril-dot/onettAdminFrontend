@@ -213,29 +213,51 @@ const API = (() => {
   // ══════════════════════════════════════════════════════════════
   //  CHAT / CONVERSATIONS
   //
-  //  Seller endpoints (authenticated as AdminPrincipal):
-  //    GET  /api/v1/chat/seller/conversations
-  //    GET  /api/v1/chat/seller/inbox
-  //    GET  /api/v1/chat/seller/unread-count
-  //    GET  /api/v1/chat/conversations/{id}/history
-  //    POST /api/v1/chat/conversations/{id}/messages/seller  ← sellerSendMessage
+  //  All seller chat endpoints use AdminPrincipal (seller JWT).
+  //  Routed through /api/v1/admin/chat/* to avoid UserPrincipal
+  //  injection errors that occur on the shared /api/v1/chat/* routes.
+  //
+  //  GET  /api/v1/admin/chat/conversations              — list
+  //  GET  /api/v1/admin/chat/inbox                      — rich inbox
+  //  GET  /api/v1/admin/chat/unread-count               — badge count
+  //  GET  /api/v1/admin/chat/conversations/{id}/history — thread
+  //  POST /api/v1/admin/chat/conversations/{id}/reply   — send reply
+  //  PATCH /api/v1/admin/chat/conversations/{id}/read   — mark read
   // ══════════════════════════════════════════════════════════════
-  const getSellerConversations = (unreadOnly = false) =>
-    get(`/api/v1/chat/seller/conversations?unreadOnly=${unreadOnly}`);
 
-  const getSellerInbox       = ()   => get('/api/v1/chat/seller/inbox');
-  const getSellerUnreadCount = ()   => get('/api/v1/chat/seller/unread-count');
-  const getChatHistory       = (id) => get(`/api/v1/chat/conversations/${id}/history`);
+  const getSellerConversations = (unreadOnly = false) =>
+    get(`/api/v1/admin/chat/conversations?unreadOnly=${unreadOnly}`);
+
+  const getSellerInbox       = ()   => get('/api/v1/admin/chat/inbox');
+  const getSellerUnreadCount = ()   => get('/api/v1/admin/chat/unread-count');
+
+  /**
+   * getChatHistory(conversationId)
+   * GET /api/v1/admin/chat/conversations/{id}/history
+   * Requires AdminPrincipal (seller JWT).
+   */
+  const getChatHistory = (id) =>
+    get(`/api/v1/admin/chat/conversations/${id}/history`);
 
   /**
    * sellerSendMessage(conversationId, content, productImageId?)
-   * POST /api/v1/chat/conversations/{conversationId}/messages/seller
+   * POST /api/v1/admin/chat/conversations/{id}/reply
    * Body: { content, productImageId? }
+   * Requires AdminPrincipal (seller JWT).
    */
   const sellerSendMessage = (conversationId, content, productImageId = null) =>
-    post(`/api/v1/chat/conversations/${conversationId}/messages/seller`,
+    post(
+      `/api/v1/admin/chat/conversations/${conversationId}/reply`,
       productImageId ? { content, productImageId } : { content }
     );
+
+  /**
+   * markChatAsRead(conversationId)
+   * PATCH /api/v1/admin/chat/conversations/{id}/read
+   * Requires AdminPrincipal (seller JWT).
+   */
+  const markChatAsRead = (id) =>
+    patch(`/api/v1/admin/chat/conversations/${id}/read`);
 
   // ── Public API ────────────────────────────────────────────────
   return {
@@ -272,9 +294,9 @@ const API = (() => {
     analyzeTrends, generateListing, suggestPrice, analyzeInventory, improveVisibility,
     // notifications (seller/admin)
     getNotifications, getUnreadCount, markNotifRead, markAllNotifsRead, registerSellerFcmToken,
-    // chat
-    getSellerConversations, getSellerInbox, getSellerUnreadCount, getChatHistory,
-    sellerSendMessage,
+    // chat (all routed through /api/v1/admin/chat/*)
+    getSellerConversations, getSellerInbox, getSellerUnreadCount,
+    getChatHistory, sellerSendMessage, markChatAsRead,
   };
 })();
 
