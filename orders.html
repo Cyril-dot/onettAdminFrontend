@@ -19,13 +19,11 @@
     .nav-link.active { background: rgba(124,58,237,.14); }
     .nav-link.active::before { background: var(--po-accent); }
 
-    /* ── Page header ── */
     .po-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
     .po-header-left .po-title { font-family:var(--font-display); font-size:26px; font-weight:800; color:var(--text); letter-spacing:-.6px; line-height:1.15; }
     .po-header-left .po-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; font-weight:400; }
     .po-header-right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 
-    /* ── Stats grid ── */
     .po-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
     .po-stat { background:var(--white); border-radius:14px; border:1px solid var(--gray-100); padding:18px 20px; position:relative; overflow:hidden; transition:transform .16s,box-shadow .16s; }
     .po-stat:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
@@ -43,7 +41,6 @@
     .po-stat-num { font-family:var(--font-display); font-size:28px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
     .po-stat-label { font-size:12px; color:var(--text-muted); font-weight:500; margin-top:4px; }
 
-    /* ── Status pills ── */
     .status-pills { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:24px; }
     .status-pill { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:99px; border:1.5px solid var(--gray-200); background:var(--white); font-size:12px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:all .16s ease; font-family:var(--font-display); white-space:nowrap; }
     .status-pill:hover { border-color:var(--po-accent); color:var(--po-accent); background:var(--po-accent-light); }
@@ -51,19 +48,16 @@
     .status-pill .pill-count { background:rgba(255,255,255,.25); border-radius:99px; padding:1px 7px; font-size:10px; font-weight:800; }
     .status-pill:not(.active) .pill-count { background:var(--gray-100); color:var(--text-muted); }
 
-    /* ── Main card ── */
     .po-card { background:var(--white); border-radius:16px; border:1px solid var(--gray-100); box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; }
     .po-card-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid var(--gray-100); gap:12px; flex-wrap:wrap; }
     .po-card-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
     .po-card-title .material-symbols-rounded { font-size:18px; color:var(--po-accent); }
 
-    /* ── Search ── */
     .po-search-wrap { display:flex; align-items:center; gap:8px; background:var(--gray-50); border:1.5px solid var(--gray-200); border-radius:10px; padding:7px 12px; min-width:220px; }
     .po-search-wrap .material-symbols-rounded { font-size:17px; color:var(--text-muted); }
     .po-search-wrap input { border:none; background:transparent; font-size:13px; color:var(--text); outline:none; font-family:var(--font-display); width:100%; }
     .po-search-wrap:focus-within { border-color:var(--po-accent); background:var(--po-accent-light); }
 
-    /* ── Table ── */
     .po-table-wrap { overflow-x:auto; }
     .po-table { width:100%; border-collapse:collapse; font-size:13px; }
     .po-table thead th { text-align:left; padding:10px 20px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); background:var(--gray-50); border-bottom:1px solid var(--gray-200); white-space:nowrap; }
@@ -72,26 +66,22 @@
     .po-table tbody tr:hover { background:#FAFAF8; }
     .po-table tbody td { padding:14px 20px; vertical-align:middle; }
 
-    /* ── Table cells ── */
     .po-id { font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--po-accent); background:var(--po-accent-light); border-radius:6px; padding:3px 8px; display:inline-block; }
     .po-amount { font-weight:800; font-size:14px; color:var(--text); font-family:var(--font-display); }
 
-    /* ── Order status badge ── */
+    /* Only statuses that exist in the backend OrderStatus enum */
     .po-status { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; font-family:var(--font-display); white-space:nowrap; }
     .po-status .material-symbols-rounded { font-size:13px; }
+    .po-status.AWAITING_PAYMENT { background:#FFFBEB; color:#D97706; }
+    .po-status.PAYMENT_FAILED   { background:#FEE2E2; color:#B91C1C; }
+    .po-status.DEPOSIT_PAID     { background:#D1FAE5; color:#065F46; }
     .po-status.PENDING          { background:#F5F3FF; color:var(--po-accent-dark); }
-    .po-status.PROCESSING       { background:#DBEAFE; color:#1D4ED8; }
+    .po-status.CONFIRMED        { background:#D1FAE5; color:#065F46; }
     .po-status.SHIPPED          { background:#FEF3C7; color:#92400E; }
     .po-status.DELIVERED        { background:#D1FAE5; color:#065F46; }
     .po-status.CANCELLED        { background:#FEE2E2; color:#B91C1C; }
-    .po-status.REFUNDED         { background:#F5F3FF; color:#6D28D9; }
-    .po-status.CONFIRMED        { background:#D1FAE5; color:#065F46; }
-    .po-status.AWAITING_PAYMENT { background:#FEF3C7; color:#D97706; }
-    .po-status.DEPOSIT_PAID     { background:#D1FAE5; color:#065F46; }
-    .po-status.PAYMENT_FAILED   { background:#FEE2E2; color:#B91C1C; }
     .po-status.UNKNOWN          { background:var(--gray-100); color:var(--text-muted); }
 
-    /* ── Buttons ── */
     .po-action-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all .14s; font-family:var(--font-display); white-space:nowrap; }
     .po-action-btn .material-symbols-rounded { font-size:15px; }
     .po-action-btn.view { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
@@ -113,39 +103,32 @@
     .btn-po-danger:hover { background:#FECACA; }
     .btn-po-danger .material-symbols-rounded { font-size:17px; }
 
-    /* ── Modal detail rows ── */
     .po-detail-row { display:flex; align-items:flex-start; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:12px; }
     .po-detail-row:last-child { border-bottom:none; }
     .po-detail-key { font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; }
     .po-detail-val { font-size:13px; font-weight:700; color:var(--text); text-align:right; font-family:var(--font-display); }
 
-    /* ── Payment info block ── */
     .po-payment-block { background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:4px 14px; margin-bottom:16px; }
     .po-payment-block.failed { background:#FFF1F2; border-color:#FECDD3; }
     .po-payment-block.pending { background:#FFFBEB; border-color:#FDE68A; }
 
-    /* ── Payment screenshot ── */
     .po-screenshot-link { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; background:var(--po-accent-light); color:var(--po-accent-dark); font-size:12px; font-weight:700; font-family:var(--font-display); text-decoration:none; border:1px solid var(--po-accent-mid); transition:all .14s; }
     .po-screenshot-link:hover { background:var(--po-accent-mid); }
     .po-screenshot-link .material-symbols-rounded { font-size:15px; }
 
-    /* ── Order items in modal ── */
-    .po-item-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:8px; transition:opacity .2s, max-height .3s; overflow:hidden; }
+    .po-item-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:8px; }
     .po-item-row:last-child { border-bottom:none; }
     .po-item-dismiss { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px; background:var(--gray-100); border:1px solid var(--gray-200); color:var(--text-muted); cursor:pointer; font-size:14px; transition:all .14s; flex-shrink:0; line-height:1; font-family:var(--font-display); font-weight:700; }
     .po-item-dismiss:hover { background:#FEE2E2; border-color:#FECACA; color:#B91C1C; }
 
-    /* ── Section label ── */
     .po-section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--text-muted); margin-bottom:8px; margin-top:16px; }
 
-    /* ── Empty state ── */
     .po-empty { display:flex; flex-direction:column; align-items:center; gap:12px; padding:64px 24px; text-align:center; }
     .po-empty-icon { width:64px; height:64px; border-radius:18px; background:var(--po-accent-light); display:flex; align-items:center; justify-content:center; }
     .po-empty-icon .material-symbols-rounded { font-size:30px; color:var(--po-accent); }
     .po-empty-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--gray-500); }
     .po-empty-sub { font-size:12px; color:var(--text-muted); max-width:260px; }
 
-    /* ── Misc ── */
     .po-total-chip { display:inline-flex; align-items:center; gap:6px; background:var(--po-accent-light); color:var(--po-accent-dark); border-radius:99px; padding:4px 12px; font-size:12px; font-weight:700; font-family:var(--font-display); }
     .po-skel { height:14px; border-radius:6px; background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
     .po-skel.sm { width:60px; height:10px; }
@@ -165,9 +148,7 @@
 <body>
 <div id="app"></div>
 
-<!-- ════════════════════════════════════════
-     ORDER DETAIL MODAL
-════════════════════════════════════════ -->
+<!-- ORDER DETAIL MODAL -->
 <div class="modal-overlay" id="orderModal">
   <div class="modal" style="max-width:540px">
     <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
@@ -200,33 +181,35 @@ requireAuth();
 let currentOrderId = null;
 
 // ─────────────────────────────────────────────
-// STATUS CONFIG
+// STATUS CONFIG — ONLY valid backend OrderStatus values
 // ─────────────────────────────────────────────
 const STATUS_CONFIG = {
-  '':                  { label: 'All',           icon: 'select_all' },
+  '':                  { label: 'All',            icon: 'select_all' },
+  'AWAITING_PAYMENT':  { label: 'Awaiting Pay.',  icon: 'hourglass_top' },
+  'PAYMENT_FAILED':    { label: 'Pay. Failed',    icon: 'error' },
+  'DEPOSIT_PAID':      { label: 'Deposit Paid',   icon: 'savings' },
   'PENDING':           { label: 'Pending',        icon: 'schedule' },
-  'PROCESSING':        { label: 'Processing',     icon: 'autorenew' },
+  'CONFIRMED':         { label: 'Confirmed',      icon: 'check_circle' },
   'SHIPPED':           { label: 'Shipped',        icon: 'local_shipping' },
   'DELIVERED':         { label: 'Delivered',      icon: 'task_alt' },
   'CANCELLED':         { label: 'Cancelled',      icon: 'cancel' },
-  'REFUNDED':          { label: 'Refunded',       icon: 'currency_exchange' },
-  'CONFIRMED':         { label: 'Confirmed',      icon: 'check_circle' },
-  'AWAITING_PAYMENT':  { label: 'Awaiting Pay.',  icon: 'hourglass_top' },
-  'DEPOSIT_PAID':      { label: 'Deposit Paid',   icon: 'savings' },
 };
 
+// Same map used for badge rendering
 const STATUS_ICONS = {
+  AWAITING_PAYMENT: { icon: 'hourglass_top',     label: 'Awaiting Pay.' },
+  PAYMENT_FAILED:   { icon: 'error',             label: 'Pay. Failed' },
+  DEPOSIT_PAID:     { icon: 'savings',           label: 'Deposit Paid' },
   PENDING:          { icon: 'schedule',          label: 'Pending' },
-  PROCESSING:       { icon: 'autorenew',         label: 'Processing' },
+  CONFIRMED:        { icon: 'check_circle',      label: 'Confirmed' },
   SHIPPED:          { icon: 'local_shipping',    label: 'Shipped' },
   DELIVERED:        { icon: 'task_alt',          label: 'Delivered' },
   CANCELLED:        { icon: 'cancel',            label: 'Cancelled' },
-  REFUNDED:         { icon: 'currency_exchange', label: 'Refunded' },
-  CONFIRMED:        { icon: 'check_circle',      label: 'Confirmed' },
-  AWAITING_PAYMENT: { icon: 'hourglass_top',     label: 'Awaiting Pay.' },
-  DEPOSIT_PAID:     { icon: 'savings',           label: 'Deposit Paid' },
-  PAYMENT_FAILED:   { icon: 'error',             label: 'Pay. Failed' },
 };
+
+// Status options available to admin for update — only valid transitions
+// (Cannot set to AWAITING_PAYMENT, PAYMENT_FAILED, DEPOSIT_PAID via admin)
+const UPDATABLE_STATUSES = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
 let currentStatus = '';
 
@@ -295,6 +278,7 @@ const content = `
         <tr>
           <th>Order ID</th>
           <th class="col-date">Date</th>
+          <th>Customer</th>
           <th>Total</th>
           <th>Status</th>
           <th>Items</th>
@@ -311,17 +295,20 @@ const content = `
 
 renderLayout('Orders', 'orders.html', content);
 buildStatusPills();
+
+// Load orders first (visible content), then stats in background
 loadOrders();
-loadStats();
+loadStats(); // non-blocking
 
 // ─────────────────────────────────────────────
 // SKELETON
 // ─────────────────────────────────────────────
 function skeletonRows() {
-  return Array(5).fill(0).map(() => `
+  return Array(6).fill(0).map(() => `
     <tr>
       <td><div class="po-skel sm"></div></td>
       <td class="col-date"><div class="po-skel sm"></div></td>
+      <td><div class="po-skel md"></div></td>
       <td><div class="po-skel sm"></div></td>
       <td><div class="po-skel sm" style="width:90px"></div></td>
       <td><div class="po-skel sm"></div></td>
@@ -348,13 +335,10 @@ function buildStatusPills() {
 }
 
 // ─────────────────────────────────────────────
-// STATS
-// FIX: revenue endpoint returns data.data object —
-//      read totalRevenue from the nested payload.
-// FIX: list endpoints return data.data arrays —
-//      unwrap correctly before counting.
+// STATS — loaded after orders to avoid blocking
 // ─────────────────────────────────────────────
 async function loadStats() {
+  // Reuse already-loaded orders data when possible
   async function safeCount(apiFn) {
     try {
       const r = await apiFn();
@@ -368,11 +352,13 @@ async function loadStats() {
     try {
       const r = await API.getSellerRevenue();
       if (!r.ok) return null;
-      // Response shape: { success, data: { totalRevenue, weeklyRevenue, ... } }
       return r.data?.data ?? r.data ?? null;
     } catch { return null; }
   }
 
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+  // Run all in parallel
   const [today, week, month, revData] = await Promise.all([
     safeCount(API.getOrdersToday),
     safeCount(API.getOrdersThisWeek),
@@ -380,14 +366,11 @@ async function loadStats() {
     safeRevenue(),
   ]);
 
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-
   set('todayCount', today);
   set('weekCount',  week);
   set('monthCount', month);
 
   if (revData) {
-    // Try the most common field names the backend may return
     const rev = revData.totalRevenue ?? revData.total ?? revData.revenue ?? null;
     set('revTotal', rev != null ? fmtCur(rev) : '—');
   } else {
@@ -396,17 +379,15 @@ async function loadStats() {
 }
 
 // ─────────────────────────────────────────────
-// ORDERS LIST
+// ORDERS LIST — cached to avoid re-fetches
 // ─────────────────────────────────────────────
 async function loadOrders() {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
 
   const res = await API.getAllOrders(currentStatus || null);
-
   if (btn) btn.classList.remove('loading');
 
-  // FIX: unwrap the nested data array
   const raw = res.data?.data ?? res.data ?? [];
   window._allOrders = Array.isArray(raw) ? raw : [];
 
@@ -419,7 +400,6 @@ async function loadOrders() {
 
 function updatePillCounts(orders) {
   const counts = {};
-  // FIX: backend returns orderStatus, not status
   orders.forEach(o => {
     const s = o.orderStatus || o.status;
     if (s) counts[s] = (counts[s] || 0) + 1;
@@ -445,15 +425,13 @@ function switchStatus(status) {
 
 // ─────────────────────────────────────────────
 // RENDER TABLE ROWS
-// FIX: read o.orderStatus (not o.status)
-// FIX: read o.orderItems (not o.items) for count
 // ─────────────────────────────────────────────
 function renderRows(orders) {
   const tbody = document.getElementById('ordersBody');
   if (!tbody) return;
 
   if (!orders.length) {
-    tbody.innerHTML = `<tr><td colspan="6">
+    tbody.innerHTML = `<tr><td colspan="7">
       <div class="po-empty">
         <div class="po-empty-icon"><span class="material-symbols-rounded">inbox</span></div>
         <div class="po-empty-title">No orders found</div>
@@ -468,16 +446,16 @@ function renderRows(orders) {
   tbody.innerHTML = orders.map(o => {
     const id         = o.orderId || o.id;
     const idShort    = String(id || '').slice(-8).toUpperCase();
-    // FIX: backend field is orderStatus, not status
     const statusKey  = o.orderStatus || o.status || '';
     const statusCfg  = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
-    // FIX: backend field is orderItems, not items
     const itemCount  = o.orderItems?.length ?? o.items?.length ?? o.itemCount ?? '—';
+    const customer   = o.customerName || '—';
 
     return `
     <tr>
       <td><span class="po-id">#${idShort}</span></td>
       <td class="col-date" style="font-size:12px;color:var(--text-muted)">${fmtDate(o.createdAt)}</td>
+      <td style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(customer)}</td>
       <td><span class="po-amount">${fmtCur(o.total || o.totalAmount)}</span></td>
       <td>
         <span class="po-status ${statusKey}">
@@ -500,17 +478,17 @@ function filterTable() {
   const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
   if (!window._allOrders) return;
   const filtered = window._allOrders.filter(o =>
-    String(o.orderId || o.id || '').toLowerCase().includes(q)
+    String(o.orderId || o.id || '').toLowerCase().includes(q) ||
+    String(o.customerName || '').toLowerCase().includes(q) ||
+    String(o.customerEmail || '').toLowerCase().includes(q)
   );
   renderRows(filtered);
+  const el = document.getElementById('poCount');
+  if (el) el.textContent = filtered.length;
 }
 
 // ─────────────────────────────────────────────
 // ORDER DETAIL MODAL
-// FIX: read o.orderStatus not o.status
-// FIX: read o.orderItems not o.items
-// FIX: render paymentStatus + paymentReference
-// FIX: dismiss button on each item row
 // ─────────────────────────────────────────────
 async function viewOrder(id) {
   currentOrderId = id;
@@ -521,52 +499,57 @@ async function viewOrder(id) {
       <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
 
-  const res = await API.getOrderById(id);
+  // Use cached data first for instant render, then fetch full details
+  const cached = (window._allOrders || []).find(o => (o.orderId || o.id) === id);
+  if (cached) renderOrderModal(cached, true);
 
+  const res = await API.getOrderById(id);
   if (!res.ok) {
-    document.getElementById('modalBody').innerHTML = `
-      <p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">
-        Failed to load order details.
-      </p>`;
+    if (!cached) {
+      document.getElementById('modalBody').innerHTML = `
+        <p style="color:#DC2626;font-family:var(--font-display);font-weight:600;padding:20px">
+          Failed to load order details.
+        </p>`;
+    }
     return;
   }
 
-  // FIX: unwrap nested data
   const o = res.data?.data ?? res.data;
+  renderOrderModal(o, false);
+}
 
-  // FIX: use orderStatus field
+function renderOrderModal(o, isPartial) {
   const statusKey = o.orderStatus || o.status || '';
-  const canCancel = !['CANCELLED','DELIVERED','REFUNDED'].includes(statusKey);
-  if (canCancel) document.getElementById('cancelBtn').style.display = 'inline-flex';
+  const canCancel = !['CANCELLED', 'DELIVERED'].includes(statusKey);
+  const cancelBtn = document.getElementById('cancelBtn');
+  if (cancelBtn) cancelBtn.style.display = canCancel ? 'inline-flex' : 'none';
 
   const statusCfg = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
 
-  const statusOptions = ['PENDING','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED','CONFIRMED']
-    .map(s => `<option value="${s}" ${s === statusKey ? 'selected' : ''}>${s}</option>`)
+  // Only show statuses that exist in the backend enum and are valid admin updates
+  const statusOptions = UPDATABLE_STATUSES
+    .map(s => `<option value="${s}" ${s === statusKey ? 'selected' : ''}>${s.replace(/_/g,' ')}</option>`)
     .join('');
 
-  // ── Payment section ──────────────────────────────────────
-  // FIX: render paymentStatus and paymentReference (screenshot)
   const paymentStatus = o.paymentStatus || 'N/A';
   const paymentRef    = o.paymentReference || null;
 
-  let paymentBlockClass = 'po-payment-block';
-  if (paymentStatus === 'FAILED' || paymentStatus === 'REJECTED') paymentBlockClass += ' failed';
-  else if (paymentStatus === 'PENDING') paymentBlockClass += ' pending';
+  let payBlockCls = 'po-payment-block';
+  if (paymentStatus === 'FAILED' || paymentStatus === 'REJECTED') payBlockCls += ' failed';
+  else if (paymentStatus === 'PENDING') payBlockCls += ' pending';
 
-  const paymentStatusCfg = {
-    CONFIRMED: { icon: 'check_circle',      color: '#065F46', label: 'Confirmed' },
-    PENDING:   { icon: 'hourglass_top',     color: '#D97706', label: 'Pending' },
-    FAILED:    { icon: 'error',             color: '#B91C1C', label: 'Failed' },
-    REJECTED:  { icon: 'cancel',            color: '#B91C1C', label: 'Rejected' },
-    'N/A':     { icon: 'remove_circle',     color: '#9CA3AF', label: 'N/A' },
-  }[paymentStatus] || { icon: 'info', color: '#6B7280', label: paymentStatus };
+  const payStatusMap = {
+    CONFIRMED: { icon: 'check_circle',  color: '#065F46', label: 'Confirmed' },
+    PENDING:   { icon: 'hourglass_top', color: '#D97706', label: 'Pending' },
+    FAILED:    { icon: 'error',         color: '#B91C1C', label: 'Failed' },
+    REJECTED:  { icon: 'cancel',        color: '#B91C1C', label: 'Rejected' },
+    'N/A':     { icon: 'remove_circle', color: '#9CA3AF', label: 'N/A' },
+  };
+  const payStatusCfg = payStatusMap[paymentStatus] || { icon: 'info', color: '#6B7280', label: paymentStatus };
 
-  // FIX: read orderItems (backend field), fall back to items
   const orderItems = o.orderItems || o.items || [];
 
   document.getElementById('modalBody').innerHTML = `
-    <!-- ── Header ── -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
       <div style="width:44px;height:44px;border-radius:12px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;">
         <span class="material-symbols-rounded" style="font-size:22px;color:var(--po-accent)">receipt_long</span>
@@ -581,7 +564,6 @@ async function viewOrder(id) {
       </span>
     </div>
 
-    <!-- ── Key details ── -->
     <div style="background:var(--gray-50);border-radius:10px;padding:4px 14px;margin-bottom:16px">
       <div class="po-detail-row">
         <span class="po-detail-key">Customer</span>
@@ -607,14 +589,13 @@ async function viewOrder(id) {
       </div>` : ''}
     </div>
 
-    <!-- ── Payment details ── -->
     <div class="po-section-label">Payment</div>
-    <div class="${paymentBlockClass}" style="margin-bottom:16px">
+    <div class="${payBlockCls}" style="margin-bottom:16px">
       <div class="po-detail-row">
         <span class="po-detail-key">Payment Status</span>
-        <span class="po-detail-val" style="display:inline-flex;align-items:center;gap:6px;color:${paymentStatusCfg.color}">
-          <span class="material-symbols-rounded" style="font-size:15px">${paymentStatusCfg.icon}</span>
-          ${paymentStatusCfg.label}
+        <span class="po-detail-val" style="display:inline-flex;align-items:center;gap:6px;color:${payStatusCfg.color}">
+          <span class="material-symbols-rounded" style="font-size:15px">${payStatusCfg.icon}</span>
+          ${payStatusCfg.label}
         </span>
       </div>
       ${paymentRef ? `
@@ -635,7 +616,7 @@ async function viewOrder(id) {
       </div>`}
     </div>
 
-    <!-- ── Update status ── -->
+    ${isPartial ? '' : `
     <div class="po-section-label">Update Status</div>
     <div style="display:flex;gap:8px;margin-bottom:16px">
       <select id="newStatus" style="flex:1;padding:9px 12px;border-radius:10px;border:1.5px solid var(--gray-200);font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text);background:var(--white);outline:none">
@@ -644,18 +625,13 @@ async function viewOrder(id) {
       <button class="btn-po-primary" onclick="updateStatus()">
         <span class="material-symbols-rounded">save</span> Update
       </button>
-    </div>
+    </div>`}
 
-    <!-- ── Order items ── -->
     ${orderItems.length ? `
     <div class="po-section-label">Order Items (${orderItems.length})</div>
     <div style="border:1px solid var(--gray-100);border-radius:10px;overflow:hidden">
       ${orderItems.map((item, idx) => {
-        const itemTotal = fmtCur(
-          (item.quantity && item.unitPrice)
-            ? item.quantity * parseFloat(item.unitPrice)
-            : item.subTotal ?? item.price
-        );
+        const subTotal = item.subTotal ?? (item.quantity && item.unitPrice ? item.quantity * parseFloat(item.unitPrice) : null);
         return `
         <div class="po-item-row" id="item-row-${idx}" style="padding:12px 14px">
           <div style="flex:1;min-width:0">
@@ -665,7 +641,7 @@ async function viewOrder(id) {
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-            <span style="font-family:var(--font-display);font-weight:800;font-size:13px">${itemTotal}</span>
+            <span style="font-family:var(--font-display);font-weight:800;font-size:13px">${fmtCur(subTotal)}</span>
             <button class="po-item-dismiss" title="Hide this item" onclick="dismissItem(${idx})">✕</button>
           </div>
         </div>`;
@@ -677,7 +653,6 @@ async function viewOrder(id) {
   `;
 }
 
-// Hide a single order item row (UI-only, no API call)
 function dismissItem(idx) {
   const row = document.getElementById(`item-row-${idx}`);
   if (!row) return;
@@ -698,13 +673,21 @@ function dismissItem(idx) {
 async function updateStatus() {
   const newStatus = document.getElementById('newStatus')?.value;
   if (!newStatus) return;
+
+  const btn = document.querySelector('#modalBody .btn-po-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
   const res = await API.updateOrderStatus(currentOrderId, newStatus);
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-rounded">save</span> Update'; }
+
   if (res.ok) {
     showToast('Order status updated!');
     closeModal();
     loadOrders();
   } else {
-    showToast(res.data?.message || 'Update failed', 'error');
+    const msg = res.data?.message || res.data?.data?.message || 'Update failed';
+    showToast(msg, 'error');
   }
 }
 
@@ -712,14 +695,14 @@ async function updateStatus() {
 // CANCEL ORDER
 // ─────────────────────────────────────────────
 async function cancelOrder() {
-  if (!confirm('Cancel this order?')) return;
+  if (!confirm('Cancel this order? This cannot be undone.')) return;
   const res = await API.cancelOrderByAdmin(currentOrderId);
   if (res.ok) {
     showToast('Order cancelled');
     closeModal();
     loadOrders();
   } else {
-    showToast(res.data?.message || 'Failed', 'error');
+    showToast(res.data?.message || 'Failed to cancel order', 'error');
   }
 }
 
@@ -744,10 +727,7 @@ function fmtDate(str) {
 
 function escHtml(s) {
   return String(s ?? '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function isImageUrl(url) {

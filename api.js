@@ -34,12 +34,8 @@ const API = (() => {
         data = { message: await res.text() };
       }
 
-      // ── Debug logging for non-2xx responses ──────────────────
       if (!res.ok) {
-        console.warn(
-          `[API] ${method} ${path} → ${res.status}`,
-          '\nResponse:', data
-        );
+        console.warn(`[API] ${method} ${path} → ${res.status}`, '\nResponse:', data);
       }
 
       return { ok: res.ok, status: res.status, data };
@@ -82,28 +78,22 @@ const API = (() => {
   //  ORDERS
   //
   //  updateOrderStatus: PATCH /api/v1/orders/admin/{id}/status
-  //  Controller expects: @RequestBody Map<String, String> payload
-  //  with key "status" — e.g. { "status": "SHIPPED" }
+  //  Body: { "status": "CONFIRMED" }
   //
-  //  FIX: explicitly pass Content-Type and stringify body so Spring
-  //  can deserialize the Map<String, String> correctly.
-  //  If the server returns 400 "Cannot update a cancelled order" or
-  //  "Order already delivered" that is a service-layer business rule,
-  //  not a request format issue — surface the message to the UI.
+  //  Valid status values (from backend OrderStatus enum):
+  //    AWAITING_PAYMENT, PAYMENT_FAILED, DEPOSIT_PAID,
+  //    PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED
+  //
+  //  Admin-updatable statuses (via this endpoint):
+  //    PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED
   // ══════════════════════════════════════════════════════════════
   const getAllOrders      = (status) => get(`/api/v1/orders/admin/all${status ? `?status=${status}` : ''}`);
   const getOrderById      = (id)     => get(`/api/v1/orders/admin/${id}`);
 
-  /**
-   * updateOrderStatus(id, status)
-   * PATCH /api/v1/orders/admin/{id}/status
-   * Body: { "status": "SHIPPED" }   ← Map<String,String> on the controller
-   */
   async function updateOrderStatus(id, status) {
     console.log(`[API] updateOrderStatus → orderId=${id}  newStatus=${status}`);
     const res = await patch(`/api/v1/orders/admin/${id}/status`, { status });
     if (!res.ok) {
-      // Surface the exact Spring error message so the UI toast is informative
       const msg = res.data?.message ?? res.data?.data?.message ?? `HTTP ${res.status}`;
       console.warn(`[API] updateOrderStatus failed [${res.status}]: ${msg}`);
     }
@@ -121,71 +111,31 @@ const API = (() => {
 
   // ══════════════════════════════════════════════════════════════
   //  PAYMENTS — ORDER PAYMENTS
-  //  Base: /api/v1/payments/orders
   // ══════════════════════════════════════════════════════════════
-
-  /** getAllOrderPayments() — GET /api/v1/payments/orders/admin/all */
-  const getAllOrderPayments = () => get('/api/v1/payments/orders/admin/all');
-
-  /** getOrderPaymentsByStatus(status) — GET /api/v1/payments/orders/admin?status=PENDING */
-  const getOrderPaymentsByStatus = (status) => get(`/api/v1/payments/orders/admin?status=${status}`);
-
-  /** getOrderPaymentByOrderId(orderId) — GET /api/v1/payments/orders/admin/order/{orderId} */
-  const getOrderPaymentByOrderId = (orderId) => get(`/api/v1/payments/orders/admin/order/${orderId}`);
-
-  /** getOrderPaymentById(paymentId) — GET /api/v1/payments/orders/admin/{paymentId} */
-  const getOrderPaymentById = (paymentId) => get(`/api/v1/payments/orders/admin/${paymentId}`);
-
-  /**
-   * confirmOrderPayment(orderId, adminNote?)
-   * POST /api/v1/payments/orders/admin/{orderId}/confirm?adminNote=...
-   */
-  const confirmOrderPayment = (orderId, adminNote) =>
-    post(`/api/v1/payments/orders/admin/${orderId}/confirm${adminNote ? `?adminNote=${encodeURIComponent(adminNote)}` : ''}`);
-
-  /**
-   * rejectOrderPayment(orderId, adminNote?)
-   * POST /api/v1/payments/orders/admin/{orderId}/reject?adminNote=...
-   */
-  const rejectOrderPayment = (orderId, adminNote) =>
-    post(`/api/v1/payments/orders/admin/${orderId}/reject${adminNote ? `?adminNote=${encodeURIComponent(adminNote)}` : ''}`);
+  const getAllOrderPayments        = ()             => get('/api/v1/payments/orders/admin/all');
+  const getOrderPaymentsByStatus   = (status)       => get(`/api/v1/payments/orders/admin?status=${status}`);
+  const getOrderPaymentByOrderId   = (orderId)      => get(`/api/v1/payments/orders/admin/order/${orderId}`);
+  const getOrderPaymentById        = (paymentId)    => get(`/api/v1/payments/orders/admin/${paymentId}`);
+  const confirmOrderPayment        = (orderId, note) =>
+    post(`/api/v1/payments/orders/admin/${orderId}/confirm${note ? `?adminNote=${encodeURIComponent(note)}` : ''}`);
+  const rejectOrderPayment         = (orderId, note) =>
+    post(`/api/v1/payments/orders/admin/${orderId}/reject${note ? `?adminNote=${encodeURIComponent(note)}` : ''}`);
 
   // ══════════════════════════════════════════════════════════════
   //  PAYMENTS — PRODUCT LISTING PAYMENTS
-  //  Base: /api/v1/payments/product-listing
   // ══════════════════════════════════════════════════════════════
-
-  /** getAllListingPayments(page, size) — GET /api/v1/payments/product-listing/admin/all */
-  const getAllListingPayments = (page = 0, size = 20) =>
+  const getAllListingPayments       = (page = 0, size = 20) =>
     get(`/api/v1/payments/product-listing/admin/all?page=${page}&size=${size}`);
-
-  /** getListingPaymentsByStatus(status, page, size) — GET /api/v1/payments/product-listing/admin?status=PENDING */
-  const getListingPaymentsByStatus = (status, page = 0, size = 20) =>
+  const getListingPaymentsByStatus  = (status, page = 0, size = 20) =>
     get(`/api/v1/payments/product-listing/admin?status=${status}&page=${page}&size=${size}`);
-
-  /** getListingPaymentById(productRequestId) — GET /api/v1/payments/product-listing/admin/{id} */
-  const getListingPaymentById = (productRequestId) =>
-    get(`/api/v1/payments/product-listing/admin/${productRequestId}`);
-
-  /** getListingPaymentCounts() — GET /api/v1/payments/product-listing/admin/counts */
-  const getListingPaymentCounts = () => get('/api/v1/payments/product-listing/admin/counts');
-
-  /**
-   * confirmListingPayment(productRequestId)
-   * POST /api/v1/payments/product-listing/admin/{productRequestId}/confirm
-   */
-  const confirmListingPayment = (productRequestId) =>
-    post(`/api/v1/payments/product-listing/admin/${productRequestId}/confirm`);
-
-  /**
-   * rejectListingPayment(productRequestId, reason?)
-   * POST /api/v1/payments/product-listing/admin/{productRequestId}/reject?reason=...
-   */
-  const rejectListingPayment = (productRequestId, reason) =>
-    post(`/api/v1/payments/product-listing/admin/${productRequestId}/reject${reason ? `?reason=${encodeURIComponent(reason)}` : ''}`);
+  const getListingPaymentById       = (id)  => get(`/api/v1/payments/product-listing/admin/${id}`);
+  const getListingPaymentCounts     = ()    => get('/api/v1/payments/product-listing/admin/counts');
+  const confirmListingPayment       = (id)  => post(`/api/v1/payments/product-listing/admin/${id}/confirm`);
+  const rejectListingPayment        = (id, reason) =>
+    post(`/api/v1/payments/product-listing/admin/${id}/reject${reason ? `?reason=${encodeURIComponent(reason)}` : ''}`);
 
   // ══════════════════════════════════════════════════════════════
-  //  CATEGORIES (Seller) — multipart/form-data
+  //  CATEGORIES (Seller)
   // ══════════════════════════════════════════════════════════════
   const createCategory      = (formData)             => request('POST', '/api/v1/seller/categories', formData, true);
   const updateCategory      = (categoryId, formData) => request('PUT', `/api/v1/seller/categories/${categoryId}`, formData, true);
@@ -220,13 +170,13 @@ const API = (() => {
   // ══════════════════════════════════════════════════════════════
   //  USER-SUBMITTED PRODUCTS (Approval Workflow)
   // ══════════════════════════════════════════════════════════════
-  const getAllProductRequests      = ()                          => get('/api/v1/user-products/seller/all');
+  const getAllProductRequests      = ()                             => get('/api/v1/user-products/seller/all');
   const getProductRequestsByStatus = (status, page = 0, size = 10) =>
     get(`/api/v1/user-products/seller/by-status?status=${status}&page=${page}&size=${size}`);
-  const getRecentProductRequests   = (page = 0, size = 10)      =>
+  const getRecentProductRequests   = (page = 0, size = 10)          =>
     get(`/api/v1/user-products/seller/recent?page=${page}&size=${size}`);
-  const getProductRequestById      = (id)                       => get(`/api/v1/user-products/seller/requests/${id}`);
-  const updateProductApproval      = (id, status)               =>
+  const getProductRequestById      = (id)                          => get(`/api/v1/user-products/seller/requests/${id}`);
+  const updateProductApproval      = (id, status)                  =>
     patch(`/api/v1/user-products/seller/requests/${id}/status`, { status });
 
   // ══════════════════════════════════════════════════════════════
@@ -251,35 +201,41 @@ const API = (() => {
 
   // ══════════════════════════════════════════════════════════════
   //  NOTIFICATIONS — SELLER / ADMIN
-  //  Base: /api/v1/notifications/seller
   // ══════════════════════════════════════════════════════════════
-
-  /** getNotifications(unreadOnly?) — GET /api/v1/notifications/seller?unreadOnly=false */
-  const getNotifications = (unreadOnly = false) =>
+  const getNotifications       = (unreadOnly = false) =>
     get(`/api/v1/notifications/seller?unreadOnly=${unreadOnly}`);
-
-  /** getUnreadCount() — GET /api/v1/notifications/seller/unread-count */
-  const getUnreadCount = () => get('/api/v1/notifications/seller/unread-count');
-
-  /** markNotifRead(notificationId) — PATCH /api/v1/notifications/seller/{id}/read */
-  const markNotifRead = (id) => patch(`/api/v1/notifications/seller/${id}/read`);
-
-  /** markAllNotifsRead() — PATCH /api/v1/notifications/seller/read-all */
-  const markAllNotifsRead = () => patch('/api/v1/notifications/seller/read-all');
-
-  /** registerSellerFcmToken(fcmToken) — POST /api/v1/notifications/seller/fcm-token */
+  const getUnreadCount         = ()   => get('/api/v1/notifications/seller/unread-count');
+  const markNotifRead          = (id) => patch(`/api/v1/notifications/seller/${id}/read`);
+  const markAllNotifsRead      = ()   => patch('/api/v1/notifications/seller/read-all');
   const registerSellerFcmToken = (fcmToken) =>
     post('/api/v1/notifications/seller/fcm-token', { fcmToken });
 
   // ══════════════════════════════════════════════════════════════
   //  CHAT / CONVERSATIONS
+  //
+  //  Seller endpoints (authenticated as AdminPrincipal):
+  //    GET  /api/v1/chat/seller/conversations
+  //    GET  /api/v1/chat/seller/inbox
+  //    GET  /api/v1/chat/seller/unread-count
+  //    GET  /api/v1/chat/conversations/{id}/history
+  //    POST /api/v1/chat/conversations/{id}/messages/seller  ← sellerSendMessage
   // ══════════════════════════════════════════════════════════════
   const getSellerConversations = (unreadOnly = false) =>
     get(`/api/v1/chat/seller/conversations?unreadOnly=${unreadOnly}`);
-  const getSellerInbox       = () => get('/api/v1/chat/seller/inbox');
-  const getSellerUnreadCount = () => get('/api/v1/chat/seller/unread-count');
-  const getChatHistory       = (conversationId) =>
-    get(`/api/v1/chat/conversations/${conversationId}/history`);
+
+  const getSellerInbox       = ()   => get('/api/v1/chat/seller/inbox');
+  const getSellerUnreadCount = ()   => get('/api/v1/chat/seller/unread-count');
+  const getChatHistory       = (id) => get(`/api/v1/chat/conversations/${id}/history`);
+
+  /**
+   * sellerSendMessage(conversationId, content, productImageId?)
+   * POST /api/v1/chat/conversations/{conversationId}/messages/seller
+   * Body: { content, productImageId? }
+   */
+  const sellerSendMessage = (conversationId, content, productImageId = null) =>
+    post(`/api/v1/chat/conversations/${conversationId}/messages/seller`,
+      productImageId ? { content, productImageId } : { content }
+    );
 
   // ── Public API ────────────────────────────────────────────────
   return {
@@ -318,6 +274,7 @@ const API = (() => {
     getNotifications, getUnreadCount, markNotifRead, markAllNotifsRead, registerSellerFcmToken,
     // chat
     getSellerConversations, getSellerInbox, getSellerUnreadCount, getChatHistory,
+    sellerSendMessage,
   };
 })();
 
