@@ -48,7 +48,6 @@
       background: rgba(255,255,255,.04); pointer-events: none;
     }
 
-    /* ── FIXED: Avatar styles ── */
     .pr-avatar {
       width: 88px; height: 88px; border-radius: 50%;
       background: rgba(255,255,255,.18);
@@ -57,24 +56,14 @@
       color: #fff; flex-shrink: 0;
       border: 3px solid rgba(255,255,255,.35);
       overflow: hidden; position: relative; z-index: 1;
-      /* Ensure text initial is centered when no image */
       line-height: 1;
     }
-    /* Image fills avatar completely — no leftover initial text beside it */
     .pr-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      display: block;
-      position: absolute;
-      top: 0; left: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 50%; display: block;
+      position: absolute; top: 0; left: 0;
     }
-    /* Fallback initial sits behind the image */
-    .pr-avatar .pr-avatar-initial {
-      position: relative;
-      z-index: 0;
-    }
+    .pr-avatar .pr-avatar-initial { position: relative; z-index: 0; }
 
     .pr-hero-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
     .pr-hero-name {
@@ -129,7 +118,7 @@
     .pr-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
 
     /* ── Cards ── */
-    .pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
     .pr-card {
       background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
       box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
@@ -162,9 +151,8 @@
       text-align: right; font-family: var(--font-display); word-break: break-word;
     }
     .pr-detail-val.muted { color: var(--text-muted); font-weight: 500; font-style: italic; }
-    .pr-detail-val.mono { font-family: var(--font-mono); font-weight: 500; }
+    .pr-detail-val.mono  { font-family: var(--font-mono); font-weight: 500; }
 
-    /* Verified badge */
     .pr-verified {
       display: inline-flex; align-items: center; gap: 4px;
       background: #D1FAE5; color: #065F46; border-radius: 99px;
@@ -178,28 +166,13 @@
     }
     .pr-unverified .material-symbols-rounded { font-size: 13px; }
 
-    /* ── Stat item inside card ── */
-    .pr-store-stat {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 13px 16px; border-radius: 12px; margin-bottom: 10px;
-    }
-    .pr-store-stat:last-child { margin-bottom: 0; }
-    .pr-store-stat-left { display: flex; align-items: center; gap: 10px; }
-    .pr-store-stat-left .material-symbols-rounded { font-size: 18px; }
-    .pr-store-stat-label { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text); }
-    .pr-store-stat-num {
-      font-family: var(--font-display); font-size: 20px; font-weight: 800;
-      color: var(--text); letter-spacing: -.5px;
-    }
-
-    /* Description block */
     .pr-description {
       background: var(--gray-50); border-radius: 10px; padding: 14px 16px;
       font-size: 13px; color: var(--text); line-height: 1.65; font-weight: 500;
       border: 1px solid var(--gray-100); margin-bottom: 0;
     }
 
-    /* Refresh / Edit buttons */
+    /* ── Buttons ── */
     .pr-refresh-btn {
       display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
       border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
@@ -214,38 +187,184 @@
       display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
       border-radius: 9px; background: var(--pr-accent); color: #fff;
       font-size: 12px; font-weight: 700; cursor: pointer; border: none;
-      font-family: var(--font-display); transition: all .14s; text-decoration: none;
+      font-family: var(--font-display); transition: all .14s;
     }
     .pr-edit-btn:hover { background: var(--pr-accent-dark); box-shadow: 0 4px 14px var(--pr-accent-glow); }
     .pr-edit-btn .material-symbols-rounded { font-size: 16px; }
 
-    /* Skeleton */
+    /* ── Skeleton ── */
     .pr-skel {
       border-radius: 6px;
       background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
       background-size: 200% 100%; animation: shimmer 1.4s infinite;
     }
-    .pr-skel.line { height: 14px; width: 100%; margin-bottom: 6px; }
+    .pr-skel.line  { height: 14px; width: 100%; margin-bottom: 6px; }
     .pr-skel.short { height: 12px; width: 60%; }
     .pr-skel.avatar { width: 88px; height: 88px; border-radius: 50%; flex-shrink: 0; }
-    .pr-skel.stat { height: 28px; width: 80px; }
-    .pr-skel.tag { height: 28px; width: 100px; border-radius: 99px; }
+    .pr-skel.stat  { height: 28px; width: 80px; }
+    .pr-skel.tag   { height: 28px; width: 100px; border-radius: 99px; }
 
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin    { to { transform: rotate(360deg); } }
 
-    /* ── Full-width description row ── */
     .pr-detail-row.full { flex-direction: column; align-items: flex-start; gap: 8px; }
     .pr-detail-row.full .pr-detail-val { text-align: left; }
+
+    /* ══════════════════════════════════════════
+       EDIT PROFILE SECTION
+    ══════════════════════════════════════════ */
+    .pe-section {
+      background: var(--white); border-radius: 16px; border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden;
+      display: none; /* hidden by default */
+    }
+    .pe-section.open { display: block; }
+
+    .pe-section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
+      background: linear-gradient(135deg, var(--pr-accent-light) 0%, #fff 60%);
+    }
+    .pe-section-title {
+      font-family: var(--font-display); font-size: 16px; font-weight: 800;
+      color: var(--text); display: flex; align-items: center; gap: 8px;
+    }
+    .pe-section-title .material-symbols-rounded { font-size: 20px; color: var(--pr-accent); }
+    .pe-section-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-weight: 400; }
+
+    .pe-close-btn {
+      width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--gray-200);
+      background: var(--white); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-muted); transition: all .14s; flex-shrink: 0;
+    }
+    .pe-close-btn:hover { border-color: #EF4444; color: #EF4444; background: #FEF2F2; }
+    .pe-close-btn .material-symbols-rounded { font-size: 18px; }
+
+    .pe-form { padding: 24px; }
+    .pe-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Field group */
+    .pe-field { display: flex; flex-direction: column; gap: 6px; }
+    .pe-field.full-width { grid-column: 1 / -1; }
+
+    .pe-label {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .7px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .pe-label .material-symbols-rounded { font-size: 13px; color: var(--pr-accent); }
+
+    .pe-input, .pe-textarea {
+      width: 100%; padding: 10px 14px; border-radius: 10px;
+      border: 1.5px solid var(--gray-200); background: var(--white);
+      font-family: var(--font-display); font-size: 13px; font-weight: 600;
+      color: var(--text); outline: none; transition: border-color .15s, box-shadow .15s;
+      box-sizing: border-box;
+    }
+    .pe-input:focus, .pe-textarea:focus {
+      border-color: var(--pr-accent);
+      box-shadow: 0 0 0 3px var(--pr-accent-glow);
+    }
+    .pe-input.error { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,.12); }
+    .pe-textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+
+    /* Profile picture upload */
+    .pe-pic-upload {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; gap: 20px;
+      padding: 16px; border-radius: 12px; border: 1.5px dashed var(--gray-200);
+      background: var(--gray-50); cursor: pointer; transition: all .15s;
+    }
+    .pe-pic-upload:hover { border-color: var(--pr-accent); background: var(--pr-accent-light); }
+    .pe-pic-preview {
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--pr-accent-mid); flex-shrink: 0;
+      background: var(--pr-accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 22px; font-weight: 800;
+      color: var(--pr-accent); overflow: hidden; position: relative;
+    }
+    .pe-pic-preview img {
+      width: 100%; height: 100%; object-fit: cover;
+      position: absolute; top: 0; left: 0; border-radius: 50%;
+    }
+    .pe-pic-info { flex: 1; }
+    .pe-pic-label {
+      font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text);
+    }
+    .pe-pic-hint { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .pe-pic-btn {
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px;
+      border-radius: 8px; background: var(--pr-accent-light); border: 1.5px solid var(--pr-accent-mid);
+      color: var(--pr-accent); font-size: 11px; font-weight: 700; cursor: pointer;
+      font-family: var(--font-display); transition: all .14s; white-space: nowrap;
+    }
+    .pe-pic-btn:hover { background: var(--pr-accent); color: #fff; }
+    .pe-pic-btn .material-symbols-rounded { font-size: 14px; }
+    #picFileInput { display: none; }
+
+    /* Divider */
+    .pe-divider {
+      grid-column: 1 / -1; height: 1px; background: var(--gray-100); margin: 4px 0;
+    }
+    .pe-section-label {
+      grid-column: 1 / -1;
+      font-family: var(--font-display); font-size: 12px; font-weight: 800;
+      color: var(--pr-accent); text-transform: uppercase; letter-spacing: .8px;
+      display: flex; align-items: center; gap: 8px; margin-top: 4px;
+    }
+    .pe-section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--pr-accent-mid);
+    }
+
+    /* Form footer */
+    .pe-form-footer {
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+      padding: 16px 24px; border-top: 1px solid var(--gray-100);
+      background: var(--gray-50);
+    }
+    .pe-cancel-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px;
+      border-radius: 9px; background: var(--white); border: 1.5px solid var(--gray-200);
+      color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer;
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .pe-cancel-btn:hover { border-color: var(--gray-400); color: var(--text); }
+    .pe-cancel-btn .material-symbols-rounded { font-size: 16px; }
+
+    .pe-save-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px;
+      border-radius: 9px; background: var(--pr-accent); color: #fff;
+      font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+      font-family: var(--font-display); transition: all .14s;
+    }
+    .pe-save-btn:hover:not(:disabled) { background: var(--pr-accent-dark); box-shadow: 0 4px 14px var(--pr-accent-glow); }
+    .pe-save-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .pe-save-btn .material-symbols-rounded { font-size: 16px; }
+    .pe-save-btn.saving .material-symbols-rounded { animation: spin .8s linear infinite; }
+
+    /* Note */
+    .pe-note {
+      grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 8px;
+      padding: 12px 14px; border-radius: 10px; background: var(--pr-accent-light);
+      border: 1px solid var(--pr-accent-mid); font-size: 12px; color: var(--pr-accent-dark);
+      font-weight: 500; line-height: 1.5;
+    }
+    .pe-note .material-symbols-rounded { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
     @media (max-width: 900px) {
       .pr-grid { grid-template-columns: 1fr; }
       .pr-stats { grid-template-columns: 1fr 1fr 1fr; }
+      .pe-form-grid { grid-template-columns: 1fr; }
+      .pe-pic-upload { flex-wrap: wrap; }
+      .pe-field.full-width { grid-column: 1; }
     }
     @media (max-width: 600px) {
       .pr-stats { grid-template-columns: 1fr; }
       .pr-hero { padding: 24px 20px; }
       .pr-header-left .pr-title { font-size: 20px; }
+      .pe-form-grid { grid-template-columns: 1fr; }
+      .pe-field.full-width { grid-column: 1; }
     }
   </style>
 </head>
@@ -256,6 +375,27 @@
 <script>
 requireAuth();
 
+/* ─────────────────────────────────────────────
+   State  (declared first — used in content string below)
+───────────────────────────────────────────── */
+let _currentProfile = null;
+let _newPicFile     = null;
+
+/* ─────────────────────────────────────────────
+   Skeleton helper  (defined before content string uses it)
+───────────────────────────────────────────── */
+function skelDetailRows(n) {
+  return Array(n).fill(0).map(() => `
+    <div class="pr-detail-row">
+      <div class="pr-skel line" style="width:90px;height:11px"></div>
+      <div class="pr-skel line" style="width:140px;height:13px"></div>
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────────
+   Page Content
+───────────────────────────────────────────── */
 const content = `
 <div class="pr-header">
   <div class="pr-header-left">
@@ -267,10 +407,10 @@ const content = `
       <span class="material-symbols-rounded">refresh</span>
       Refresh
     </button>
-    <a href="profile-edit.html" class="pr-edit-btn">
-      <span class="material-symbols-rounded">edit</span>
-      Edit Profile
-    </a>
+    <button class="pr-edit-btn" onclick="toggleEditSection()">
+      <span class="material-symbols-rounded" id="editBtnIcon">edit</span>
+      <span id="editBtnLabel">Edit Profile</span>
+    </button>
   </div>
 </div>
 
@@ -336,20 +476,133 @@ const content = `
     </div>
   </div>
 </div>
+
+<!-- ══ EDIT PROFILE SECTION ══ -->
+<div class="pe-section" id="editSection">
+  <div class="pe-section-header">
+    <div>
+      <div class="pe-section-title">
+        <span class="material-symbols-rounded">manage_accounts</span>
+        Edit Profile
+      </div>
+      <div class="pe-section-subtitle">Update your personal and store information</div>
+    </div>
+    <button class="pe-close-btn" onclick="toggleEditSection()" title="Close">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+  </div>
+
+  <div class="pe-form">
+    <div class="pe-form-grid">
+
+      <!-- Profile picture -->
+      <div class="pe-pic-upload" onclick="document.getElementById('picFileInput').click()">
+        <div class="pe-pic-preview" id="picPreview">
+          <span id="picInitial">?</span>
+        </div>
+        <div class="pe-pic-info">
+          <div class="pe-pic-label">Profile Picture</div>
+          <div class="pe-pic-hint">Click to upload a new photo · JPG, PNG or WEBP · Max 5MB</div>
+        </div>
+        <button class="pe-pic-btn" type="button"
+          onclick="event.stopPropagation();document.getElementById('picFileInput').click()">
+          <span class="material-symbols-rounded">upload</span>
+          Choose Photo
+        </button>
+        <input type="file" id="picFileInput" accept="image/*" onchange="handlePicChange(event)"/>
+      </div>
+
+      <!-- ── Personal Info ── -->
+      <div class="pe-section-label">Personal Information</div>
+
+      <div class="pe-field">
+        <label class="pe-label" for="ef_fullName">
+          <span class="material-symbols-rounded">person</span> Full Name
+        </label>
+        <input class="pe-input" id="ef_fullName" type="text"
+               placeholder="Your full name" autocomplete="name"/>
+      </div>
+
+      <div class="pe-field">
+        <label class="pe-label" for="ef_phone">
+          <span class="material-symbols-rounded">phone</span> Phone Number
+        </label>
+        <input class="pe-input" id="ef_phone" type="tel"
+               placeholder="e.g. 0244000000" autocomplete="tel"/>
+      </div>
+
+      <div class="pe-field full-width">
+        <label class="pe-label" for="ef_location">
+          <span class="material-symbols-rounded">location_on</span> Location
+        </label>
+        <input class="pe-input" id="ef_location" type="text"
+               placeholder="City, Region" autocomplete="address-level2"/>
+      </div>
+
+      <div class="pe-field full-width">
+        <label class="pe-label" for="ef_businessAddress">
+          <span class="material-symbols-rounded">home_work</span> Business Address
+        </label>
+        <input class="pe-input" id="ef_businessAddress" type="text"
+               placeholder="Full business address" autocomplete="street-address"/>
+      </div>
+
+      <div class="pe-divider"></div>
+
+      <!-- ── Store Info ── -->
+      <div class="pe-section-label">Store Information</div>
+
+      <div class="pe-field full-width">
+        <label class="pe-label" for="ef_storeName">
+          <span class="material-symbols-rounded">storefront</span> Store Name
+        </label>
+        <input class="pe-input" id="ef_storeName" type="text"
+               placeholder="Your store name"/>
+      </div>
+
+      <div class="pe-field full-width">
+        <label class="pe-label" for="ef_storeDescription">
+          <span class="material-symbols-rounded">description</span> Store Description
+        </label>
+        <textarea class="pe-textarea" id="ef_storeDescription"
+                  placeholder="Describe your store…"></textarea>
+      </div>
+
+      <div class="pe-field full-width">
+        <label class="pe-label" for="ef_sellerBio">
+          <span class="material-symbols-rounded">person_outline</span> Seller Bio
+        </label>
+        <textarea class="pe-textarea" id="ef_sellerBio"
+                  placeholder="Tell buyers a bit about yourself…"></textarea>
+      </div>
+
+      <div class="pe-note">
+        <span class="material-symbols-rounded">info</span>
+        Your email address and Tax ID cannot be changed here. To update these, please contact support.
+      </div>
+
+    </div><!-- /.pe-form-grid -->
+  </div><!-- /.pe-form -->
+
+  <div class="pe-form-footer">
+    <button class="pe-cancel-btn" onclick="toggleEditSection()">
+      <span class="material-symbols-rounded">close</span>
+      Cancel
+    </button>
+    <button class="pe-save-btn" id="saveBtn" onclick="saveProfile()">
+      <span class="material-symbols-rounded">save</span>
+      Save Changes
+    </button>
+  </div>
+</div><!-- /.pe-section -->
 `;
 
 renderLayout('My Profile', 'profile.html', content);
 refreshAll();
 
-function skelDetailRows(n) {
-  return Array(n).fill(0).map(() => `
-    <div class="pr-detail-row">
-      <div class="pr-skel line" style="width:90px;height:11px"></div>
-      <div class="pr-skel line" style="width:140px;height:13px"></div>
-    </div>
-  `).join('');
-}
-
+/* ─────────────────────────────────────────────
+   Refresh
+───────────────────────────────────────────── */
 async function refreshAll() {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
@@ -357,45 +610,40 @@ async function refreshAll() {
   if (btn) btn.classList.remove('loading');
 }
 
-// ── Load Profile ──────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   Load Profile
+───────────────────────────────────────────── */
 async function loadProfile() {
   const res = await API.sellerMe();
   if (!res.ok) { showToast('Failed to load profile', 'error'); return; }
 
   const s = res.data?.data || res.data;
   if (!s) return;
+  _currentProfile = s;
 
-  // Resolve display fields — cover all response shape variants
-  const name        = s.storeName || s.businessName || s.fullName || s.name || 'Seller';
-  const email       = s.email || '—';
-  const phone       = s.phoneNumber || s.phone || '';
-  const location    = s.location || s.address || '';
-  const businessAddr= s.businessAddress || s.address || '';
-  const storeName   = s.storeName || '';
-  const fullName    = s.fullName || s.name || '';
-  const taxId       = s.taxId || '';
-  const isVerified  = s.isVerified ?? s.verified ?? false;
-  const role        = s.role || '';
-  const createdAt   = s.createdAt || '';
-  const updatedAt   = s.updatedAt || '';
-  const storeDesc   = s.storeDescription || s.description || '';
-  const sellerBio   = s.sellerBio || s.bio || '';
-  const picUrl      = s.profilePic?.imageUrl || s.profilePicUrl || s.profilePic || s.avatarUrl || '';
-  const initial     = name.charAt(0).toUpperCase();
+  const name         = s.storeName || s.businessName || s.fullName || s.name || 'Seller';
+  const email        = s.email || '—';
+  const phone        = s.phoneNumber || s.phone || '';
+  const location     = s.location || '';
+  const businessAddr = s.businessAddress || '';
+  const storeName    = s.storeName || '';
+  const fullName     = s.fullName || s.name || '';
+  const taxId        = s.taxId || '';
+  const isVerified   = s.isVerified ?? s.verified ?? false;
+  const role         = s.role || '';
+  const createdAt    = s.createdAt || '';
+  const updatedAt    = s.updatedAt || '';
+  const storeDesc    = s.storeDescription || s.description || '';
+  const sellerBio    = s.sellerBio || s.bio || '';
+  const picUrl       = s.profilePic?.imageUrl || s.profilePicUrl || s.profilePic || s.avatarUrl || '';
+  const initial      = name.charAt(0).toUpperCase();
 
-  // ── FIXED: Avatar HTML — image sits absolutely inside the avatar circle,
-  //    fallback initial is always in the DOM but visually behind the image.
-  //    onerror hides the broken image so the initial shows through.
   const avatarHtml = `
     <span class="pr-avatar-initial">${initial}</span>
-    ${picUrl ? `<img
-        src="${picUrl}"
-        alt="${initial}"
-        onerror="this.style.display='none'"
-    />` : ''}
+    ${picUrl ? `<img src="${picUrl}" alt="${esc(initial)}" onerror="this.style.display='none'"/>` : ''}
   `;
 
-  // ── Hero ──
+  /* ── Hero ── */
   document.getElementById('profileHero').innerHTML = `
     <div class="pr-hero" style="margin-bottom:24px">
       <div class="pr-avatar">${avatarHtml}</div>
@@ -403,8 +651,8 @@ async function loadProfile() {
         <div class="pr-hero-name">${esc(name)}</div>
         <div class="pr-hero-email">${esc(email)}</div>
         <div class="pr-hero-tags">
-          ${phone    ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">phone</span>${esc(phone)}</div>` : ''}
-          ${location ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">location_on</span>${esc(location)}</div>` : ''}
+          ${phone     ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">phone</span>${esc(phone)}</div>` : ''}
+          ${location  ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">location_on</span>${esc(location)}</div>` : ''}
           ${createdAt ? `<div class="pr-hero-tag"><span class="material-symbols-rounded">calendar_today</span>Since ${new Date(createdAt).getFullYear()}</div>` : ''}
         </div>
       </div>
@@ -417,38 +665,51 @@ async function loadProfile() {
     </div>
   `;
 
-  // ── Account Info Card ──
+  /* ── Account Info Card ── */
   document.getElementById('accountInfo').innerHTML = `
-    ${detailRow('person', 'Full Name', esc(fullName) || '—')}
-    ${detailRow('alternate_email', 'Email', `<span class="pr-detail-val mono">${esc(email)}</span>`, true)}
-    ${detailRow('phone', 'Phone', esc(phone) || '—')}
-    ${detailRow('location_on', 'Location', esc(location) || '—')}
-    ${detailRow('home_work', 'Business Address', esc(businessAddr) || '—')}
-    ${detailRow('receipt', 'Tax ID', taxId ? `<span class="pr-detail-val mono">${esc(taxId)}</span>` : '<span class="pr-detail-val muted">Not set</span>', true)}
-    ${detailRow('verified_user', 'Verification', isVerified
-        ? `<span class="pr-verified"><span class="material-symbols-rounded">check_circle</span>Verified</span>`
-        : `<span class="pr-unverified"><span class="material-symbols-rounded">schedule</span>Pending</span>`, true)}
-    ${detailRow('calendar_today', 'Member Since', createdAt ? formatDate(createdAt) : '—')}
+    ${detailRow('person',        'Full Name',        esc(fullName) || '—')}
+    ${detailRow('alternate_email','Email',           `<span class="pr-detail-val mono">${esc(email)}</span>`, true)}
+    ${detailRow('phone',         'Phone',            esc(phone) || '—')}
+    ${detailRow('location_on',   'Location',         esc(location) || '—')}
+    ${detailRow('home_work',     'Business Address', esc(businessAddr) || '—')}
+    ${detailRow('receipt',       'Tax ID',
+        taxId
+          ? `<span class="pr-detail-val mono">${esc(taxId)}</span>`
+          : `<span class="pr-detail-val muted">Not set</span>`,
+        true)}
+    ${detailRow('verified_user', 'Verification',
+        isVerified
+          ? `<span class="pr-verified"><span class="material-symbols-rounded">check_circle</span>Verified</span>`
+          : `<span class="pr-unverified"><span class="material-symbols-rounded">schedule</span>Pending</span>`,
+        true)}
+    ${detailRow('calendar_today','Member Since', createdAt ? formatDate(createdAt) : '—')}
     ${updatedAt ? detailRow('edit_calendar', 'Last Updated', formatDate(updatedAt)) : ''}
   `;
 
-  // ── Store Info Card ──
+  /* ── Store Info Card ── */
   document.getElementById('storeInfo').innerHTML = `
     ${detailRow('storefront', 'Store Name', esc(storeName) || '—')}
-    ${storeDesc ? `
-      <div class="pr-detail-row full">
-        <div class="pr-detail-key"><span class="material-symbols-rounded">description</span>Store Description</div>
-        <div class="pr-description">${esc(storeDesc)}</div>
-      </div>` : detailRow('description', 'Store Description', '<span class="pr-detail-val muted">Not set</span>', true)}
-    ${sellerBio ? `
-      <div class="pr-detail-row full">
-        <div class="pr-detail-key"><span class="material-symbols-rounded">person_outline</span>Seller Bio</div>
-        <div class="pr-description">${esc(sellerBio)}</div>
-      </div>` : detailRow('person_outline', 'Seller Bio', '<span class="pr-detail-val muted">Not set</span>', true)}
+    ${storeDesc
+      ? `<div class="pr-detail-row full">
+           <div class="pr-detail-key"><span class="material-symbols-rounded">description</span>Store Description</div>
+           <div class="pr-description">${esc(storeDesc)}</div>
+         </div>`
+      : detailRow('description', 'Store Description', '<span class="pr-detail-val muted">Not set</span>', true)}
+    ${sellerBio
+      ? `<div class="pr-detail-row full">
+           <div class="pr-detail-key"><span class="material-symbols-rounded">person_outline</span>Seller Bio</div>
+           <div class="pr-description">${esc(sellerBio)}</div>
+         </div>`
+      : detailRow('person_outline', 'Seller Bio', '<span class="pr-detail-val muted">Not set</span>', true)}
   `;
+
+  /* Pre-fill the edit form with the freshly loaded data */
+  prefillEditForm(s);
 }
 
-// ── Load Store Stats ──────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   Load Store Stats
+───────────────────────────────────────────── */
 async function loadStoreStats() {
   const [prods, orders, rev] = await Promise.all([
     API.getMyProducts(),
@@ -456,13 +717,23 @@ async function loadStoreStats() {
     API.getSellerRevenue()
   ]);
 
-  const toArr = r => { const d = r.data?.data || r.data; return Array.isArray(d) ? d : []; };
+  /* ── Products count ── prefer totalElements if paginated ── */
+  const prodsData  = prods.data?.data || prods.data;
+  const prodCount  = prodsData?.totalElements
+    ?? prodsData?.total
+    ?? (Array.isArray(prodsData) ? prodsData.length : null)
+    ?? '—';
 
-  const prodCount  = toArr(prods).length;
-  const orderCount = toArr(orders).length;
+  /* ── Orders count ── */
+  const ordersData  = orders.data?.data || orders.data;
+  const orderCount  = ordersData?.totalElements
+    ?? ordersData?.total
+    ?? (Array.isArray(ordersData) ? ordersData.length : null)
+    ?? '—';
 
-  const revData    = rev.data?.data || rev.data;
-  const revTotal   = revData?.totalRevenue ?? revData?.total ?? revData?.revenue ?? null;
+  /* ── Revenue ── */
+  const revData  = rev.data?.data || rev.data;
+  const revTotal = revData?.totalRevenue ?? revData?.total ?? revData?.revenue ?? null;
 
   const el = id => document.getElementById(id);
   if (el('statProducts')) el('statProducts').textContent = prodCount;
@@ -472,9 +743,210 @@ async function loadStoreStats() {
     : '—';
 }
 
-// ── Helpers ────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   Toggle Edit Section
+───────────────────────────────────────────── */
+function toggleEditSection() {
+  const section = document.getElementById('editSection');
+  const icon    = document.getElementById('editBtnIcon');
+  const label   = document.getElementById('editBtnLabel');
+
+  const isOpen = section.classList.toggle('open');
+  icon.textContent  = isOpen ? 'close'        : 'edit';
+  label.textContent = isOpen ? 'Close Editor' : 'Edit Profile';
+
+  if (isOpen) {
+    /* Smooth scroll to the form */
+    setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Prefill Edit Form
+───────────────────────────────────────────── */
+function prefillEditForm(s) {
+  setVal('ef_fullName',         s.fullName         || s.name        || '');
+  setVal('ef_phone',            s.phoneNumber      || s.phone       || '');
+  setVal('ef_location',         s.location         || '');
+  setVal('ef_businessAddress',  s.businessAddress  || '');
+  setVal('ef_storeName',        s.storeName        || '');
+  setVal('ef_storeDescription', s.storeDescription || s.description || '');
+  setVal('ef_sellerBio',        s.sellerBio        || s.bio         || '');
+
+  /* Remove error highlights from previous save attempt */
+  document.querySelectorAll('.pe-input.error, .pe-textarea.error')
+    .forEach(el => el.classList.remove('error'));
+
+  /* Profile pic preview */
+  const picUrl  = s.profilePic?.imageUrl || s.profilePicUrl || s.profilePic || s.avatarUrl || '';
+  const initial = (s.storeName || s.fullName || s.name || '?').charAt(0).toUpperCase();
+  const preview = document.getElementById('picPreview');
+  const initEl  = document.getElementById('picInitial');
+
+  if (initEl) initEl.textContent = initial;
+  if (preview) {
+    const existingImg = preview.querySelector('img');
+    if (existingImg) existingImg.remove();
+    if (picUrl) {
+      const img = document.createElement('img');
+      img.src   = picUrl;
+      img.alt   = initial;
+      img.onerror = () => img.remove();
+      preview.appendChild(img);
+    }
+  }
+
+  /* Reset staged file */
+  _newPicFile = null;
+  const fileInput = document.getElementById('picFileInput');
+  if (fileInput) fileInput.value = '';
+}
+
+/* ─────────────────────────────────────────────
+   Handle Picture Change (live preview)
+───────────────────────────────────────────── */
+function handlePicChange(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  /* 5 MB guard */
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('Image must be under 5 MB', 'error');
+    event.target.value = '';
+    return;
+  }
+
+  _newPicFile = file;
+
+  const reader   = new FileReader();
+  reader.onload  = e => {
+    const preview = document.getElementById('picPreview');
+    if (!preview) return;
+    let img = preview.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      preview.appendChild(img);
+    }
+    img.src           = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ─────────────────────────────────────────────
+   Client-side Validation
+───────────────────────────────────────────── */
+function validateForm() {
+  let valid = true;
+
+  /* Clear previous error states */
+  document.querySelectorAll('.pe-input.error, .pe-textarea.error')
+    .forEach(el => el.classList.remove('error'));
+
+  const fullName  = getVal('ef_fullName');
+  const storeName = getVal('ef_storeName');
+
+  if (!fullName) {
+    document.getElementById('ef_fullName').classList.add('error');
+    valid = false;
+  }
+  if (!storeName) {
+    document.getElementById('ef_storeName').classList.add('error');
+    valid = false;
+  }
+  if (!valid) {
+    showToast('Please fill in all required fields', 'error');
+    /* Scroll to first error */
+    const firstError = document.querySelector('.pe-input.error, .pe-textarea.error');
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return valid;
+}
+
+/* ─────────────────────────────────────────────
+   Save Profile  —  PUT /api/v1/sellers/me
+   multipart/form-data:
+     "data"       → JSON blob  (@RequestPart("data"))
+     "profilePic" → image file (@RequestPart(value="profilePic", required=false))
+───────────────────────────────────────────── */
+async function saveProfile() {
+  if (!validateForm()) return;
+
+  const btn = document.getElementById('saveBtn');
+  if (!btn) return;
+
+  btn.disabled = true;
+  btn.classList.add('saving');
+  btn.innerHTML = '<span class="material-symbols-rounded">refresh</span> Saving…';
+
+  try {
+    /*
+     * Field name alignment:
+     *   phoneNumber  — matches backend @JsonProperty / field name
+     *   All other keys mirror the backend SellerUpdateRequest DTO.
+     */
+    const payload = {
+      fullName:         getVal('ef_fullName'),
+      phoneNumber:      getVal('ef_phone'),           /* backend field: phoneNumber */
+      location:         getVal('ef_location'),
+      businessAddress:  getVal('ef_businessAddress'),
+      storeName:        getVal('ef_storeName'),
+      storeDescription: getVal('ef_storeDescription'),
+      sellerBio:        getVal('ef_sellerBio'),
+    };
+
+    const formData = new FormData();
+    formData.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+    if (_newPicFile) {
+      formData.append('profilePic', _newPicFile);
+    }
+
+    const res = await API.updateSellerProfile(formData);
+
+    if (res.ok) {
+      showToast('Profile updated successfully!', 'success');
+      _newPicFile = null;
+
+      /* Close the edit section */
+      const section = document.getElementById('editSection');
+      if (section) section.classList.remove('open');
+      const icon  = document.getElementById('editBtnIcon');
+      const label = document.getElementById('editBtnLabel');
+      if (icon)  icon.textContent  = 'edit';
+      if (label) label.textContent = 'Edit Profile';
+
+      /* Reload profile to reflect saved changes */
+      await loadProfile();
+    } else {
+      const msg = res.data?.message
+               || res.data?.data?.message
+               || `Update failed (HTTP ${res.status})`;
+      showToast(msg, 'error');
+    }
+  } catch (err) {
+    showToast('Something went wrong. Please try again.', 'error');
+    console.error('[saveProfile]', err);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('saving');
+    btn.innerHTML = '<span class="material-symbols-rounded">save</span> Save Changes';
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Helpers
+───────────────────────────────────────────── */
+
+/**
+ * detailRow(icon, label, valHtml, rawHtml)
+ *
+ * rawHtml = false (default) → wraps valHtml in <div class="pr-detail-val">
+ * rawHtml = true            → injects valHtml as-is (for badges, mono spans, etc.)
+ */
 function detailRow(icon, label, valHtml, rawHtml = false) {
-  const val = rawHtml ? valHtml : `<div class="pr-detail-val">${valHtml}</div>`;
+  const val = rawHtml
+    ? valHtml
+    : `<div class="pr-detail-val">${valHtml}</div>`;
   return `
     <div class="pr-detail-row">
       <div class="pr-detail-key">
@@ -485,7 +957,10 @@ function detailRow(icon, label, valHtml, rawHtml = false) {
 }
 
 function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 function formatDate(dateStr) {
@@ -495,6 +970,16 @@ function formatDate(dateStr) {
       year: 'numeric', month: 'short', day: 'numeric'
     });
   } catch { return dateStr; }
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
 }
 </script>
 </body>

@@ -70,9 +70,20 @@ const API = (() => {
 
   // ══════════════════════════════════════════════════════════════
   //  SELLER PROFILE
+  //
+  //  updateSellerProfile: PUT /api/v1/sellers/me
+  //  Body: multipart/form-data
+  //    - data        (required) — JSON string with profile fields:
+  //                               { fullName, phone, location,
+  //                                 businessAddress, storeName,
+  //                                 storeDescription, sellerBio }
+  //    - profilePic  (optional) — image file (JPEG / PNG)
+  //
+  //  Email and taxId cannot be changed via this endpoint.
   // ══════════════════════════════════════════════════════════════
-  const sellerMe   = ()   => get('/api/v1/sellers/me');
-  const sellerById = (id) => get(`/api/v1/sellers/${id}`);
+  const sellerMe            = ()         => get('/api/v1/sellers/me');
+  const sellerById          = (id)       => get(`/api/v1/sellers/${id}`);
+  const updateSellerProfile = (formData) => request('PUT', '/api/v1/sellers/me', formData, true);
 
   // ══════════════════════════════════════════════════════════════
   //  ORDERS
@@ -217,7 +228,7 @@ const API = (() => {
   //  Routed through /api/v1/admin/chat/* to avoid UserPrincipal
   //  injection errors that occur on the shared /api/v1/chat/* routes.
   //
-  //  POST  /api/v1/admin/chat/orders/{orderId}/start    — start order chat  ← NEW
+  //  POST  /api/v1/admin/chat/orders/{orderId}/start    — start order chat
   //  GET   /api/v1/admin/chat/conversations             — list
   //  GET   /api/v1/admin/chat/inbox                     — rich inbox
   //  GET   /api/v1/admin/chat/unread-count              — badge count
@@ -277,7 +288,7 @@ const API = (() => {
     // auth
     sellerLogin, logout, getToken, setToken, getSellerId, setSellerId,
     // seller profile
-    sellerMe, sellerById,
+    sellerMe, sellerById, updateSellerProfile,
     // orders
     getAllOrders, getOrderById, updateOrderStatus, cancelOrderByAdmin,
     getOrderSummary, getOrdersToday, getOrdersThisWeek, getOrdersThisMonth,
@@ -308,7 +319,7 @@ const API = (() => {
     // notifications (seller/admin)
     getNotifications, getUnreadCount, markNotifRead, markAllNotifsRead, registerSellerFcmToken,
     // chat (all routed through /api/v1/admin/chat/*)
-    startOrderConversation,                                           // ← NEW
+    startOrderConversation,
     getSellerConversations, getSellerInbox, getSellerUnreadCount,
     getChatHistory, sellerSendMessage, markChatAsRead,
   };
