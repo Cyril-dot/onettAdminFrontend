@@ -33,6 +33,15 @@ const API = (() => {
       } else {
         data = { message: await res.text() };
       }
+
+      // ── Debug logging for non-2xx responses ──────────────────
+      if (!res.ok) {
+        console.warn(
+          `[API] ${method} ${path} → ${res.status}`,
+          '\nResponse:', data
+        );
+      }
+
       return { ok: res.ok, status: res.status, data };
     } catch (err) {
       console.error(`[API] ${method} ${path} failed:`, err);
@@ -71,18 +80,44 @@ const API = (() => {
 
   // ══════════════════════════════════════════════════════════════
   //  ORDERS
+  //
+  //  updateOrderStatus: PATCH /api/v1/orders/admin/{id}/status
+  //  Controller expects: @RequestBody Map<String, String> payload
+  //  with key "status" — e.g. { "status": "SHIPPED" }
+  //
+  //  FIX: explicitly pass Content-Type and stringify body so Spring
+  //  can deserialize the Map<String, String> correctly.
+  //  If the server returns 400 "Cannot update a cancelled order" or
+  //  "Order already delivered" that is a service-layer business rule,
+  //  not a request format issue — surface the message to the UI.
   // ══════════════════════════════════════════════════════════════
-  const getAllOrders       = (status)      => get(`/api/v1/orders/admin/all${status ? `?status=${status}` : ''}`);
-  const getOrderById       = (id)          => get(`/api/v1/orders/admin/${id}`);
-  const updateOrderStatus  = (id, status)  => patch(`/api/v1/orders/admin/${id}/status`, { status });
-  const cancelOrderByAdmin = (id)          => patch(`/api/v1/orders/admin/${id}/cancel`);
-  const getOrderSummary    = ()            => get('/api/v1/orders/admin/summary');
-  const getOrdersToday     = ()            => get('/api/v1/orders/admin/today');
-  const getOrdersThisWeek  = ()            => get('/api/v1/orders/admin/this-week');
-  const getOrdersThisMonth = ()            => get('/api/v1/orders/admin/this-month');
-  const getDailyCounts     = ()            => get('/api/v1/orders/admin/daily-counts');
-  const getSellerOrders    = (status)      => get(`/api/v1/orders/seller/orders${status ? `?status=${status}` : ''}`);
-  const getSellerRevenue   = ()            => get('/api/v1/orders/seller/revenue');
+  const getAllOrders      = (status) => get(`/api/v1/orders/admin/all${status ? `?status=${status}` : ''}`);
+  const getOrderById      = (id)     => get(`/api/v1/orders/admin/${id}`);
+
+  /**
+   * updateOrderStatus(id, status)
+   * PATCH /api/v1/orders/admin/{id}/status
+   * Body: { "status": "SHIPPED" }   ← Map<String,String> on the controller
+   */
+  async function updateOrderStatus(id, status) {
+    console.log(`[API] updateOrderStatus → orderId=${id}  newStatus=${status}`);
+    const res = await patch(`/api/v1/orders/admin/${id}/status`, { status });
+    if (!res.ok) {
+      // Surface the exact Spring error message so the UI toast is informative
+      const msg = res.data?.message ?? res.data?.data?.message ?? `HTTP ${res.status}`;
+      console.warn(`[API] updateOrderStatus failed [${res.status}]: ${msg}`);
+    }
+    return res;
+  }
+
+  const cancelOrderByAdmin = (id) => patch(`/api/v1/orders/admin/${id}/cancel`);
+  const getOrderSummary    = ()   => get('/api/v1/orders/admin/summary');
+  const getOrdersToday     = ()   => get('/api/v1/orders/admin/today');
+  const getOrdersThisWeek  = ()   => get('/api/v1/orders/admin/this-week');
+  const getOrdersThisMonth = ()   => get('/api/v1/orders/admin/this-month');
+  const getDailyCounts     = ()   => get('/api/v1/orders/admin/daily-counts');
+  const getSellerOrders    = (status) => get(`/api/v1/orders/seller/orders${status ? `?status=${status}` : ''}`);
+  const getSellerRevenue   = ()   => get('/api/v1/orders/seller/revenue');
 
   // ══════════════════════════════════════════════════════════════
   //  PAYMENTS — ORDER PAYMENTS
@@ -160,24 +195,24 @@ const API = (() => {
   // ══════════════════════════════════════════════════════════════
   //  PRODUCTS (Seller)
   // ══════════════════════════════════════════════════════════════
-  const addProduct         = (formData)              => request('POST', '/api/v1/seller/products', formData, true);
-  const updateProduct      = (productId, formData)   => request('PUT', `/api/v1/seller/products/${productId}`, formData, true);
-  const replaceAllImages   = (productId, formData)   => request('PUT', `/api/v1/seller/products/${productId}/images/replace`, formData, true);
-  const uploadProductVideo = (productId, formData)   => request('POST', `/api/v1/seller/products/${productId}/video`, formData, true);
-  const deleteProductVideo = (productId)             => del(`/api/v1/seller/products/${productId}/video`);
+  const addProduct         = (formData)            => request('POST', '/api/v1/seller/products', formData, true);
+  const updateProduct      = (productId, formData) => request('PUT', `/api/v1/seller/products/${productId}`, formData, true);
+  const replaceAllImages   = (productId, formData) => request('PUT', `/api/v1/seller/products/${productId}/images/replace`, formData, true);
+  const uploadProductVideo = (productId, formData) => request('POST', `/api/v1/seller/products/${productId}/video`, formData, true);
+  const deleteProductVideo = (productId)           => del(`/api/v1/seller/products/${productId}/video`);
 
-  const getMyProducts         = ()            => get('/api/v1/seller/products');
-  const getProductsByStatus   = (status)      => get(`/api/v1/seller/products/by-status?status=${status}`);
-  const getProductDetails     = (id)          => get(`/api/v1/seller/products/${id}`);
-  const getTrendingProducts   = ()            => get('/api/v1/seller/products/trending');
-  const getDiscountedProducts = ()            => get('/api/v1/seller/products/discounted');
-  const getLowStockProducts   = (threshold=5) => get(`/api/v1/seller/products/low-stock?threshold=${threshold}`);
-  const searchProducts        = (params)      => get(`/api/v1/seller/products/search?${new URLSearchParams(params)}`);
-  const globalSearch          = (kw)          => get(`/api/v1/seller/products/global-search?keyword=${encodeURIComponent(kw)}`);
+  const getMyProducts         = ()              => get('/api/v1/seller/products');
+  const getProductsByStatus   = (status)        => get(`/api/v1/seller/products/by-status?status=${status}`);
+  const getProductDetails     = (id)            => get(`/api/v1/seller/products/${id}`);
+  const getTrendingProducts   = ()              => get('/api/v1/seller/products/trending');
+  const getDiscountedProducts = ()              => get('/api/v1/seller/products/discounted');
+  const getLowStockProducts   = (threshold = 5) => get(`/api/v1/seller/products/low-stock?threshold=${threshold}`);
+  const searchProducts        = (params)        => get(`/api/v1/seller/products/search?${new URLSearchParams(params)}`);
+  const globalSearch          = (kw)            => get(`/api/v1/seller/products/global-search?keyword=${encodeURIComponent(kw)}`);
 
-  const updateStock         = (id, stock)                          => patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
-  const updateProductStatus = (id, status)                         => patch(`/api/v1/seller/products/${id}/status?status=${status}`);
-  const updateStockStatus   = (id, stockStatus, availableInDays)   =>
+  const updateStock         = (id, stock)                        => patch(`/api/v1/seller/products/${id}/stock?stock=${stock}`);
+  const updateProductStatus = (id, status)                       => patch(`/api/v1/seller/products/${id}/status?status=${status}`);
+  const updateStockStatus   = (id, stockStatus, availableInDays) =>
     patch(`/api/v1/seller/products/${id}/stock-status?stockStatus=${stockStatus}${availableInDays != null ? `&availableInDays=${availableInDays}` : ''}`);
 
   const deleteProduct = (id) => del(`/api/v1/seller/products/${id}`);
@@ -185,76 +220,61 @@ const API = (() => {
   // ══════════════════════════════════════════════════════════════
   //  USER-SUBMITTED PRODUCTS (Approval Workflow)
   // ══════════════════════════════════════════════════════════════
-  const getAllProductRequests      = ()                         => get('/api/v1/user-products/seller/all');
-  const getProductRequestsByStatus = (status, page=0, size=10) =>
+  const getAllProductRequests      = ()                          => get('/api/v1/user-products/seller/all');
+  const getProductRequestsByStatus = (status, page = 0, size = 10) =>
     get(`/api/v1/user-products/seller/by-status?status=${status}&page=${page}&size=${size}`);
-  const getRecentProductRequests   = (page=0, size=10)         =>
+  const getRecentProductRequests   = (page = 0, size = 10)      =>
     get(`/api/v1/user-products/seller/recent?page=${page}&size=${size}`);
-  const getProductRequestById      = (id)                      => get(`/api/v1/user-products/seller/requests/${id}`);
-  const updateProductApproval      = (id, status)              =>
+  const getProductRequestById      = (id)                       => get(`/api/v1/user-products/seller/requests/${id}`);
+  const updateProductApproval      = (id, status)               =>
     patch(`/api/v1/user-products/seller/requests/${id}/status`, { status });
 
   // ══════════════════════════════════════════════════════════════
   //  PRE-ORDERS
   // ══════════════════════════════════════════════════════════════
-  const getAllActivePreOrders = ()         => get('/api/pre-orders/seller/all');
-  const getPreOrdersByProduct = (pid)      => get(`/api/pre-orders/seller/product/${pid}`);
-  const getPreOrdersByStatus  = (status)   => get(`/api/pre-orders/seller/status/${status}`);
-  const confirmSecondPayment  = (id, note) =>
+  const getAllActivePreOrders = ()          => get('/api/pre-orders/seller/all');
+  const getPreOrdersByProduct = (pid)       => get(`/api/pre-orders/seller/product/${pid}`);
+  const getPreOrdersByStatus  = (status)    => get(`/api/pre-orders/seller/status/${status}`);
+  const confirmSecondPayment  = (id, note)  =>
     post(`/api/pre-orders/seller/${id}/confirm-payment`, note ? { adminNote: note } : {});
 
   // ══════════════════════════════════════════════════════════════
   //  AI TOOLS
   // ══════════════════════════════════════════════════════════════
-  const analyzeTrends     = ()                                       => get('/api/v1/ai/trends');
-  const generateListing   = (productName, basicDetails)              =>
+  const analyzeTrends     = () => get('/api/v1/ai/trends');
+  const generateListing   = (productName, basicDetails) =>
     post(`/api/v1/ai/seller/generate-listing?productName=${encodeURIComponent(productName)}&basicDetails=${encodeURIComponent(basicDetails)}`);
   const suggestPrice      = (productName, productDetails, condition) =>
     get(`/api/v1/ai/seller/suggest-price?productName=${encodeURIComponent(productName)}&productDetails=${encodeURIComponent(productDetails)}${condition ? `&condition=${condition}` : ''}`);
-  const analyzeInventory  = ()                                       => get('/api/v1/ai/seller/inventory-analysis');
-  const improveVisibility = (productId)                              => get(`/api/v1/ai/seller/improve-visibility/${productId}`);
+  const analyzeInventory  = () => get('/api/v1/ai/seller/inventory-analysis');
+  const improveVisibility = (productId) => get(`/api/v1/ai/seller/improve-visibility/${productId}`);
 
   // ══════════════════════════════════════════════════════════════
   //  NOTIFICATIONS — SELLER / ADMIN
   //  Base: /api/v1/notifications/seller
   // ══════════════════════════════════════════════════════════════
 
-  /**
-   * getNotifications(unreadOnly?)
-   * GET /api/v1/notifications/seller?unreadOnly=false
-   */
+  /** getNotifications(unreadOnly?) — GET /api/v1/notifications/seller?unreadOnly=false */
   const getNotifications = (unreadOnly = false) =>
     get(`/api/v1/notifications/seller?unreadOnly=${unreadOnly}`);
 
-  /**
-   * getUnreadCount()
-   * GET /api/v1/notifications/seller/unread-count
-   */
+  /** getUnreadCount() — GET /api/v1/notifications/seller/unread-count */
   const getUnreadCount = () => get('/api/v1/notifications/seller/unread-count');
 
-  /**
-   * markNotifRead(notificationId)
-   * PATCH /api/v1/notifications/seller/{notificationId}/read
-   */
+  /** markNotifRead(notificationId) — PATCH /api/v1/notifications/seller/{id}/read */
   const markNotifRead = (id) => patch(`/api/v1/notifications/seller/${id}/read`);
 
-  /**
-   * markAllNotifsRead()
-   * PATCH /api/v1/notifications/seller/read-all
-   */
+  /** markAllNotifsRead() — PATCH /api/v1/notifications/seller/read-all */
   const markAllNotifsRead = () => patch('/api/v1/notifications/seller/read-all');
 
-  /**
-   * registerSellerFcmToken(fcmToken)
-   * POST /api/v1/notifications/seller/fcm-token
-   */
+  /** registerSellerFcmToken(fcmToken) — POST /api/v1/notifications/seller/fcm-token */
   const registerSellerFcmToken = (fcmToken) =>
     post('/api/v1/notifications/seller/fcm-token', { fcmToken });
 
   // ══════════════════════════════════════════════════════════════
   //  CHAT / CONVERSATIONS
   // ══════════════════════════════════════════════════════════════
-  const getSellerConversations = (unreadOnly=false) =>
+  const getSellerConversations = (unreadOnly = false) =>
     get(`/api/v1/chat/seller/conversations?unreadOnly=${unreadOnly}`);
   const getSellerInbox       = () => get('/api/v1/chat/seller/inbox');
   const getSellerUnreadCount = () => get('/api/v1/chat/seller/unread-count');
@@ -366,5 +386,5 @@ function statusBadge(status) {
     DRAFT:            'badge-muted',
   };
   const cls = map[status] || 'badge-muted';
-  return `<span class="badge ${cls}">${status?.replace(/_/g,' ') || '—'}</span>`;
+  return `<span class="badge ${cls}">${status?.replace(/_/g, ' ') || '—'}</span>`;
 }
