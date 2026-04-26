@@ -19,11 +19,13 @@
     .nav-link.active { background: rgba(124,58,237,.14); }
     .nav-link.active::before { background: var(--po-accent); }
 
+    /* ── Page Header ── */
     .po-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
     .po-header-left .po-title { font-family:var(--font-display); font-size:26px; font-weight:800; color:var(--text); letter-spacing:-.6px; line-height:1.15; }
     .po-header-left .po-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; font-weight:400; }
     .po-header-right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 
+    /* ── Stats ── */
     .po-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
     .po-stat { background:var(--white); border-radius:14px; border:1px solid var(--gray-100); padding:18px 20px; position:relative; overflow:hidden; transition:transform .16s,box-shadow .16s; }
     .po-stat:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
@@ -41,6 +43,7 @@
     .po-stat-num { font-family:var(--font-display); font-size:28px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
     .po-stat-label { font-size:12px; color:var(--text-muted); font-weight:500; margin-top:4px; }
 
+    /* ── Status Pills ── */
     .status-pills { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:24px; }
     .status-pill { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:99px; border:1.5px solid var(--gray-200); background:var(--white); font-size:12px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:all .16s ease; font-family:var(--font-display); white-space:nowrap; }
     .status-pill:hover { border-color:var(--po-accent); color:var(--po-accent); background:var(--po-accent-light); }
@@ -48,16 +51,19 @@
     .status-pill .pill-count { background:rgba(255,255,255,.25); border-radius:99px; padding:1px 7px; font-size:10px; font-weight:800; }
     .status-pill:not(.active) .pill-count { background:var(--gray-100); color:var(--text-muted); }
 
+    /* ── Card ── */
     .po-card { background:var(--white); border-radius:16px; border:1px solid var(--gray-100); box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; }
     .po-card-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid var(--gray-100); gap:12px; flex-wrap:wrap; }
     .po-card-title { font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
     .po-card-title .material-symbols-rounded { font-size:18px; color:var(--po-accent); }
 
+    /* ── Search ── */
     .po-search-wrap { display:flex; align-items:center; gap:8px; background:var(--gray-50); border:1.5px solid var(--gray-200); border-radius:10px; padding:7px 12px; min-width:220px; }
     .po-search-wrap .material-symbols-rounded { font-size:17px; color:var(--text-muted); }
     .po-search-wrap input { border:none; background:transparent; font-size:13px; color:var(--text); outline:none; font-family:var(--font-display); width:100%; }
     .po-search-wrap:focus-within { border-color:var(--po-accent); background:var(--po-accent-light); }
 
+    /* ── Table ── */
     .po-table-wrap { overflow-x:auto; }
     .po-table { width:100%; border-collapse:collapse; font-size:13px; }
     .po-table thead th { text-align:left; padding:10px 20px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); background:var(--gray-50); border-bottom:1px solid var(--gray-200); white-space:nowrap; }
@@ -69,6 +75,7 @@
     .po-id { font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--po-accent); background:var(--po-accent-light); border-radius:6px; padding:3px 8px; display:inline-block; }
     .po-amount { font-weight:800; font-size:14px; color:var(--text); font-family:var(--font-display); }
 
+    /* ── Status Chips ── */
     .po-status { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; font-family:var(--font-display); white-space:nowrap; }
     .po-status .material-symbols-rounded { font-size:13px; }
     .po-status.AWAITING_PAYMENT { background:#FFFBEB; color:#D97706; }
@@ -81,6 +88,7 @@
     .po-status.CANCELLED        { background:#FEE2E2; color:#B91C1C; }
     .po-status.UNKNOWN          { background:var(--gray-100); color:var(--text-muted); }
 
+    /* ── Buttons ── */
     .po-action-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all .14s; font-family:var(--font-display); white-space:nowrap; }
     .po-action-btn .material-symbols-rounded { font-size:15px; }
     .po-action-btn.view { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
@@ -95,39 +103,57 @@
     .btn-po-primary { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:var(--po-accent); color:#fff; font-size:13px; font-weight:700; font-family:var(--font-display); border:none; cursor:pointer; transition:all .15s; }
     .btn-po-primary:hover { background:var(--po-accent-dark); box-shadow:0 4px 16px var(--po-accent-glow); }
     .btn-po-primary .material-symbols-rounded { font-size:17px; }
+
     .btn-po-ghost { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:var(--gray-100); color:var(--gray-700); font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid var(--gray-200); cursor:pointer; transition:all .15s; }
     .btn-po-ghost:hover { background:var(--gray-200); }
     .btn-po-ghost .material-symbols-rounded { font-size:17px; }
+
     .btn-po-danger { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:#FEE2E2; color:#B91C1C; font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid #FECACA; cursor:pointer; transition:all .15s; }
     .btn-po-danger:hover { background:#FECACA; }
     .btn-po-danger .material-symbols-rounded { font-size:17px; }
 
-    /* ── Message Customer button ── */
     .btn-po-chat { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:#EFF6FF; color:#1D4ED8; font-size:13px; font-weight:700; font-family:var(--font-display); border:1px solid #BFDBFE; cursor:pointer; transition:all .15s; }
     .btn-po-chat:hover { background:#DBEAFE; box-shadow:0 4px 14px rgba(29,78,216,.15); }
     .btn-po-chat:disabled { opacity:.6; cursor:not-allowed; }
     .btn-po-chat .material-symbols-rounded { font-size:17px; }
     .btn-po-chat.loading .material-symbols-rounded { animation:spin .7s linear infinite; }
 
+    /* ── Export Dropdown ── */
+    .export-wrap { position:relative; }
+    .btn-export { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:10px; background:#0F172A; color:#fff; font-size:13px; font-weight:700; font-family:var(--font-display); border:none; cursor:pointer; transition:background .15s; }
+    .btn-export:hover { background:#1E293B; }
+    .btn-export .material-symbols-rounded { font-size:17px; }
+    .export-dropdown { position:absolute; top:calc(100% + 6px); right:0; background:var(--white); border:1px solid var(--gray-200); border-radius:12px; padding:6px; box-shadow:0 8px 32px rgba(0,0,0,.14); z-index:200; min-width:200px; display:none; }
+    .export-dropdown.open { display:block; animation:fadeDown .15s ease; }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .export-dropdown-item { display:flex; align-items:center; gap:9px; width:100%; padding:9px 12px; border:none; background:transparent; border-radius:8px; font-family:var(--font-display); font-size:13px; font-weight:600; color:var(--text); cursor:pointer; transition:background .12s; text-align:left; }
+    .export-dropdown-item:hover { background:var(--gray-50); }
+    .export-dropdown-item .material-symbols-rounded { font-size:16px; color:var(--text-muted); }
+    .export-dropdown-divider { height:1px; background:var(--gray-100); margin:4px 0; }
+
+    /* ── Modal Detail Rows ── */
     .po-detail-row { display:flex; align-items:flex-start; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:12px; }
     .po-detail-row:last-child { border-bottom:none; }
-    .po-detail-key { font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; }
-    .po-detail-val { font-size:13px; font-weight:700; color:var(--text); text-align:right; font-family:var(--font-display); }
+    .po-detail-key { font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; flex-shrink:0; }
+    .po-detail-val { font-size:13px; font-weight:700; color:var(--text); text-align:right; font-family:var(--font-display); word-break:break-all; }
 
     .po-payment-block { background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:4px 14px; margin-bottom:16px; }
-    .po-payment-block.failed { background:#FFF1F2; border-color:#FECDD3; }
+    .po-payment-block.failed  { background:#FFF1F2; border-color:#FECDD3; }
     .po-payment-block.pending { background:#FFFBEB; border-color:#FDE68A; }
+
+    .po-account-block { background:#F0F9FF; border:1px solid #BAE6FD; border-radius:10px; padding:4px 14px; margin-bottom:16px; }
 
     .po-screenshot-link { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; background:var(--po-accent-light); color:var(--po-accent-dark); font-size:12px; font-weight:700; font-family:var(--font-display); text-decoration:none; border:1px solid var(--po-accent-mid); transition:all .14s; }
     .po-screenshot-link:hover { background:var(--po-accent-mid); }
     .po-screenshot-link .material-symbols-rounded { font-size:15px; }
 
-    .po-item-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:8px; }
+    .po-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--gray-100); gap:8px; }
     .po-item-row:last-child { border-bottom:none; }
     .po-item-dismiss { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px; background:var(--gray-100); border:1px solid var(--gray-200); color:var(--text-muted); cursor:pointer; font-size:14px; transition:all .14s; flex-shrink:0; line-height:1; font-family:var(--font-display); font-weight:700; }
     .po-item-dismiss:hover { background:#FEE2E2; border-color:#FECACA; color:#B91C1C; }
 
-    .po-section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--text-muted); margin-bottom:8px; margin-top:16px; }
+    .po-section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--text-muted); margin-bottom:8px; margin-top:16px; display:flex; align-items:center; gap:6px; }
+    .po-section-label .material-symbols-rounded { font-size:14px; color:var(--po-accent); }
 
     .po-empty { display:flex; flex-direction:column; align-items:center; gap:12px; padding:64px 24px; text-align:center; }
     .po-empty-icon { width:64px; height:64px; border-radius:18px; background:var(--po-accent-light); display:flex; align-items:center; justify-content:center; }
@@ -136,27 +162,34 @@
     .po-empty-sub { font-size:12px; color:var(--text-muted); max-width:260px; }
 
     .po-total-chip { display:inline-flex; align-items:center; gap:6px; background:var(--po-accent-light); color:var(--po-accent-dark); border-radius:99px; padding:4px 12px; font-size:12px; font-weight:700; font-family:var(--font-display); }
+
+    /* ── Skeleton ── */
     .po-skel { height:14px; border-radius:6px; background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
     .po-skel.sm { width:60px; height:10px; }
     .po-skel.md { width:120px; }
     .po-skel.lg { width:180px; }
     @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
 
+    /* ── Copy chip ── */
+    .copy-chip { display:inline-flex; align-items:center; gap:4px; cursor:pointer; font-family:var(--font-mono); font-size:12px; font-weight:500; background:var(--gray-100); border:1px solid var(--gray-200); border-radius:6px; padding:3px 8px; color:var(--text); transition:background .12s; user-select:none; }
+    .copy-chip:hover { background:var(--gray-200); }
+    .copy-chip .material-symbols-rounded { font-size:13px; color:var(--text-muted); }
+
     @media (max-width:900px) { .po-stats { grid-template-columns:repeat(2,1fr); } }
     @media (max-width:640px) {
       .po-stats { grid-template-columns:1fr 1fr; gap:10px; }
       .po-stat-num { font-size:22px; }
       .po-header-left .po-title { font-size:20px; }
-      .col-date { display:none; }
+      .col-date, .col-phone { display:none; }
     }
   </style>
 </head>
 <body>
 <div id="app"></div>
 
-<!-- ORDER DETAIL MODAL -->
+<!-- ═══════════════════════════════════════════ ORDER DETAIL MODAL -->
 <div class="modal-overlay" id="orderModal">
-  <div class="modal" style="max-width:540px">
+  <div class="modal" style="max-width:580px">
     <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="width:36px;height:36px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
@@ -168,12 +201,11 @@
         <span class="material-symbols-rounded">close</span>
       </button>
     </div>
-    <div class="modal-body" id="modalBody" style="padding:20px 24px;max-height:70vh;overflow-y:auto"></div>
+    <div class="modal-body" id="modalBody" style="padding:20px 24px;max-height:72vh;overflow-y:auto"></div>
     <div class="modal-footer" style="padding:14px 24px;gap:8px;flex-wrap:wrap">
       <button class="btn-po-ghost" onclick="closeModal()">
         <span class="material-symbols-rounded">close</span> Close
       </button>
-      <!-- Message Customer — starts / opens an order conversation then navigates to chat.html -->
       <button class="btn-po-chat" id="messageBtn" style="display:none" onclick="messageCustomer()">
         <span class="material-symbols-rounded">chat</span> Message Customer
       </button>
@@ -190,9 +222,7 @@
 requireAuth();
 let currentOrderId = null;
 
-// ─────────────────────────────────────────────
-// STATUS CONFIG — ONLY valid backend OrderStatus values
-// ─────────────────────────────────────────────
+// ─── STATUS CONFIG ────────────────────────────────────────────────
 const STATUS_CONFIG = {
   '':                  { label: 'All',            icon: 'select_all' },
   'AWAITING_PAYMENT':  { label: 'Awaiting Pay.',  icon: 'hourglass_top' },
@@ -206,38 +236,54 @@ const STATUS_CONFIG = {
 };
 
 const STATUS_ICONS = {
-  AWAITING_PAYMENT: { icon: 'hourglass_top',     label: 'Awaiting Pay.' },
-  PAYMENT_FAILED:   { icon: 'error',             label: 'Pay. Failed' },
-  DEPOSIT_PAID:     { icon: 'savings',           label: 'Deposit Paid' },
-  PENDING:          { icon: 'schedule',          label: 'Pending' },
-  CONFIRMED:        { icon: 'check_circle',      label: 'Confirmed' },
-  SHIPPED:          { icon: 'local_shipping',    label: 'Shipped' },
-  DELIVERED:        { icon: 'task_alt',          label: 'Delivered' },
-  CANCELLED:        { icon: 'cancel',            label: 'Cancelled' },
+  AWAITING_PAYMENT: { icon: 'hourglass_top',   label: 'Awaiting Pay.' },
+  PAYMENT_FAILED:   { icon: 'error',           label: 'Pay. Failed' },
+  DEPOSIT_PAID:     { icon: 'savings',         label: 'Deposit Paid' },
+  PENDING:          { icon: 'schedule',        label: 'Pending' },
+  CONFIRMED:        { icon: 'check_circle',    label: 'Confirmed' },
+  SHIPPED:          { icon: 'local_shipping',  label: 'Shipped' },
+  DELIVERED:        { icon: 'task_alt',        label: 'Delivered' },
+  CANCELLED:        { icon: 'cancel',          label: 'Cancelled' },
 };
 
-// Status options available to admin for update
-const UPDATABLE_STATUSES = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
-
-// Statuses where it makes sense to message the customer
-// (exclude AWAITING_PAYMENT and PAYMENT_FAILED — no point messaging before payment)
+const UPDATABLE_STATUSES   = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 const MESSAGEABLE_STATUSES = ['DEPOSIT_PAID', 'PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED'];
 
 let currentStatus = '';
 
-// ─────────────────────────────────────────────
-// PAGE LAYOUT
-// ─────────────────────────────────────────────
+// ─── PAGE LAYOUT ──────────────────────────────────────────────────
 const content = `
 <div class="po-header">
   <div class="po-header-left">
     <div class="po-title">Orders</div>
-    <div class="po-subtitle">Manage all orders across the platform</div>
+    <div class="po-subtitle">Manage and export all orders across the platform</div>
   </div>
   <div class="po-header-right">
+    <!-- EXPORT DROPDOWN -->
+    <div class="export-wrap" id="exportWrap">
+      <button class="btn-export" onclick="toggleExport(event)">
+        <span class="material-symbols-rounded">download</span>
+        Export CSV
+        <span class="material-symbols-rounded" style="font-size:16px;opacity:.7">expand_more</span>
+      </button>
+      <div class="export-dropdown" id="exportDropdown">
+        <button class="export-dropdown-item" onclick="runExport('today')">
+          <span class="material-symbols-rounded">today</span> Today's Orders
+        </button>
+        <button class="export-dropdown-item" onclick="runExport('week')">
+          <span class="material-symbols-rounded">date_range</span> This Week's Orders
+        </button>
+        <button class="export-dropdown-item" onclick="runExport('month')">
+          <span class="material-symbols-rounded">calendar_month</span> This Month's Orders
+        </button>
+        <div class="export-dropdown-divider"></div>
+        <button class="export-dropdown-item" onclick="runExport('all')">
+          <span class="material-symbols-rounded">table_view</span> All Orders
+        </button>
+      </div>
+    </div>
     <button class="po-refresh-btn" id="refreshBtn" onclick="loadOrders()">
-      <span class="material-symbols-rounded">refresh</span>
-      Refresh
+      <span class="material-symbols-rounded">refresh</span> Refresh
     </button>
   </div>
 </div>
@@ -276,7 +322,7 @@ const content = `
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <div class="po-search-wrap">
         <span class="material-symbols-rounded">search</span>
-        <input type="text" id="searchInput" placeholder="Search order ID…" oninput="filterTable()"/>
+        <input type="text" id="searchInput" placeholder="Search name, email, phone, order ID…" oninput="filterTable()"/>
       </div>
       <div class="po-total-chip">
         <span class="material-symbols-rounded" style="font-size:13px">tag</span>
@@ -291,15 +337,14 @@ const content = `
           <th>Order ID</th>
           <th class="col-date">Date</th>
           <th>Customer</th>
+          <th class="col-phone">Phone</th>
           <th>Total</th>
           <th>Status</th>
           <th>Items</th>
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="ordersBody">
-        ${skeletonRows()}
-      </tbody>
+      <tbody id="ordersBody">${skeletonRows()}</tbody>
     </table>
   </div>
 </div>
@@ -310,15 +355,23 @@ buildStatusPills();
 loadOrders();
 loadStats();
 
-// ─────────────────────────────────────────────
-// SKELETON
-// ─────────────────────────────────────────────
+// Close export dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('exportWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('exportDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
+
+// ─── SKELETON ─────────────────────────────────────────────────────
 function skeletonRows() {
   return Array(6).fill(0).map(() => `
     <tr>
       <td><div class="po-skel sm"></div></td>
       <td class="col-date"><div class="po-skel sm"></div></td>
       <td><div class="po-skel md"></div></td>
+      <td class="col-phone"><div class="po-skel sm"></div></td>
       <td><div class="po-skel sm"></div></td>
       <td><div class="po-skel sm" style="width:90px"></div></td>
       <td><div class="po-skel sm"></div></td>
@@ -327,9 +380,7 @@ function skeletonRows() {
   `).join('');
 }
 
-// ─────────────────────────────────────────────
-// STATUS PILLS
-// ─────────────────────────────────────────────
+// ─── STATUS PILLS ─────────────────────────────────────────────────
 function buildStatusPills() {
   const container = document.getElementById('statusPills');
   if (!container) return;
@@ -344,9 +395,7 @@ function buildStatusPills() {
   `).join('');
 }
 
-// ─────────────────────────────────────────────
-// STATS
-// ─────────────────────────────────────────────
+// ─── STATS ────────────────────────────────────────────────────────
 async function loadStats() {
   async function safeCount(apiFn) {
     try {
@@ -386,9 +435,7 @@ async function loadStats() {
   }
 }
 
-// ─────────────────────────────────────────────
-// ORDERS LIST
-// ─────────────────────────────────────────────
+// ─── LOAD ORDERS ─────────────────────────────────────────────────
 async function loadOrders() {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
@@ -412,10 +459,8 @@ function updatePillCounts(orders) {
     const s = o.orderStatus || o.status;
     if (s) counts[s] = (counts[s] || 0) + 1;
   });
-
   const allEl = document.getElementById('pill-count-all');
   if (allEl) allEl.textContent = orders.length;
-
   Object.keys(STATUS_CONFIG).forEach(s => {
     if (!s) return;
     const el = document.getElementById(`pill-count-${s}`);
@@ -431,15 +476,13 @@ function switchStatus(status) {
   loadOrders();
 }
 
-// ─────────────────────────────────────────────
-// RENDER TABLE ROWS
-// ─────────────────────────────────────────────
+// ─── RENDER TABLE ROWS ────────────────────────────────────────────
 function renderRows(orders) {
   const tbody = document.getElementById('ordersBody');
   if (!tbody) return;
 
   if (!orders.length) {
-    tbody.innerHTML = `<tr><td colspan="7">
+    tbody.innerHTML = `<tr><td colspan="8">
       <div class="po-empty">
         <div class="po-empty-icon"><span class="material-symbols-rounded">inbox</span></div>
         <div class="po-empty-title">No orders found</div>
@@ -458,12 +501,17 @@ function renderRows(orders) {
     const statusCfg  = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
     const itemCount  = o.orderItems?.length ?? o.items?.length ?? o.itemCount ?? '—';
     const customer   = o.customerName || '—';
+    const phone      = o.customerPhone || o.phoneNumber || '—';
 
     return `
     <tr>
       <td><span class="po-id">#${idShort}</span></td>
       <td class="col-date" style="font-size:12px;color:var(--text-muted)">${fmtDate(o.createdAt)}</td>
-      <td style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(customer)}</td>
+      <td>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(customer)}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${escHtml(o.customerEmail || '')}</div>
+      </td>
+      <td class="col-phone" style="font-size:12px;color:var(--text-muted)">${escHtml(phone)}</td>
       <td><span class="po-amount">${fmtCur(o.total || o.totalAmount)}</span></td>
       <td>
         <span class="po-status ${statusKey}">
@@ -474,8 +522,7 @@ function renderRows(orders) {
       <td style="font-size:12px;color:var(--text-muted)">${itemCount} item(s)</td>
       <td>
         <button class="po-action-btn view" onclick="viewOrder('${id}')">
-          <span class="material-symbols-rounded">open_in_new</span>
-          View
+          <span class="material-symbols-rounded">open_in_new</span> View
         </button>
       </td>
     </tr>`;
@@ -487,17 +534,158 @@ function filterTable() {
   if (!window._allOrders) return;
   const filtered = window._allOrders.filter(o =>
     String(o.orderId || o.id || '').toLowerCase().includes(q) ||
-    String(o.customerName || '').toLowerCase().includes(q) ||
-    String(o.customerEmail || '').toLowerCase().includes(q)
+    String(o.customerName    || '').toLowerCase().includes(q) ||
+    String(o.customerEmail   || '').toLowerCase().includes(q) ||
+    String(o.customerPhone   || '').toLowerCase().includes(q) ||
+    String(o.phoneNumber     || '').toLowerCase().includes(q)
   );
   renderRows(filtered);
   const el = document.getElementById('poCount');
   if (el) el.textContent = filtered.length;
 }
 
-// ─────────────────────────────────────────────
-// ORDER DETAIL MODAL
-// ─────────────────────────────────────────────
+// ─── EXPORT CSV ───────────────────────────────────────────────────
+function toggleExport(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('exportDropdown');
+  if (dd) dd.classList.toggle('open');
+}
+
+async function runExport(range) {
+  // Close dropdown
+  const dd = document.getElementById('exportDropdown');
+  if (dd) dd.classList.remove('open');
+
+  let orders = [];
+  let label  = range;
+
+  // Fetch from API for accurate date-filtered data
+  try {
+    let res;
+    if (range === 'today')  res = await API.getOrdersToday();
+    else if (range === 'week')  res = await API.getOrdersThisWeek();
+    else if (range === 'month') res = await API.getOrdersThisMonth();
+    else res = await API.getAllOrders();
+
+    const raw = res?.data?.data ?? res?.data ?? [];
+    orders = Array.isArray(raw) ? raw : [];
+  } catch (err) {
+    // Fallback: filter in-memory from already loaded list
+    orders = window._allOrders || [];
+    if (range !== 'all') {
+      const now   = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const week  = new Date(now - 7 * 86400000);
+      const month = new Date(now.getFullYear(), now.getMonth(), 1);
+      const from  = range === 'today' ? today : range === 'week' ? week : month;
+      orders = orders.filter(o => o.createdAt && new Date(o.createdAt) >= from);
+    }
+  }
+
+  if (!orders.length) {
+    showToast(`No orders found for: ${label}`, 'info');
+    return;
+  }
+
+  exportToCSV(orders, label);
+  showToast(`Exporting ${orders.length} orders (${label})…`, 'success');
+}
+
+function exportToCSV(orders, label) {
+  const headers = [
+    'Order ID',
+    'Date',
+    'Time',
+    'Order Status',
+    'Payment Status',
+    // Customer
+    'Customer Name',
+    'Customer Email',
+    'Customer Phone',
+    // Payment / Account
+    'Account Name',
+    'Account Number',
+    'Bank / MoMo',
+    'Payment Reference',
+    // Order
+    'Product(s)',
+    'Quantity',
+    'Unit Price (GHS)',
+    'Sub Total (GHS)',
+    'Order Total (GHS)',
+    'Delivery Address',
+    'Notes',
+  ];
+
+  const rows = [headers];
+
+  for (const o of orders) {
+    const items = o.orderItems || o.items || [];
+    const orderDate = o.createdAt ? new Date(o.createdAt) : null;
+    const dateStr   = orderDate ? orderDate.toLocaleDateString('en-GH')  : '';
+    const timeStr   = orderDate ? orderDate.toLocaleTimeString('en-GH', { hour: '2-digit', minute: '2-digit' }) : '';
+
+    const orderId        = o.orderId || o.id || '';
+    const orderStatus    = o.orderStatus  || o.status || '';
+    const paymentStatus  = o.paymentStatus || '';
+    const customerName   = o.customerName  || '';
+    const customerEmail  = o.customerEmail || '';
+    const customerPhone  = o.customerPhone || o.phoneNumber || '';
+    const accountName    = o.accountName   || o.paymentAccountName  || '';
+    const accountNumber  = o.accountNumber || o.paymentAccountNumber || '';
+    const bank           = o.bank          || o.bankName || o.momoProvider || '';
+    const paymentRef     = o.paymentReference || '';
+    const total          = parseFloat(o.total || o.totalAmount || 0).toFixed(2);
+    const delivery       = o.deliveryAddress || '';
+    const notes          = o.notes || '';
+
+    if (items.length === 0) {
+      // One row even if no items
+      rows.push([
+        orderId, dateStr, timeStr, orderStatus, paymentStatus,
+        customerName, customerEmail, customerPhone,
+        accountName, accountNumber, bank, paymentRef,
+        '', '', '', '', total, delivery, notes,
+      ]);
+    } else {
+      for (const item of items) {
+        const subTotal = item.subTotal != null
+          ? parseFloat(item.subTotal).toFixed(2)
+          : (item.quantity && item.unitPrice
+              ? (item.quantity * parseFloat(item.unitPrice)).toFixed(2)
+              : '');
+        rows.push([
+          orderId, dateStr, timeStr, orderStatus, paymentStatus,
+          customerName, customerEmail, customerPhone,
+          accountName, accountNumber, bank, paymentRef,
+          item.productName || item.name || '',
+          item.quantity || '',
+          item.unitPrice != null ? parseFloat(item.unitPrice).toFixed(2) : '',
+          subTotal,
+          total,
+          delivery,
+          notes,
+        ]);
+      }
+    }
+  }
+
+  const csv = rows
+    .map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `orders-${label}-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ─── ORDER DETAIL MODAL ───────────────────────────────────────────
 async function viewOrder(id) {
   currentOrderId = id;
   document.getElementById('orderModal').classList.add('open');
@@ -508,6 +696,7 @@ async function viewOrder(id) {
       <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
 
+  // Show cached version instantly while full fetch loads
   const cached = (window._allOrders || []).find(o => (o.orderId || o.id) === id);
   if (cached) renderOrderModal(cached, true);
 
@@ -527,9 +716,9 @@ async function viewOrder(id) {
 }
 
 function renderOrderModal(o, isPartial) {
-  const statusKey   = o.orderStatus || o.status || '';
-  const canCancel   = !['CANCELLED', 'DELIVERED'].includes(statusKey);
-  const canMessage  = MESSAGEABLE_STATUSES.includes(statusKey);
+  const statusKey  = o.orderStatus || o.status || '';
+  const canCancel  = !['CANCELLED', 'DELIVERED'].includes(statusKey);
+  const canMessage = MESSAGEABLE_STATUSES.includes(statusKey);
 
   const cancelBtn  = document.getElementById('cancelBtn');
   const messageBtn = document.getElementById('messageBtn');
@@ -537,6 +726,7 @@ function renderOrderModal(o, isPartial) {
   if (messageBtn) messageBtn.style.display = canMessage ? 'inline-flex' : 'none';
 
   const statusCfg = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
+
   const statusOptions = UPDATABLE_STATUSES
     .map(s => `<option value="${s}" ${s === statusKey ? 'selected' : ''}>${s.replace(/_/g,' ')}</option>`)
     .join('');
@@ -557,9 +747,18 @@ function renderOrderModal(o, isPartial) {
   };
   const payStatusCfg = payStatusMap[paymentStatus] || { icon: 'info', color: '#6B7280', label: paymentStatus };
 
+  // ── Customer fields — cover all possible field names from backend ──
+  const customerName   = o.customerName   || '—';
+  const customerEmail  = o.customerEmail  || '—';
+  const customerPhone  = o.customerPhone  || o.phoneNumber  || o.customerPhoneNumber || '—';
+  const accountName    = o.accountName    || o.paymentAccountName   || o.senderAccountName   || '—';
+  const accountNumber  = o.accountNumber  || o.paymentAccountNumber || o.senderAccountNumber || '—';
+  const bank           = o.bank           || o.bankName || o.momoProvider || o.paymentProvider || '—';
+
   const orderItems = o.orderItems || o.items || [];
 
   document.getElementById('modalBody').innerHTML = `
+    <!-- ── Order Header ── -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
       <div style="width:44px;height:44px;border-radius:12px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;">
         <span class="material-symbols-rounded" style="font-size:22px;color:var(--po-accent)">receipt_long</span>
@@ -574,23 +773,37 @@ function renderOrderModal(o, isPartial) {
       </span>
     </div>
 
+    <!-- ── Customer Information ── -->
+    <div class="po-section-label">
+      <span class="material-symbols-rounded">person</span> Customer Information
+    </div>
     <div style="background:var(--gray-50);border-radius:10px;padding:4px 14px;margin-bottom:16px">
       <div class="po-detail-row">
-        <span class="po-detail-key">Customer</span>
-        <span class="po-detail-val">${escHtml(o.customerName || '—')}</span>
+        <span class="po-detail-key">Full Name</span>
+        <span class="po-detail-val">${escHtml(customerName)}</span>
       </div>
       <div class="po-detail-row">
         <span class="po-detail-key">Email</span>
-        <span class="po-detail-val" style="font-size:12px">${escHtml(o.customerEmail || '—')}</span>
+        <span class="po-detail-val" style="font-size:12px">${escHtml(customerEmail)}</span>
       </div>
       <div class="po-detail-row">
-        <span class="po-detail-key">Total</span>
-        <span class="po-detail-val" style="color:#065F46;font-size:16px">${fmtCur(o.total || o.totalAmount)}</span>
+        <span class="po-detail-key">Phone Number</span>
+        <span class="po-detail-val">
+          ${customerPhone !== '—'
+            ? `<span class="copy-chip" onclick="copyText('${escHtml(customerPhone)}','Phone number')">
+                <span class="material-symbols-rounded">content_copy</span>${escHtml(customerPhone)}
+               </span>`
+            : '—'}
+        </span>
+      </div>
+      <div class="po-detail-row">
+        <span class="po-detail-key">Order Total</span>
+        <span class="po-detail-val" style="color:#065F46;font-size:15px">${fmtCur(o.total || o.totalAmount)}</span>
       </div>
       ${o.deliveryAddress ? `
       <div class="po-detail-row">
         <span class="po-detail-key">Delivery Address</span>
-        <span class="po-detail-val">${escHtml(o.deliveryAddress)}</span>
+        <span class="po-detail-val" style="font-weight:500">${escHtml(o.deliveryAddress)}</span>
       </div>` : ''}
       ${o.notes ? `
       <div class="po-detail-row">
@@ -599,8 +812,11 @@ function renderOrderModal(o, isPartial) {
       </div>` : ''}
     </div>
 
-    <div class="po-section-label">Payment</div>
-    <div class="${payBlockCls}" style="margin-bottom:16px">
+    <!-- ── Payment & Account Details ── -->
+    <div class="po-section-label">
+      <span class="material-symbols-rounded">account_balance</span> Payment & Account Details
+    </div>
+    <div class="${payBlockCls}" style="margin-bottom:0">
       <div class="po-detail-row">
         <span class="po-detail-key">Payment Status</span>
         <span class="po-detail-val" style="display:inline-flex;align-items:center;gap:6px;color:${payStatusCfg.color}">
@@ -608,26 +824,48 @@ function renderOrderModal(o, isPartial) {
           ${payStatusCfg.label}
         </span>
       </div>
-      ${paymentRef ? `
       <div class="po-detail-row">
         <span class="po-detail-key">Screenshot / Ref</span>
         <span class="po-detail-val">
-          ${isImageUrl(paymentRef)
-            ? `<a href="${escHtml(paymentRef)}" target="_blank" class="po-screenshot-link">
-                 <span class="material-symbols-rounded">image</span> View Screenshot
-               </a>`
-            : `<span style="font-family:var(--font-mono);font-size:12px">${escHtml(paymentRef)}</span>`
-          }
+          ${paymentRef
+            ? (isImageUrl(paymentRef)
+                ? `<a href="${escHtml(paymentRef)}" target="_blank" class="po-screenshot-link">
+                     <span class="material-symbols-rounded">image</span> View Screenshot
+                   </a>`
+                : `<span class="copy-chip" onclick="copyText('${escHtml(paymentRef)}','Reference')">
+                     <span class="material-symbols-rounded">content_copy</span>${escHtml(paymentRef)}
+                   </span>`)
+            : '<span style="color:var(--text-muted);font-weight:500">None uploaded</span>'}
         </span>
-      </div>` : `
+      </div>
+    </div>
+
+    <div class="po-account-block" style="margin-top:8px">
       <div class="po-detail-row">
-        <span class="po-detail-key">Screenshot / Ref</span>
-        <span class="po-detail-val" style="color:var(--text-muted);font-weight:500">None uploaded</span>
-      </div>`}
+        <span class="po-detail-key">Account Name</span>
+        <span class="po-detail-val">${escHtml(accountName)}</span>
+      </div>
+      <div class="po-detail-row">
+        <span class="po-detail-key">Account Number</span>
+        <span class="po-detail-val">
+          ${accountNumber !== '—'
+            ? `<span class="copy-chip" onclick="copyText('${escHtml(accountNumber)}','Account number')">
+                 <span class="material-symbols-rounded">content_copy</span>${escHtml(accountNumber)}
+               </span>`
+            : '—'}
+        </span>
+      </div>
+      <div class="po-detail-row">
+        <span class="po-detail-key">Bank / MoMo</span>
+        <span class="po-detail-val">${escHtml(bank)}</span>
+      </div>
     </div>
 
     ${isPartial ? '' : `
-    <div class="po-section-label">Update Status</div>
+    <!-- ── Update Status ── -->
+    <div class="po-section-label" style="margin-top:18px">
+      <span class="material-symbols-rounded">edit</span> Update Status
+    </div>
     <div style="display:flex;gap:8px;margin-bottom:16px">
       <select id="newStatus" style="flex:1;padding:9px 12px;border-radius:10px;border:1.5px solid var(--gray-200);font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text);background:var(--white);outline:none">
         ${statusOptions}
@@ -637,14 +875,18 @@ function renderOrderModal(o, isPartial) {
       </button>
     </div>`}
 
+    <!-- ── Order Items ── -->
     ${orderItems.length ? `
-    <div class="po-section-label">Order Items (${orderItems.length})</div>
+    <div class="po-section-label">
+      <span class="material-symbols-rounded">shopping_bag</span> Order Items (${orderItems.length})
+    </div>
     <div style="border:1px solid var(--gray-100);border-radius:10px;overflow:hidden">
       ${orderItems.map((item, idx) => {
-        const subTotal = item.subTotal ?? (item.quantity && item.unitPrice ? item.quantity * parseFloat(item.unitPrice) : null);
+        const subTotal = item.subTotal ?? (item.quantity && item.unitPrice
+          ? item.quantity * parseFloat(item.unitPrice) : null);
         const imgUrl   = item.primaryImageUrl || '';
         return `
-        <div class="po-item-row" id="item-row-${idx}" style="padding:12px 14px;gap:10px">
+        <div class="po-item-row" id="item-row-${idx}">
           ${imgUrl ? `<img src="${escHtml(imgUrl)}" alt="" style="width:38px;height:38px;border-radius:8px;object-fit:cover;border:1px solid var(--gray-200);flex-shrink:0" onerror="this.style.display='none'"/>` : ''}
           <div style="flex:1;min-width:0">
             <div style="font-family:var(--font-display);font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(item.productName || 'Product')}</div>
@@ -658,6 +900,11 @@ function renderOrderModal(o, isPartial) {
           </div>
         </div>`;
       }).join('')}
+      <!-- Total row -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--gray-50);border-top:2px solid var(--gray-100)">
+        <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px">Order Total</span>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:15px;color:#065F46">${fmtCur(o.total || o.totalAmount)}</span>
+      </div>
     </div>` : `
     <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;font-family:var(--font-display)">
       No item details available
@@ -679,15 +926,22 @@ function dismissItem(idx) {
   setTimeout(() => row.style.display = 'none', 300);
 }
 
-// ─────────────────────────────────────────────
-// STATUS UPDATE
-// ─────────────────────────────────────────────
+// ─── COPY TO CLIPBOARD ────────────────────────────────────────────
+function copyText(text, label) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`${label} copied!`, 'success');
+  }).catch(() => {
+    showToast('Copy failed — please copy manually', 'error');
+  });
+}
+
+// ─── UPDATE STATUS ────────────────────────────────────────────────
 async function updateStatus() {
   const newStatus = document.getElementById('newStatus')?.value;
   if (!newStatus) return;
 
   const btn = document.querySelector('#modalBody .btn-po-primary');
-  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="material-symbols-rounded">hourglass_top</span> Saving…'; }
 
   const res = await API.updateOrderStatus(currentOrderId, newStatus);
 
@@ -703,9 +957,7 @@ async function updateStatus() {
   }
 }
 
-// ─────────────────────────────────────────────
-// CANCEL ORDER
-// ─────────────────────────────────────────────
+// ─── CANCEL ORDER ─────────────────────────────────────────────────
 async function cancelOrder() {
   if (!confirm('Cancel this order? This cannot be undone.')) return;
   const res = await API.cancelOrderByAdmin(currentOrderId);
@@ -718,14 +970,7 @@ async function cancelOrder() {
   }
 }
 
-// ─────────────────────────────────────────────
-// MESSAGE CUSTOMER — NEW
-//
-// Calls POST /api/v1/admin/chat/orders/{orderId}/start
-// which is idempotent: creates or finds the conversation.
-// Then stores the conversationId in sessionStorage and
-// navigates to chat.html, which auto-selects the conversation.
-// ─────────────────────────────────────────────
+// ─── MESSAGE CUSTOMER ─────────────────────────────────────────────
 async function messageCustomer() {
   const btn = document.getElementById('messageBtn');
   if (!btn || !currentOrderId) return;
@@ -745,14 +990,9 @@ async function messageCustomer() {
 
     const conv   = res.data?.data ?? res.data;
     const convId = conv?.id || conv?.conversationId;
-
-    if (convId) {
-      // Store so chat.html can auto-open this conversation on load
-      sessionStorage.setItem('openConversationId', convId);
-    }
+    if (convId) sessionStorage.setItem('openConversationId', convId);
 
     showToast('Opening chat…', 'info');
-    // Small delay so the toast is visible before navigation
     setTimeout(() => { window.location.href = 'chat.html'; }, 600);
 
   } finally {
@@ -766,9 +1006,7 @@ function closeModal() {
   document.getElementById('orderModal').classList.remove('open');
 }
 
-// ─────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────
+// ─── HELPERS ──────────────────────────────────────────────────────
 function fmtCur(val) {
   if (val == null || val === '') return '—';
   const n = parseFloat(val);
@@ -783,12 +1021,17 @@ function fmtDate(str) {
 
 function escHtml(s) {
   return String(s ?? '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
 
 function isImageUrl(url) {
   if (!url) return false;
-  return /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(url) || url.includes('cloudinary') || url.includes('imgur');
+  return /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(url)
+    || url.includes('cloudinary')
+    || url.includes('imgur');
 }
 </script>
 </body>
