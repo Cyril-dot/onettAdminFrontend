@@ -123,13 +123,13 @@
     .btn-export { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:10px; background:#0F172A; color:#fff; font-size:13px; font-weight:700; font-family:var(--font-display); border:none; cursor:pointer; transition:background .15s; }
     .btn-export:hover { background:#1E293B; }
     .btn-export .material-symbols-rounded { font-size:17px; }
-    .export-dropdown { position:absolute; top:calc(100% + 6px); right:0; background:var(--white); border:1px solid var(--gray-200); border-radius:12px; padding:6px; box-shadow:0 8px 32px rgba(0,0,0,.14); z-index:200; min-width:200px; display:none; }
+    .export-dropdown { position:absolute; top:calc(100% + 6px); right:0; background:var(--white); border:1px solid var(--gray-200); border-radius:12px; padding:6px; box-shadow:0 8px 32px rgba(0,0,0,.14); z-index:200; min-width:210px; display:none; }
     .export-dropdown.open { display:block; animation:fadeDown .15s ease; }
     @keyframes fadeDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
-    .export-dropdown-item { display:flex; align-items:center; gap:9px; width:100%; padding:9px 12px; border:none; background:transparent; border-radius:8px; font-family:var(--font-display); font-size:13px; font-weight:600; color:var(--text); cursor:pointer; transition:background .12s; text-align:left; }
-    .export-dropdown-item:hover { background:var(--gray-50); }
-    .export-dropdown-item .material-symbols-rounded { font-size:16px; color:var(--text-muted); }
-    .export-dropdown-divider { height:1px; background:var(--gray-100); margin:4px 0; }
+    .export-item { display:flex; align-items:center; gap:9px; width:100%; padding:9px 12px; border:none; background:transparent; border-radius:8px; font-family:var(--font-display); font-size:13px; font-weight:600; color:var(--text); cursor:pointer; transition:background .12s; text-align:left; }
+    .export-item:hover { background:var(--gray-50); }
+    .export-item .material-symbols-rounded { font-size:16px; color:var(--text-muted); }
+    .export-divider { height:1px; background:var(--gray-100); margin:4px 0; }
 
     /* ── Modal Detail Rows ── */
     .po-detail-row { display:flex; align-items:flex-start; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--gray-100); gap:12px; }
@@ -137,24 +137,33 @@
     .po-detail-key { font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; flex-shrink:0; }
     .po-detail-val { font-size:13px; font-weight:700; color:var(--text); text-align:right; font-family:var(--font-display); word-break:break-all; }
 
-    .po-payment-block { background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:4px 14px; margin-bottom:16px; }
-    .po-payment-block.failed  { background:#FFF1F2; border-color:#FECDD3; }
-    .po-payment-block.pending { background:#FFFBEB; border-color:#FDE68A; }
-
-    .po-account-block { background:#F0F9FF; border:1px solid #BAE6FD; border-radius:10px; padding:4px 14px; margin-bottom:16px; }
+    .po-info-block   { background:var(--gray-50);  border:1px solid var(--gray-200); border-radius:10px; padding:4px 14px; margin-bottom:12px; }
+    .po-pay-block    { background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:4px 14px; margin-bottom:8px; }
+    .po-pay-block.failed  { background:#FFF1F2; border-color:#FECDD3; }
+    .po-pay-block.pending { background:#FFFBEB; border-color:#FDE68A; }
+    .po-acct-block   { background:#F0F9FF; border:1px solid #BAE6FD; border-radius:10px; padding:4px 14px; margin-bottom:12px; }
 
     .po-screenshot-link { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; background:var(--po-accent-light); color:var(--po-accent-dark); font-size:12px; font-weight:700; font-family:var(--font-display); text-decoration:none; border:1px solid var(--po-accent-mid); transition:all .14s; }
     .po-screenshot-link:hover { background:var(--po-accent-mid); }
     .po-screenshot-link .material-symbols-rounded { font-size:15px; }
 
+    /* ── Copy chip ── */
+    .copy-chip { display:inline-flex; align-items:center; gap:5px; cursor:pointer; font-family:var(--font-mono); font-size:12px; font-weight:500; background:var(--gray-100); border:1px solid var(--gray-200); border-radius:6px; padding:3px 8px; color:var(--text); transition:background .12s; user-select:none; }
+    .copy-chip:hover { background:var(--gray-200); }
+    .copy-chip .material-symbols-rounded { font-size:13px; color:var(--text-muted); }
+
+    /* ── Order Items ── */
     .po-item-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--gray-100); gap:8px; }
     .po-item-row:last-child { border-bottom:none; }
+    .po-item-thumb { width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--gray-200); flex-shrink:0; background:var(--gray-100); }
     .po-item-dismiss { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px; background:var(--gray-100); border:1px solid var(--gray-200); color:var(--text-muted); cursor:pointer; font-size:14px; transition:all .14s; flex-shrink:0; line-height:1; font-family:var(--font-display); font-weight:700; }
     .po-item-dismiss:hover { background:#FEE2E2; border-color:#FECACA; color:#B91C1C; }
 
+    /* ── Section Labels ── */
     .po-section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--text-muted); margin-bottom:8px; margin-top:16px; display:flex; align-items:center; gap:6px; }
     .po-section-label .material-symbols-rounded { font-size:14px; color:var(--po-accent); }
 
+    /* ── Empty state ── */
     .po-empty { display:flex; flex-direction:column; align-items:center; gap:12px; padding:64px 24px; text-align:center; }
     .po-empty-icon { width:64px; height:64px; border-radius:18px; background:var(--po-accent-light); display:flex; align-items:center; justify-content:center; }
     .po-empty-icon .material-symbols-rounded { font-size:30px; color:var(--po-accent); }
@@ -170,10 +179,9 @@
     .po-skel.lg { width:180px; }
     @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
 
-    /* ── Copy chip ── */
-    .copy-chip { display:inline-flex; align-items:center; gap:4px; cursor:pointer; font-family:var(--font-mono); font-size:12px; font-weight:500; background:var(--gray-100); border:1px solid var(--gray-200); border-radius:6px; padding:3px 8px; color:var(--text); transition:background .12s; user-select:none; }
-    .copy-chip:hover { background:var(--gray-200); }
-    .copy-chip .material-symbols-rounded { font-size:13px; color:var(--text-muted); }
+    /* ── Broken image fallback ── */
+    .img-fallback { width:40px; height:40px; border-radius:8px; background:var(--gray-100); border:1px solid var(--gray-200); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .img-fallback .material-symbols-rounded { font-size:18px; color:var(--text-muted); }
 
     @media (max-width:900px) { .po-stats { grid-template-columns:repeat(2,1fr); } }
     @media (max-width:640px) {
@@ -190,7 +198,7 @@
 <!-- ═══════════════════════════════════════════ ORDER DETAIL MODAL -->
 <div class="modal-overlay" id="orderModal">
   <div class="modal" style="max-width:580px">
-    <div class="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid var(--gray-100)">
+    <div class="modal-header" style="padding:20px 24px 16px;border-bottom:1px solid var(--gray-100)">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="width:36px;height:36px;border-radius:9px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center">
           <span class="material-symbols-rounded" style="font-size:18px;color:var(--po-accent)">receipt_long</span>
@@ -224,26 +232,26 @@ let currentOrderId = null;
 
 // ─── STATUS CONFIG ────────────────────────────────────────────────
 const STATUS_CONFIG = {
-  '':                  { label: 'All',            icon: 'select_all' },
+  '':                  { label: 'All',            icon: 'select_all'    },
   'AWAITING_PAYMENT':  { label: 'Awaiting Pay.',  icon: 'hourglass_top' },
-  'PAYMENT_FAILED':    { label: 'Pay. Failed',    icon: 'error' },
-  'DEPOSIT_PAID':      { label: 'Deposit Paid',   icon: 'savings' },
-  'PENDING':           { label: 'Pending',        icon: 'schedule' },
-  'CONFIRMED':         { label: 'Confirmed',      icon: 'check_circle' },
-  'SHIPPED':           { label: 'Shipped',        icon: 'local_shipping' },
-  'DELIVERED':         { label: 'Delivered',      icon: 'task_alt' },
-  'CANCELLED':         { label: 'Cancelled',      icon: 'cancel' },
+  'PAYMENT_FAILED':    { label: 'Pay. Failed',    icon: 'error'         },
+  'DEPOSIT_PAID':      { label: 'Deposit Paid',   icon: 'savings'       },
+  'PENDING':           { label: 'Pending',        icon: 'schedule'      },
+  'CONFIRMED':         { label: 'Confirmed',      icon: 'check_circle'  },
+  'SHIPPED':           { label: 'Shipped',        icon: 'local_shipping'},
+  'DELIVERED':         { label: 'Delivered',      icon: 'task_alt'      },
+  'CANCELLED':         { label: 'Cancelled',      icon: 'cancel'        },
 };
 
 const STATUS_ICONS = {
   AWAITING_PAYMENT: { icon: 'hourglass_top',   label: 'Awaiting Pay.' },
-  PAYMENT_FAILED:   { icon: 'error',           label: 'Pay. Failed' },
-  DEPOSIT_PAID:     { icon: 'savings',         label: 'Deposit Paid' },
-  PENDING:          { icon: 'schedule',        label: 'Pending' },
-  CONFIRMED:        { icon: 'check_circle',    label: 'Confirmed' },
-  SHIPPED:          { icon: 'local_shipping',  label: 'Shipped' },
-  DELIVERED:        { icon: 'task_alt',        label: 'Delivered' },
-  CANCELLED:        { icon: 'cancel',          label: 'Cancelled' },
+  PAYMENT_FAILED:   { icon: 'error',           label: 'Pay. Failed'   },
+  DEPOSIT_PAID:     { icon: 'savings',         label: 'Deposit Paid'  },
+  PENDING:          { icon: 'schedule',        label: 'Pending'       },
+  CONFIRMED:        { icon: 'check_circle',    label: 'Confirmed'     },
+  SHIPPED:          { icon: 'local_shipping',  label: 'Shipped'       },
+  DELIVERED:        { icon: 'task_alt',        label: 'Delivered'     },
+  CANCELLED:        { icon: 'cancel',          label: 'Cancelled'     },
 };
 
 const UPDATABLE_STATUSES   = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
@@ -259,7 +267,6 @@ const content = `
     <div class="po-subtitle">Manage and export all orders across the platform</div>
   </div>
   <div class="po-header-right">
-    <!-- EXPORT DROPDOWN -->
     <div class="export-wrap" id="exportWrap">
       <button class="btn-export" onclick="toggleExport(event)">
         <span class="material-symbols-rounded">download</span>
@@ -267,17 +274,17 @@ const content = `
         <span class="material-symbols-rounded" style="font-size:16px;opacity:.7">expand_more</span>
       </button>
       <div class="export-dropdown" id="exportDropdown">
-        <button class="export-dropdown-item" onclick="runExport('today')">
+        <button class="export-item" onclick="runExport('today')">
           <span class="material-symbols-rounded">today</span> Today's Orders
         </button>
-        <button class="export-dropdown-item" onclick="runExport('week')">
+        <button class="export-item" onclick="runExport('week')">
           <span class="material-symbols-rounded">date_range</span> This Week's Orders
         </button>
-        <button class="export-dropdown-item" onclick="runExport('month')">
+        <button class="export-item" onclick="runExport('month')">
           <span class="material-symbols-rounded">calendar_month</span> This Month's Orders
         </button>
-        <div class="export-dropdown-divider"></div>
-        <button class="export-dropdown-item" onclick="runExport('all')">
+        <div class="export-divider"></div>
+        <button class="export-item" onclick="runExport('all')">
           <span class="material-symbols-rounded">table_view</span> All Orders
         </button>
       </div>
@@ -373,7 +380,7 @@ function skeletonRows() {
       <td><div class="po-skel md"></div></td>
       <td class="col-phone"><div class="po-skel sm"></div></td>
       <td><div class="po-skel sm"></div></td>
-      <td><div class="po-skel sm" style="width:90px"></div></td>
+      <td><div class="po-skel" style="width:90px"></div></td>
       <td><div class="po-skel sm"></div></td>
       <td><div class="po-skel sm" style="width:80px"></div></td>
     </tr>
@@ -435,7 +442,7 @@ async function loadStats() {
   }
 }
 
-// ─── LOAD ORDERS ─────────────────────────────────────────────────
+// ─── LOAD ORDERS ──────────────────────────────────────────────────
 async function loadOrders() {
   const btn = document.getElementById('refreshBtn');
   if (btn) btn.classList.add('loading');
@@ -495,13 +502,13 @@ function renderRows(orders) {
   }
 
   tbody.innerHTML = orders.map(o => {
-    const id         = o.orderId || o.id;
-    const idShort    = String(id || '').slice(-8).toUpperCase();
-    const statusKey  = o.orderStatus || o.status || '';
-    const statusCfg  = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
-    const itemCount  = o.orderItems?.length ?? o.items?.length ?? o.itemCount ?? '—';
-    const customer   = o.customerName || '—';
-    const phone      = o.customerPhone || o.phoneNumber || '—';
+    const id        = o.orderId || o.id;
+    const idShort   = String(id || '').slice(-8).toUpperCase();
+    const statusKey = o.orderStatus || o.status || '';
+    const statusCfg = STATUS_ICONS[statusKey] || { icon: 'radio_button_unchecked', label: statusKey || 'Unknown' };
+    const itemCount = o.orderItems?.length ?? o.items?.length ?? o.itemCount ?? '—';
+    const customer  = o.customerName || '—';
+    const phone     = o.customerPhone || o.phoneNumber || '—';
 
     return `
     <tr>
@@ -533,11 +540,11 @@ function filterTable() {
   const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
   if (!window._allOrders) return;
   const filtered = window._allOrders.filter(o =>
-    String(o.orderId || o.id || '').toLowerCase().includes(q) ||
-    String(o.customerName    || '').toLowerCase().includes(q) ||
-    String(o.customerEmail   || '').toLowerCase().includes(q) ||
-    String(o.customerPhone   || '').toLowerCase().includes(q) ||
-    String(o.phoneNumber     || '').toLowerCase().includes(q)
+    String(o.orderId      || o.id  || '').toLowerCase().includes(q) ||
+    String(o.customerName  || '').toLowerCase().includes(q) ||
+    String(o.customerEmail || '').toLowerCase().includes(q) ||
+    String(o.customerPhone || '').toLowerCase().includes(q) ||
+    String(o.phoneNumber   || '').toLowerCase().includes(q)
   );
   renderRows(filtered);
   const el = document.getElementById('poCount');
@@ -552,128 +559,102 @@ function toggleExport(e) {
 }
 
 async function runExport(range) {
-  // Close dropdown
   const dd = document.getElementById('exportDropdown');
   if (dd) dd.classList.remove('open');
 
   let orders = [];
-  let label  = range;
 
-  // Fetch from API for accurate date-filtered data
   try {
     let res;
-    if (range === 'today')  res = await API.getOrdersToday();
+    if      (range === 'today') res = await API.getOrdersToday();
     else if (range === 'week')  res = await API.getOrdersThisWeek();
     else if (range === 'month') res = await API.getOrdersThisMonth();
-    else res = await API.getAllOrders();
+    else                        res = await API.getAllOrders();
 
     const raw = res?.data?.data ?? res?.data ?? [];
     orders = Array.isArray(raw) ? raw : [];
-  } catch (err) {
-    // Fallback: filter in-memory from already loaded list
+  } catch {
+    // Fallback: filter already-loaded orders in memory
     orders = window._allOrders || [];
     if (range !== 'all') {
-      const now   = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const week  = new Date(now - 7 * 86400000);
-      const month = new Date(now.getFullYear(), now.getMonth(), 1);
-      const from  = range === 'today' ? today : range === 'week' ? week : month;
+      const now  = new Date();
+      const from = range === 'today'
+        ? new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        : range === 'week'
+          ? new Date(now - 7 * 86400000)
+          : new Date(now.getFullYear(), now.getMonth(), 1);
       orders = orders.filter(o => o.createdAt && new Date(o.createdAt) >= from);
     }
   }
 
   if (!orders.length) {
-    showToast(`No orders found for: ${label}`, 'info');
+    showToast(`No orders found for: ${range}`, 'info');
     return;
   }
 
-  exportToCSV(orders, label);
-  showToast(`Exporting ${orders.length} orders (${label})…`, 'success');
+  exportToCSV(orders, range);
+  showToast(`Exporting ${orders.length} order(s) — ${range}`, 'success');
 }
 
 function exportToCSV(orders, label) {
   const headers = [
-    'Order ID',
-    'Date',
-    'Time',
-    'Order Status',
-    'Payment Status',
-    // Customer
-    'Customer Name',
-    'Customer Email',
-    'Customer Phone',
-    // Payment / Account
-    'Account Name',
-    'Account Number',
-    'Bank / MoMo',
-    'Payment Reference',
-    // Order
-    'Product(s)',
-    'Quantity',
-    'Unit Price (GHS)',
-    'Sub Total (GHS)',
-    'Order Total (GHS)',
-    'Delivery Address',
-    'Notes',
+    'Order ID', 'Date', 'Time', 'Order Status', 'Payment Status',
+    'Customer Name', 'Customer Email', 'Customer Phone',
+    'Account Name', 'Account Number', 'Bank / MoMo', 'Payment Reference',
+    'Product Name', 'Quantity', 'Unit Price (GHS)', 'Sub Total (GHS)',
+    'Order Total (GHS)', 'Delivery Address', 'Notes',
   ];
 
   const rows = [headers];
 
   for (const o of orders) {
-    const items = o.orderItems || o.items || [];
-    const orderDate = o.createdAt ? new Date(o.createdAt) : null;
-    const dateStr   = orderDate ? orderDate.toLocaleDateString('en-GH')  : '';
-    const timeStr   = orderDate ? orderDate.toLocaleTimeString('en-GH', { hour: '2-digit', minute: '2-digit' }) : '';
+    const items     = o.orderItems || o.items || [];
+    const d         = o.createdAt ? new Date(o.createdAt) : null;
+    const dateStr   = d ? d.toLocaleDateString('en-GH') : '';
+    const timeStr   = d ? d.toLocaleTimeString('en-GH', { hour: '2-digit', minute: '2-digit' }) : '';
 
-    const orderId        = o.orderId || o.id || '';
-    const orderStatus    = o.orderStatus  || o.status || '';
-    const paymentStatus  = o.paymentStatus || '';
-    const customerName   = o.customerName  || '';
-    const customerEmail  = o.customerEmail || '';
-    const customerPhone  = o.customerPhone || o.phoneNumber || '';
-    const accountName    = o.accountName   || o.paymentAccountName  || '';
-    const accountNumber  = o.accountNumber || o.paymentAccountNumber || '';
-    const bank           = o.bank          || o.bankName || o.momoProvider || '';
-    const paymentRef     = o.paymentReference || '';
-    const total          = parseFloat(o.total || o.totalAmount || 0).toFixed(2);
-    const delivery       = o.deliveryAddress || '';
-    const notes          = o.notes || '';
+    const orderId       = o.orderId || o.id || '';
+    const orderStatus   = o.orderStatus  || o.status || '';
+    const payStatus     = o.paymentStatus || '';
+    const custName      = o.customerName  || '';
+    const custEmail     = o.customerEmail || '';
+    const custPhone     = o.customerPhone || o.phoneNumber || '';
+    const accountName   = o.accountName   || '';
+    const accountNumber = o.accountNumber || '';
+    const bank          = o.bank          || '';
+    const payRef        = o.paymentReference || '';
+    const total         = parseFloat(o.total || o.totalAmount || 0).toFixed(2);
+    const delivery      = o.deliveryAddress || '';
+    const notes         = o.notes || '';
 
-    if (items.length === 0) {
-      // One row even if no items
+    if (!items.length) {
       rows.push([
-        orderId, dateStr, timeStr, orderStatus, paymentStatus,
-        customerName, customerEmail, customerPhone,
-        accountName, accountNumber, bank, paymentRef,
+        orderId, dateStr, timeStr, orderStatus, payStatus,
+        custName, custEmail, custPhone,
+        accountName, accountNumber, bank, payRef,
         '', '', '', '', total, delivery, notes,
       ]);
     } else {
       for (const item of items) {
-        const subTotal = item.subTotal != null
+        const unitPrice = item.unitPrice != null ? parseFloat(item.unitPrice).toFixed(2) : '';
+        const subTotal  = item.subTotal  != null
           ? parseFloat(item.subTotal).toFixed(2)
           : (item.quantity && item.unitPrice
-              ? (item.quantity * parseFloat(item.unitPrice)).toFixed(2)
-              : '');
+              ? (item.quantity * parseFloat(item.unitPrice)).toFixed(2) : '');
+
         rows.push([
-          orderId, dateStr, timeStr, orderStatus, paymentStatus,
-          customerName, customerEmail, customerPhone,
-          accountName, accountNumber, bank, paymentRef,
+          orderId, dateStr, timeStr, orderStatus, payStatus,
+          custName, custEmail, custPhone,
+          accountName, accountNumber, bank, payRef,
           item.productName || item.name || '',
           item.quantity || '',
-          item.unitPrice != null ? parseFloat(item.unitPrice).toFixed(2) : '',
-          subTotal,
-          total,
-          delivery,
-          notes,
+          unitPrice, subTotal, total, delivery, notes,
         ]);
       }
     }
   }
 
-  const csv = rows
-    .map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
-    .join('\n');
-
+  const csv  = rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -696,7 +677,6 @@ async function viewOrder(id) {
       <span class="material-symbols-rounded" style="font-size:28px;color:var(--po-accent);animation:spin .8s linear infinite">progress_activity</span>
     </div>`;
 
-  // Show cached version instantly while full fetch loads
   const cached = (window._allOrders || []).find(o => (o.orderId || o.id) === id);
   if (cached) renderOrderModal(cached, true);
 
@@ -734,31 +714,32 @@ function renderOrderModal(o, isPartial) {
   const paymentStatus = o.paymentStatus || 'N/A';
   const paymentRef    = o.paymentReference || null;
 
-  let payBlockCls = 'po-payment-block';
+  let payBlockCls = 'po-pay-block';
   if (paymentStatus === 'FAILED' || paymentStatus === 'REJECTED') payBlockCls += ' failed';
   else if (paymentStatus === 'PENDING') payBlockCls += ' pending';
 
   const payStatusMap = {
     CONFIRMED: { icon: 'check_circle',  color: '#065F46', label: 'Confirmed' },
-    PENDING:   { icon: 'hourglass_top', color: '#D97706', label: 'Pending' },
-    FAILED:    { icon: 'error',         color: '#B91C1C', label: 'Failed' },
-    REJECTED:  { icon: 'cancel',        color: '#B91C1C', label: 'Rejected' },
-    'N/A':     { icon: 'remove_circle', color: '#9CA3AF', label: 'N/A' },
+    PENDING:   { icon: 'hourglass_top', color: '#D97706', label: 'Pending'   },
+    FAILED:    { icon: 'error',         color: '#B91C1C', label: 'Failed'    },
+    REJECTED:  { icon: 'cancel',        color: '#B91C1C', label: 'Rejected'  },
+    'N/A':     { icon: 'remove_circle', color: '#9CA3AF', label: 'N/A'      },
   };
   const payStatusCfg = payStatusMap[paymentStatus] || { icon: 'info', color: '#6B7280', label: paymentStatus };
 
-  // ── Customer fields — cover all possible field names from backend ──
+  // ── Pull all customer/account fields — cover every backend field name ──
   const customerName   = o.customerName   || '—';
   const customerEmail  = o.customerEmail  || '—';
-  const customerPhone  = o.customerPhone  || o.phoneNumber  || o.customerPhoneNumber || '—';
-  const accountName    = o.accountName    || o.paymentAccountName   || o.senderAccountName   || '—';
-  const accountNumber  = o.accountNumber  || o.paymentAccountNumber || o.senderAccountNumber || '—';
-  const bank           = o.bank           || o.bankName || o.momoProvider || o.paymentProvider || '—';
+  const customerPhone  = o.customerPhone  || o.phoneNumber || o.customerPhoneNumber || '—';
+  const accountName    = o.accountName    || o.senderAccountName  || '—';
+  const accountNumber  = o.accountNumber  || o.senderPhoneNumber  || '—';
+  const bank           = o.bank           || o.bankName || o.momoProvider || (accountNumber !== '—' ? 'Mobile Money' : '—');
 
   const orderItems = o.orderItems || o.items || [];
 
   document.getElementById('modalBody').innerHTML = `
-    <!-- ── Order Header ── -->
+
+    <!-- ── Header ── -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
       <div style="width:44px;height:44px;border-radius:12px;background:var(--po-accent-light);display:flex;align-items:center;justify-content:center;">
         <span class="material-symbols-rounded" style="font-size:22px;color:var(--po-accent)">receipt_long</span>
@@ -777,7 +758,7 @@ function renderOrderModal(o, isPartial) {
     <div class="po-section-label">
       <span class="material-symbols-rounded">person</span> Customer Information
     </div>
-    <div style="background:var(--gray-50);border-radius:10px;padding:4px 14px;margin-bottom:16px">
+    <div class="po-info-block">
       <div class="po-detail-row">
         <span class="po-detail-key">Full Name</span>
         <span class="po-detail-val">${escHtml(customerName)}</span>
@@ -791,9 +772,9 @@ function renderOrderModal(o, isPartial) {
         <span class="po-detail-val">
           ${customerPhone !== '—'
             ? `<span class="copy-chip" onclick="copyText('${escHtml(customerPhone)}','Phone number')">
-                <span class="material-symbols-rounded">content_copy</span>${escHtml(customerPhone)}
+                 <span class="material-symbols-rounded">content_copy</span>${escHtml(customerPhone)}
                </span>`
-            : '—'}
+            : '<span style="color:var(--text-muted);font-weight:500">Not provided</span>'}
         </span>
       </div>
       <div class="po-detail-row">
@@ -812,11 +793,11 @@ function renderOrderModal(o, isPartial) {
       </div>` : ''}
     </div>
 
-    <!-- ── Payment & Account Details ── -->
+    <!-- ── Payment Status ── -->
     <div class="po-section-label">
       <span class="material-symbols-rounded">account_balance</span> Payment & Account Details
     </div>
-    <div class="${payBlockCls}" style="margin-bottom:0">
+    <div class="${payBlockCls}">
       <div class="po-detail-row">
         <span class="po-detail-key">Payment Status</span>
         <span class="po-detail-val" style="display:inline-flex;align-items:center;gap:6px;color:${payStatusCfg.color}">
@@ -840,10 +821,15 @@ function renderOrderModal(o, isPartial) {
       </div>
     </div>
 
-    <div class="po-account-block" style="margin-top:8px">
+    <!-- ── Account / Sender Details ── -->
+    <div class="po-acct-block" style="margin-top:8px">
       <div class="po-detail-row">
         <span class="po-detail-key">Account Name</span>
-        <span class="po-detail-val">${escHtml(accountName)}</span>
+        <span class="po-detail-val">
+          ${accountName !== '—'
+            ? escHtml(accountName)
+            : '<span style="color:var(--text-muted);font-weight:500">Not provided</span>'}
+        </span>
       </div>
       <div class="po-detail-row">
         <span class="po-detail-key">Account Number</span>
@@ -852,18 +838,22 @@ function renderOrderModal(o, isPartial) {
             ? `<span class="copy-chip" onclick="copyText('${escHtml(accountNumber)}','Account number')">
                  <span class="material-symbols-rounded">content_copy</span>${escHtml(accountNumber)}
                </span>`
-            : '—'}
+            : '<span style="color:var(--text-muted);font-weight:500">Not provided</span>'}
         </span>
       </div>
       <div class="po-detail-row">
         <span class="po-detail-key">Bank / MoMo</span>
-        <span class="po-detail-val">${escHtml(bank)}</span>
+        <span class="po-detail-val">
+          ${bank !== '—'
+            ? escHtml(bank)
+            : '<span style="color:var(--text-muted);font-weight:500">Not provided</span>'}
+        </span>
       </div>
     </div>
 
     ${isPartial ? '' : `
     <!-- ── Update Status ── -->
-    <div class="po-section-label" style="margin-top:18px">
+    <div class="po-section-label" style="margin-top:4px">
       <span class="material-symbols-rounded">edit</span> Update Status
     </div>
     <div style="display:flex;gap:8px;margin-bottom:16px">
@@ -882,21 +872,36 @@ function renderOrderModal(o, isPartial) {
     </div>
     <div style="border:1px solid var(--gray-100);border-radius:10px;overflow:hidden">
       ${orderItems.map((item, idx) => {
-        const subTotal = item.subTotal ?? (item.quantity && item.unitPrice
-          ? item.quantity * parseFloat(item.unitPrice) : null);
-        const imgUrl   = item.primaryImageUrl || '';
+        const subTotal  = item.subTotal != null
+          ? parseFloat(item.subTotal).toFixed(2)
+          : (item.quantity && item.unitPrice
+              ? (item.quantity * parseFloat(item.unitPrice)).toFixed(2) : null);
+        const imgUrl    = item.primaryImageUrl || '';
+
+        // Thumb HTML — onerror replaces broken Cloudinary image with icon placeholder
+        const thumbHtml = imgUrl
+          ? `<img
+               class="po-item-thumb"
+               src="${escHtml(imgUrl)}"
+               alt=""
+               onerror="this.outerHTML='<div class=\\'img-fallback\\'><span class=\\'material-symbols-rounded\\'>image_not_supported</span></div>'"
+             />`
+          : `<div class="img-fallback"><span class="material-symbols-rounded">shopping_bag</span></div>`;
+
         return `
         <div class="po-item-row" id="item-row-${idx}">
-          ${imgUrl ? `<img src="${escHtml(imgUrl)}" alt="" style="width:38px;height:38px;border-radius:8px;object-fit:cover;border:1px solid var(--gray-200);flex-shrink:0" onerror="this.style.display='none'"/>` : ''}
+          ${thumbHtml}
           <div style="flex:1;min-width:0">
-            <div style="font-family:var(--font-display);font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(item.productName || 'Product')}</div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${escHtml(item.productName || 'Product')}
+            </div>
             <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-top:3px">
               Qty: ${item.quantity} × ${fmtCur(item.unitPrice ?? item.price)}
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
             <span style="font-family:var(--font-display);font-weight:800;font-size:13px">${fmtCur(subTotal)}</span>
-            <button class="po-item-dismiss" title="Hide this item" onclick="dismissItem(${idx})">✕</button>
+            <button class="po-item-dismiss" title="Hide item" onclick="dismissItem(${idx})">✕</button>
           </div>
         </div>`;
       }).join('')}
@@ -981,20 +986,15 @@ async function messageCustomer() {
 
   try {
     const res = await API.startOrderConversation(currentOrderId);
-
     if (!res.ok) {
-      const msg = res.data?.message || res.data?.data?.message || 'Could not start conversation';
-      showToast(msg, 'error');
+      showToast(res.data?.message || res.data?.data?.message || 'Could not start conversation', 'error');
       return;
     }
-
     const conv   = res.data?.data ?? res.data;
     const convId = conv?.id || conv?.conversationId;
     if (convId) sessionStorage.setItem('openConversationId', convId);
-
     showToast('Opening chat…', 'info');
     setTimeout(() => { window.location.href = 'chat.html'; }, 600);
-
   } finally {
     btn.disabled = false;
     btn.classList.remove('loading');
